@@ -1,0 +1,15 @@
+{
+  "originHash" : "43a7392c44916d012c371756c1f19169c6eea8aabca28f4fd7dbbd45c23bfa58",
+  "pins" : [
+    {
+      "identity" : "pokemonapi?tab=readme-ov-file",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kinkofer/PokemonAPI?tab=readme-ov-file",
+      "state" : {
+        "revision" : "d9fa1d298e986105d9f0195095fdeadbbb5bc361",
+        "version" : "7.0.3"
+      }
+    }
+  ],
+  "version" : 3
+}
