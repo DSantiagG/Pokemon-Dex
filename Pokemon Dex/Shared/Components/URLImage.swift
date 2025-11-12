@@ -23,16 +23,14 @@ struct URLImage: View {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:
-                    // Mientras carga
                     ZStack {
-                        Color.gray.opacity(0)
+                        Color.gray.opacity(0.0)
                         ProgressView()
                     }
-                    .aspectRatio(1, contentMode: .fit)
+                    .aspectRatio(1, contentMode: contentMode)
                     .clipShape(RoundedRectangle(cornerRadius: cornerRadius*3))
                     
                 case .success(let image):
-                    // Imagen cargada correctamente
                     image
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
@@ -42,14 +40,14 @@ struct URLImage: View {
                         }
                     
                 case .failure:
-                    // Si ocurre un error al cargar
                     ZStack {
-                        Color.gray.opacity(0.2)
+                        Color.gray.opacity(0.1)
                         Image(systemName: "photo")
                             .font(.largeTitle)
                             .foregroundStyle(.white.opacity(0.8))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: cornerRadius*3))
+                    .aspectRatio(1, contentMode: contentMode)
                     .onAppear {
                         if retryCount < maxRetries {
                             let delay: TimeInterval = 0.6
@@ -70,13 +68,13 @@ struct URLImage: View {
             }
             
         } else {
-            // Si no hay URL válida
             ZStack {
-                Color.gray.opacity(0.2)
+                Color.gray.opacity(0.1)
                 Image(systemName: "photo")
                     .font(.largeTitle)
                     .foregroundStyle(.white.opacity(0.8))
             }
+            .aspectRatio(1, contentMode: contentMode)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius*3))
         }
     }

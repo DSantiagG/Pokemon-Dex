@@ -1,0 +1,15 @@
+//
+//  AppRouter.swift
+//  Pokemon Dex
+//
+//  Created by David Giron on 11/11/25.
+//
+
+import Combine
+
+@MainActor
+final class AppRouter: ObservableObject {
+    @Published var pokemonRouter = NavigationRouter()
+    //@Published var abilityRouter = NavigationRouter()
+    //@Published var berryRouter = NavigationRouter()
+}
