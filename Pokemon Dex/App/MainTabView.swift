@@ -5,7 +5,6 @@
 //  Created by David Giron on 11/11/25.
 //
 
-
 import SwiftUI
 
 struct MainTabView: View {
@@ -13,51 +12,71 @@ struct MainTabView: View {
     @StateObject var appRouter = AppRouter()
     @StateObject private var dataProvider = DataProvider()
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.stackedLayoutAppearance.selected.iconColor = .systemRed
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
+        
         TabView {
-            // MARK: Pokémon Tab
-            PokemonHomeView()
+            NavigationContainerView{
+                ViewStateView<PokemonViewModel, PokemonListView> {
+                    PokemonListView()
+                }
+            }
                 .environmentObject(appRouter.pokemonRouter)
                 .environmentObject(dataProvider.pokemonViewModel)
-            .tabItem {
-                Label("Pokémon", systemImage: "bolt.circle.fill")
-            }
-            
-            // MARK: Abilities Tab
+                .tabItem {
+                    Label("Pokémon", systemImage: "bolt.circle.fill")
+                }
             
             //AbilityHomeView()
-            PokemonHomeView()
-                .environmentObject(appRouter.pokemonRouter)
-                .environmentObject(dataProvider.pokemonViewModel)
-            .tabItem {
-                Label("Abilities", systemImage: "star.circle.fill")
+            NavigationContainerView{
+                ViewStateView<PokemonViewModel, PokemonListView> {
+                    PokemonListView()
+                }
             }
-            
-            // MARK: Berries Tab
+                .environmentObject(appRouter.abilityRouter)
+                .environmentObject(dataProvider.pokemonViewModel)
+                .tabItem {
+                    Label("Abilities", systemImage: "star.circle.fill")
+                }
             
             //BerryHomeView()
-            PokemonHomeView()
+            NavigationContainerView{
+                ViewStateView<PokemonViewModel, PokemonListView> {
+                    PokemonListView()
+                }
+            }
                 .environmentObject(appRouter.pokemonRouter)
                 .environmentObject(dataProvider.pokemonViewModel)
-            .tabItem {
-                Label("Berries", systemImage: "leaf.circle.fill")
-            }
-            
-            // MARK: Locations Tab
+                .tabItem {
+                    Label("Berries", systemImage: "leaf.circle.fill")
+                }
             
             //LocationHomeView()
-            PokemonHomeView()
+            NavigationContainerView{
+                ViewStateView<PokemonViewModel, PokemonListView> {
+                    PokemonListView()
+                }
+            }
                 .environmentObject(appRouter.pokemonRouter)
                 .environmentObject(dataProvider.pokemonViewModel)
-            .tabItem {
-                Label("Places", systemImage: "map.circle.fill")
-            }
+                .tabItem {
+                    Label("Places", systemImage: "map.circle.fill")
+                }
         }
-        .tint(.red)
     }
+    
 }
 
-#Preview {
+#Preview ("main"){
     MainTabView()
 }
 

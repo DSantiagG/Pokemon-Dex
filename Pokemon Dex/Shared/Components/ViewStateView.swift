@@ -5,24 +5,30 @@
 //  Created by David Giron on 10/11/25.
 //
 import SwiftUI
+import Combine
 
-struct ViewStateView<Content: View>: View {
-    @EnvironmentObject private var pokemonVM: PokemonViewModel
+protocol HasViewState {
+    var state: ViewState { get }
+}
+
+struct ViewStateView<VM: ObservableObject & HasViewState, Content: View>: View {
     
-    let content: Content
+    @EnvironmentObject private var viewModel: VM
     
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
+    private let content: () -> Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
     }
     
     var body: some View {
         
-        content
+        content()
         
-        if case .loading = pokemonVM.state {
+        if case .loading = viewModel.state {
             LoadingView()
         }
-        if case .error(let message, let retry) = pokemonVM.state {
+        if case .error(let message, let retry) = viewModel.state {
             ErrorView(message: message, retryAction: retry)
         }
     }
@@ -56,9 +62,30 @@ struct ErrorView: View {
     }
 }
 
-#Preview {
-    ViewStateView{
-        EmptyView()
+private final class PreviewViewModel: ObservableObject, HasViewState {
+    @Published var state: ViewState = .idle
+
+    init(state: ViewState = .idle) {
+        self.state = state
     }
-    .environmentObject(PokemonViewModel())
 }
+
+#Preview("Loading") {
+    ViewStateView <PreviewViewModel, Color> {
+        Color.blue.opacity(0.2)
+    }
+    .environmentObject(PreviewViewModel(state: .loading))
+}
+
+ #Preview("Error") {
+     ViewStateView <PreviewViewModel, EmptyView> {
+         EmptyView()
+     }
+     .environmentObject(
+         PreviewViewModel(
+             state: .error(message: "Something went wrong.", retryAction: {})
+         )
+     )
+ }
+ 
+

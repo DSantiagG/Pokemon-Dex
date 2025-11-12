@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct NavigationContainerView<Content: View>: View {
+    
     @EnvironmentObject private var router: NavigationRouter
     
     private let content: () -> Content
