@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PokemonAPI
 
 extension String {
     var pokemonTypeColor: Color {

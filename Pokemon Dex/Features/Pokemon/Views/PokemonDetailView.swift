@@ -9,6 +9,7 @@ import SwiftUI
 import PokemonAPI
 
 struct PokemonDetailView: View {
+    
     @EnvironmentObject private var pokemonVM: PokemonViewModel
     let pokemonName: String
     

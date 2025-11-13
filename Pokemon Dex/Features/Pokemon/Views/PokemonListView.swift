@@ -33,6 +33,20 @@ struct PokemonListView: View {
                 }
             }
         }
+    }
+}
+
+struct PokemonListPreviewLoader: View {
+    @StateObject private var pokemonVM = PokemonViewModel()
+    
+    var body: some View {
+        
+        ScrollView{
+            PokemonListView()
+                .padding(.horizontal)
+        }
+        .environmentObject(pokemonVM)
+        .environmentObject(NavigationRouter())
         .task {
             if pokemonVM.pokemons.isEmpty {
                 await pokemonVM.loadInitialPage()
@@ -42,10 +56,5 @@ struct PokemonListView: View {
 }
 
 #Preview {
-    ScrollView{
-        PokemonListView()
-            .padding(.horizontal)
-    }
-    .environmentObject(PokemonViewModel())
-    .environmentObject(NavigationRouter())
+    PokemonListPreviewLoader()
 }

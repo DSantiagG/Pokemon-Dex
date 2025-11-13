@@ -25,55 +25,30 @@ struct MainTabView: View {
     var body: some View {
         
         TabView {
-            NavigationContainerView{
-                ViewStateView<PokemonViewModel, PokemonListView> {
-                    PokemonListView()
-                }
-            }
+            PokemonHomeView()
                 .environmentObject(appRouter.pokemonRouter)
-                .environmentObject(dataProvider.pokemonViewModel)
                 .tabItem {
                     Label("Pokémon", systemImage: "bolt.circle.fill")
                 }
             
-            //AbilityHomeView()
-            NavigationContainerView{
-                ViewStateView<PokemonViewModel, PokemonListView> {
-                    PokemonListView()
-                }
-            }
-                .environmentObject(appRouter.abilityRouter)
-                .environmentObject(dataProvider.pokemonViewModel)
+            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
                 .tabItem {
                     Label("Abilities", systemImage: "star.circle.fill")
                 }
             
-            //BerryHomeView()
-            NavigationContainerView{
-                ViewStateView<PokemonViewModel, PokemonListView> {
-                    PokemonListView()
-                }
-            }
-                .environmentObject(appRouter.pokemonRouter)
-                .environmentObject(dataProvider.pokemonViewModel)
+            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
                 .tabItem {
                     Label("Berries", systemImage: "leaf.circle.fill")
                 }
             
-            //LocationHomeView()
-            NavigationContainerView{
-                ViewStateView<PokemonViewModel, PokemonListView> {
-                    PokemonListView()
-                }
-            }
-                .environmentObject(appRouter.pokemonRouter)
-                .environmentObject(dataProvider.pokemonViewModel)
+            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
                 .tabItem {
                     Label("Places", systemImage: "map.circle.fill")
                 }
         }
+        .environmentObject(dataProvider.pokemonViewModel)
+        
     }
-    
 }
 
 #Preview ("main"){

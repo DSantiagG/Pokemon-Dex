@@ -26,7 +26,7 @@ class PokemonViewModel: ObservableObject, HasViewState {
             pokemons = try await service.fetchInitialPage()
             state = .loaded
         } catch {
-            handleError(message: "Loading first page failed", error: error) { [weak self] in
+            handleError(debugMessage: "Loading first page failed", message: "Oops! The Pokédex is having trouble loading your Pokémon. Please try again!", error: error) { [weak self] in
                 Task { @MainActor in
                     await self?.loadInitialPage()
                 }
@@ -35,15 +35,20 @@ class PokemonViewModel: ObservableObject, HasViewState {
     }
     
     func loadNextPageIfNeeded(currentPokemon: PKMPokemon) async {
+        
+        guard let last = pokemons.last,
+            last.name == currentPokemon.name else {return}
+        
+        state = .loading
+        print("Loading next page...")
+        
         do {
-            if let newPokemons = try await service.fetchNextPageIfNeeded(currentPokemon: currentPokemon, currentList: pokemons) {
-                state = .loading
-                print("Loading next page...")
+            if let newPokemons = try await service.fetchNextPage() {
                 self.pokemons.append(contentsOf: newPokemons)
                 state = .loaded
             }
         } catch {
-            handleError(message: "Pagination error", error: error) { [weak self] in
+            handleError(debugMessage: "Pagination error", message: "Looks like the next batch of Pokémon ran away. Try again!", error: error) { [weak self] in
                 Task { @MainActor in
                     await self?.loadNextPageIfNeeded(currentPokemon: currentPokemon)
                 }
@@ -52,6 +57,7 @@ class PokemonViewModel: ObservableObject, HasViewState {
     }
     
     func loadPokemonIfNeeded(name: String) async {
+        
         state = .loading
         
         do{
@@ -64,7 +70,7 @@ class PokemonViewModel: ObservableObject, HasViewState {
             }
             state = .loaded
         } catch {
-            handleError(message: "Loading pokemon with name : \(name) failed", error: error) { [weak self] in
+            handleError(debugMessage: "Loading pokemon with name : \(name) failed", message: "This Pokémon is hiding… tap retry to find it!", error: error) { [weak self] in
                 Task { @MainActor in
                     await self?.loadPokemonIfNeeded(name: name)
                 }
@@ -73,8 +79,8 @@ class PokemonViewModel: ObservableObject, HasViewState {
         }
     }
     
-    private func handleError(message: String, error: Error, retry: @escaping () -> Void) {
-        print("\(message): \(error.localizedDescription)")
-        state = .error(message: error.localizedDescription, retryAction: retry)
+    private func handleError(debugMessage: String, message: String, error: Error, retry: @escaping () -> Void) {
+        print("\(debugMessage): \(error.localizedDescription)")
+        state = .error(message: message, retryAction: retry)
     }
 }

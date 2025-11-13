@@ -1,5 +1,5 @@
 //
-//  AppNavigationDestinationView.swift
+//  NavigationContainerView.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 12/11/25.
@@ -11,7 +11,7 @@ struct NavigationContainerView<Content: View>: View {
     @EnvironmentObject private var router: NavigationRouter
     
     private let content: () -> Content
-
+    
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
@@ -20,9 +20,14 @@ struct NavigationContainerView<Content: View>: View {
         NavigationStack (path: $router.path){
             ScrollView {
                 Text("Pokémon Dex")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.red)
+                    .font(.system(size: 36, weight: .black, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .shadow(color: .red.opacity(0.4), radius: 4)
+                
                 content()
+                    .padding(.horizontal)
             }
             .navigationDestination(for: NavigationRouter.Route.self) { route in
                 switch route{
@@ -40,6 +45,6 @@ struct NavigationContainerView<Content: View>: View {
     NavigationContainerView{
         EmptyView()
     }
-        .environmentObject(NavigationRouter())
-        .environmentObject(PokemonViewModel())
+    .environmentObject(NavigationRouter())
+    .environmentObject(PokemonViewModel())
 }

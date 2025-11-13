@@ -17,10 +17,9 @@ actor PokemonService {
         return try await fetchPokemons(from: result.results ?? [])
     }
 
-    func fetchNextPageIfNeeded(currentPokemon: PKMPokemon, currentList: [PKMPokemon]) async throws -> [PKMPokemon]? {
+    func fetchNextPage() async throws -> [PKMPokemon]? {
+        
         guard let paged = pagedObject,
-              let last = currentList.last,
-              last.name == currentPokemon.name,
               paged.hasNext else { return nil }
 
         let next = try await api.pokemonService.fetchPokemonList(paginationState: .continuing(paged, .next))
@@ -29,7 +28,10 @@ actor PokemonService {
     }
 
     func fetchPokemon(name: String) async throws -> PKMPokemon {
-        if let cached = cache[name] { return cached }
+        //TODO: Ver si esto si esta haciendo algo
+        if let cached = cache[name] {
+            print("Entre a la cache")
+            return cached }
         let pokemon = try await api.pokemonService.fetchPokemon(name)
         cache[name] = pokemon
         return pokemon

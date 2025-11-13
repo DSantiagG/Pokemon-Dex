@@ -38,7 +38,7 @@ struct PokemonCardView: View {
                             .background(RoundedRectangle(cornerRadius: 13)
                                 .fill((type.type?.name ?? "unknown").pokemonTypeColor))
                             .lineLimit(1)
-                            .minimumScaleFactor(0.8)
+                            .minimumScaleFactor(0.7)
                     }
                 }
             }
@@ -53,7 +53,6 @@ struct PokemonCardView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(pokemonColor, lineWidth: 1)
         )
-        
     }
 }
 
