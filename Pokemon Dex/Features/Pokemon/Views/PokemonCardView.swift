@@ -9,6 +9,9 @@ import SwiftUI
 import PokemonAPI
 
 struct PokemonCardView: View {
+    
+    @Environment(\.colorScheme) private var colorScheme
+    
     var pokemon: PKMPokemon
     
     private var pokemonColor: Color {
@@ -46,8 +49,10 @@ struct PokemonCardView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(pokemonColor.opacity(0.1))
-                .shadow(color: pokemonColor, radius: 7)
+                .fill(pokemonColor.opacity(colorScheme == .light ? 0.1 : 0.1))
+                .if(colorScheme == .light) { view in
+                    view.shadow(color: pokemonColor, radius: 8)
+                }
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
@@ -62,11 +67,11 @@ struct PokemonCardPreviewLoader: View {
     var body: some View {
         VStack {
             if let pokemon = pokemonVM.currentPokemon {
-                PokemonCardView(pokemon: pokemon)
+                PokemonCardView(pokemon: pokemon.pokemon)
             }
         }
         .task {
-            await pokemonVM.loadPokemonIfNeeded(name: "bulbasaur")
+            await pokemonVM.loadPokemon(name: "bulbasaur")
         }
     }
 }
@@ -74,4 +79,5 @@ struct PokemonCardPreviewLoader: View {
 #Preview {
     PokemonCardPreviewLoader()
         .padding()
+        .preferredColorScheme(.dark)
 }

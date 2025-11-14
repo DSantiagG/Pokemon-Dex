@@ -24,7 +24,7 @@ struct PokemonListView: View {
                     PokemonCardView(pokemon: pokemon)
                         .padding(2)
                         .onAppear {
-                            Task { await pokemonVM.loadNextPageIfNeeded(currentPokemon: pokemon)
+                            Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon)
                             }
                         }
                         .onTapGesture {

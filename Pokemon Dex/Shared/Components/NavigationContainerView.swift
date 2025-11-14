@@ -18,25 +18,15 @@ struct NavigationContainerView<Content: View>: View {
     
     var body: some View {
         NavigationStack (path: $router.path){
-            ScrollView {
-                Text("Pokémon Dex")
-                    .font(.system(size: 36, weight: .black, design: .rounded))
-                    .foregroundStyle(
-                        LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    )
-                    .shadow(color: .red.opacity(0.4), radius: 4)
-                
-                content()
-                    .padding(.horizontal)
-            }
-            .navigationDestination(for: NavigationRouter.Route.self) { route in
-                switch route{
-                case .pokemonDetail(name: let name):
-                    PokemonDetailView(pokemonName: name)
-                case .abilityDetail(name: let name):
-                    AbilityDetailView(abilityName: name)
+            content()
+                .navigationDestination(for: NavigationRouter.Route.self) { route in
+                    switch route{
+                    case .pokemonDetail(name: let name):
+                        PokemonDetailView(pokemonName: name)
+                    case .abilityDetail(name: let name):
+                        AbilityDetailView(abilityName: name)
+                    }
                 }
-            }
         }
     }
 }

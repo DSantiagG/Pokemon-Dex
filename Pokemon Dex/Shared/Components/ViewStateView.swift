@@ -35,23 +35,16 @@ struct LoadingView: View {
     @State private var animate = false
     
     var body: some View {
-        VStack(spacing: 4) {
-            Image.pokeball
-                .resizable()
-                .scaledToFit()
-                .frame(height: 50)
-                .rotationEffect(.degrees(animate ? 360 : 0))
-                .animation(.linear(duration: 0.7).repeatForever(autoreverses: false), value: animate)
-                .onAppear {
-                    animate = true
-                }
-            
-            Text("Loading...")
-                .font(.headline)
-                .foregroundStyle(.red)
-                .bold()
-        }
-        .padding()
+        Image.pokeball
+            .resizable()
+            .scaledToFit()
+            .frame(height: 50)
+            .padding()
+            .rotationEffect(.degrees(animate ? 360 : 0))
+            .animation(.linear(duration: 0.7).repeatForever(autoreverses: false), value: animate)
+            .onAppear {
+                animate = true
+            }
     }
 }
 

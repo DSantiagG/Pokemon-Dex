@@ -17,8 +17,21 @@ struct PokemonHomeView: View {
                 InfoStateView(message: "No Pokémon found.\nTry catching some first!")
             }else{
                 NavigationContainerView{
-                    ViewStateView(viewModel: pokemonVM) {
-                        PokemonListView()
+                    ScrollView {
+                        VStack{
+                            Text("Pokémon Dex")
+                                .font(.system(size: 36, weight: .black, design: .rounded))
+                                .foregroundStyle(
+                                    LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                )
+                                .shadow(color: .red.opacity(0.4), radius: 1)
+                            
+                            ViewStateView(viewModel: pokemonVM) {
+                                PokemonListView()
+                                
+                            }
+                        }
+                        .padding(.horizontal)
                     }
                 }
             }
