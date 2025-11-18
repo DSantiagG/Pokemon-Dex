@@ -10,7 +10,6 @@ import SwiftUI
 struct MainTabView: View {
     
     @StateObject var appRouter = AppRouter()
-    @StateObject private var dataProvider = DataProvider()
     
     init() {
         let appearance = UITabBarAppearance()
@@ -31,27 +30,24 @@ struct MainTabView: View {
                     Label("Pokémon", systemImage: "bolt.circle.fill")
                 }
             
-            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
+             InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
                 .tabItem {
                     Label("Abilities", systemImage: "star.circle.fill")
                 }
             
-            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
+            InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
                 .tabItem {
                     Label("Berries", systemImage: "leaf.circle.fill")
                 }
             
-            InfoStateView(message: "This feature is still under construction.\nPlease check back soon!")
+            InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
                 .tabItem {
                     Label("Places", systemImage: "map.circle.fill")
                 }
         }
-        .environmentObject(dataProvider.pokemonViewModel)
-        
     }
 }
 
 #Preview ("main"){
     MainTabView()
 }
-

@@ -10,6 +10,7 @@ import PokemonAPI
 
 struct PokemonListView: View {
     @EnvironmentObject private var router: NavigationRouter
+    
     @EnvironmentObject private var pokemonVM: PokemonViewModel
     
     private let columns = [
@@ -37,7 +38,7 @@ struct PokemonListView: View {
 }
 
 struct PokemonListPreviewLoader: View {
-    @StateObject private var pokemonVM = PokemonViewModel()
+    @StateObject private var pokemonVM = PokemonViewModel(pokemonService: PokemonService())
     
     var body: some View {
         

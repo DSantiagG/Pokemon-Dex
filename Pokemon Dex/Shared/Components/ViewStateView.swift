@@ -7,7 +7,7 @@
 import SwiftUI
 import Combine
 
-struct ViewStateView<VM: ObservableObject & HasViewState, Content: View>: View {
+struct ViewStateView<VM: ObservableObject & ErrorHandleable, Content: View>: View {
     
     @ObservedObject private var viewModel: VM
     private let content: () -> Content
@@ -62,17 +62,22 @@ struct ErrorView: View {
             Text(message)
                 .multilineTextAlignment(.center)
                 .bold()
-                .foregroundStyle(.blue)
             
             Button("Retry", action: retryAction)
-                .buttonStyle(.borderedProminent)
-                .bold()
+                .foregroundStyle(.white)
+                .fontWeight(.semibold)
+                .padding(.vertical, 3)
+                .padding(.horizontal, 17)
+                .background(.red.opacity(0.8))
+                .clipShape(Capsule())
         }
         .padding()
     }
 }
 
-private final class PreviewViewModel: ObservableObject, HasViewState {
+private final class PreviewViewModel: ObservableObject, ErrorHandleable {
+    func setNotFoundAndClear() {}
+    
     @Published var state: ViewState = .idle
     
     init(state: ViewState = .idle) {

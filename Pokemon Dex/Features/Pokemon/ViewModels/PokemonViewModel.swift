@@ -10,13 +10,14 @@ import PokemonAPI
 import Combine
 
 struct CurrentPokemon {
-    var pokemon: PKMPokemon
+    var details: PKMPokemon
     var species: PKMPokemonSpecies
     var evolution: [EvolutionStage]
+    var types: [PKMType]
 }
 
 @MainActor
-class PokemonViewModel: ObservableObject, HasViewState {
+class PokemonViewModel: ObservableObject, ErrorHandleable {
     
     @Published var pokemons: [PKMPokemon] = []
     @Published var currentPokemon: CurrentPokemon?
@@ -24,17 +25,21 @@ class PokemonViewModel: ObservableObject, HasViewState {
     @Published var state: ViewState = .idle
     @Published var pokemonNotFound: Bool = false
     
-    private let service = PokemonService()
+    private let pokemonService: PokemonService
+    
+    init(pokemonService: PokemonService) {
+        self.pokemonService = pokemonService
+    }
     
     func loadInitialPage() async {
         print("Loading first page...")
         state = .loading
         
         do {
-            pokemons = try await service.fetchInitialPage()
+            pokemons = try await pokemonService.fetchInitialPage()
             state = .loaded
         } catch {
-            handleError(debugMessage: "Loading first page failed", message: "Oops! The Pokédex is having trouble loading your Pokémon. Please try again!", error: error) { [weak self] in
+            handle(error: error, debugMessage: "Loading first page failed", userMessage: "Oops! The Pokédex is having trouble loading your Pokémon. Please try again!") { [weak self] in
                 Task { @MainActor in
                     await self?.loadInitialPage()
                 }
@@ -51,12 +56,12 @@ class PokemonViewModel: ObservableObject, HasViewState {
         print("Loading next page...")
         
         do {
-            if let newPokemons = try await service.fetchNextPage() {
+            if let newPokemons = try await pokemonService.fetchNextPage() {
                 self.pokemons.append(contentsOf: newPokemons)
                 state = .loaded
             }
         } catch {
-            handleError(debugMessage: "Pagination error", message: "Looks like the next batch of Pokémon ran away. Try again!", error: error) { [weak self] in
+            handle(error: error, debugMessage: "Pagination error", userMessage: "Looks like the next batch of Pokémon ran away. Try again!") { [weak self] in
                 Task { @MainActor in
                     await self?.loadNextPageIfNeeded(pokemon: pokemon)
                 }
@@ -74,12 +79,7 @@ class PokemonViewModel: ObservableObject, HasViewState {
             currentPokemon = try await fetchAllPokemonData(name: name)
             state = .loaded
         } catch {
-            if let httpError = error as? HTTPError {
-                let handled = handleHTTPError(httpError)
-                if handled { return }
-            }
-            
-            handleError(debugMessage: "Loading pokemon with name : \(name) failed", message: "This Pokémon is hiding… tap retry to find it!", error: error) { [weak self] in
+            handle(error: error, debugMessage: "Loading pokemon with name : \(name) failed", userMessage: "This Pokémon is hiding… tap retry to find it!") { [weak self] in
                 Task { @MainActor in
                     await self?.loadPokemon(name: name)
                 }
@@ -89,41 +89,35 @@ class PokemonViewModel: ObservableObject, HasViewState {
     
     private func fetchAllPokemonData(name: String) async throws -> CurrentPokemon? {
         
-        let pokemon = try await service.fetchPokemon(name: name)
+        let pokemon = try await pokemonService.fetchPokemon(name: name)
         
         guard let speciesResource = pokemon.species else { return nil }
         
-        let species = try await service.fetchSpecies(resource: speciesResource)
+        let species = try await pokemonService.fetchSpecies(resource: speciesResource)
         
         guard let evolutionResource = species.evolutionChain else { return nil }
         
-        guard let evolution = try await service.fetchEvolutionChain(resource: evolutionResource) else { return nil }
+        guard let evolution = try await pokemonService.fetchEvolutionChain(resource: evolutionResource) else { return nil }
+        
+        var types: [PKMType] = []
+        if let pokemonTypes = pokemon.types{
+            for pokemonType in pokemonTypes {
+                guard let type = pokemonType.type else { continue }
+                let typePokemon = try await pokemonService.fetchType(resource: type)
+                types.append(typePokemon)
+            }
+        }
         
         return CurrentPokemon(
-            pokemon: pokemon,
+            details: pokemon,
             species: species,
-            evolution: evolution
+            evolution: evolution,
+            types: types
         )
     }
     
-    private func handleHTTPError(_ httpError: HTTPError) -> Bool {
-        switch httpError {
-        case .serverResponse(let code, _):
-            if code == .notFound {
-                self.pokemonNotFound = true
-                self.state = .loaded
-                self.currentPokemon = nil
-                return true
-            }
-        default:
-            break
-        }
-        
-        return false
-    }
-    
-    private func handleError(debugMessage: String, message: String, error: Error, retry: @escaping () -> Void) {
-        print("\(debugMessage): \(error.localizedDescription)")
-        state = .error(message: message, retryAction: retry)
+    func setNotFoundAndClear() {
+        pokemonNotFound = true
+        currentPokemon = nil
     }
 }

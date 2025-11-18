@@ -49,7 +49,7 @@ struct PokemonCardView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(pokemonColor.opacity(colorScheme == .light ? 0.1 : 0.1))
+                .fill(pokemonColor.opacity(0.1))
                 .if(colorScheme == .light) { view in
                     view.shadow(color: pokemonColor, radius: 8)
                 }
@@ -62,12 +62,12 @@ struct PokemonCardView: View {
 }
 
 struct PokemonCardPreviewLoader: View {
-    @StateObject private var pokemonVM = PokemonViewModel()
+    @StateObject private var pokemonVM = PokemonViewModel(pokemonService: PokemonService())
     
     var body: some View {
         VStack {
             if let pokemon = pokemonVM.currentPokemon {
-                PokemonCardView(pokemon: pokemon.pokemon)
+                PokemonCardView(pokemon: pokemon.details)
             }
         }
         .task {

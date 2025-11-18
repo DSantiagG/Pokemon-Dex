@@ -11,8 +11,14 @@ import Combine
 
 @MainActor
 class DataProvider: ObservableObject {
-    let pokemonViewModel = PokemonViewModel()
-    //@Published var abilityViewModel = AbilityViewModel()
-    //@Published var berryViewModel = BerryViewModel()
-    //@Published var locationViewModel = LocationViewModel()
+
+    static let shared = DataProvider()
+
+    let pokemonService: PokemonService
+    let abilityService: AbilityService
+
+    private init() {
+        self.pokemonService = PokemonService()
+        self.abilityService = AbilityService()
+    }
 }

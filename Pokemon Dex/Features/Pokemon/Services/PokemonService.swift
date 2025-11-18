@@ -11,17 +11,18 @@ import Foundation
 actor PokemonService {
     private let api = PokemonAPI()
     private var pagedObject: PKMPagedObject<PKMPokemon>?
-    
+
     private var pokemonCache = [String: PKMPokemon]()
     private var speciesCache = [String: PKMPokemonSpecies]()
     private var chainCache = [Int: [EvolutionStage]]()
-    
+    private var typeCache = [String: PKMType]()
+
     func fetchInitialPage() async throws -> [PKMPokemon] {
         let result = try await api.pokemonService.fetchPokemonList(paginationState: .initial(pageLimit: 20))
         pagedObject = result
         return try await fetchPokemons(from: result.results ?? [])
     }
-    
+
     func fetchNextPage() async throws -> [PKMPokemon]? {
         guard let paged = pagedObject,
               paged.hasNext else { return nil }
@@ -79,6 +80,17 @@ actor PokemonService {
         }
         
         return stages
+    }
+    
+    func fetchType(resource: PKMAPIResource<PKMType>) async throws -> PKMType {
+        let key = resource.name ?? resource.url ?? "unknown"
+        if let cached = typeCache[key] {
+            print("Retornando de cache de type: \(key)")
+            return cached
+        }
+        let type = try await api.resourceService.fetch(resource)
+        typeCache[key] = type
+        return type
     }
     
     private func fetchPokemons(from results: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {

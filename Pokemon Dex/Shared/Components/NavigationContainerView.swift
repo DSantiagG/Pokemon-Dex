@@ -36,5 +36,4 @@ struct NavigationContainerView<Content: View>: View {
         EmptyView()
     }
     .environmentObject(NavigationRouter())
-    .environmentObject(PokemonViewModel())
 }

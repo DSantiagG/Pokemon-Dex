@@ -9,9 +9,8 @@ import SwiftUI
 
 struct InfoStateView: View {
     
-    @Environment(\.colorScheme) private var colorScheme
-    
-    let message: String
+    let primaryText: String
+    let secondaryText: String
     
     @State private var animate = false
     @State private var expand = false
@@ -20,17 +19,13 @@ struct InfoStateView: View {
     var body: some View {
         ZStack {
             
-            Circle()
-                .fill(Color(red: 1, green: 0.95, blue: 0.9))
-                .frame(width: 350, height: 350)
-                .blur(radius: 50)
-                .opacity(colorScheme == .dark ? 0.3 : 1)
-            
-            VStack(spacing: 25) {
+            VStack() {
                 Image.pokemonPsyduck
                     .resizable()
                     .scaledToFit()
                     .frame(width: expand ? 320 : 220, height: expand ? 320 : 220)
+                    .shadow(color: .yellow, radius: 2)
+                    .padding(.bottom, 20)
                     .rotationEffect(.degrees(animate ? 7 : -7))
                     .scaleEffect(animate ? 1.05 : 0.95)
                     .animation(.easeInOut(duration: 1.5)
@@ -44,11 +39,14 @@ struct InfoStateView: View {
                     .onAppear { animate = true }
                 
                 if showText {
-                    Text(message)
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
-                        )
+                    Text(primaryText)
+                        .font(.system(size: 25, weight: .bold, design: .rounded))
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 3), value: showText)
+                        
+                    
+                    Text(secondaryText)
                         .multilineTextAlignment(.center)
                         .transition(.opacity)
                         .animation(.easeInOut(duration: 3), value: showText)
@@ -64,5 +62,6 @@ struct InfoStateView: View {
 }
 
 #Preview {
-    InfoStateView(message: "No Pokémon found!\nTry searching again")
+    InfoStateView(primaryText: "No Pokémon found!", secondaryText: "Try searching again")
+        .preferredColorScheme(.light)
 }
