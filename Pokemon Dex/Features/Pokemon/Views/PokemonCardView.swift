@@ -71,7 +71,7 @@ struct PokemonCardPreviewLoader: View {
             }
         }
         .task {
-            await pokemonVM.loadPokemon(name: "bulbasaur")
+            await pokemonVM.loadPokemon(name: "umbreon")
         }
     }
 }
@@ -79,5 +79,5 @@ struct PokemonCardPreviewLoader: View {
 #Preview {
     PokemonCardPreviewLoader()
         .padding()
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
 }

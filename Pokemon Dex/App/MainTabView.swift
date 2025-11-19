@@ -11,6 +11,8 @@ struct MainTabView: View {
     
     @StateObject var appRouter = AppRouter()
     
+    @State var text = ""
+    
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
@@ -38,11 +40,6 @@ struct MainTabView: View {
             InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
                 .tabItem {
                     Label("Berries", systemImage: "leaf.circle.fill")
-                }
-            
-            InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-                .tabItem {
-                    Label("Places", systemImage: "map.circle.fill")
                 }
         }
     }

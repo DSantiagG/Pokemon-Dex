@@ -22,13 +22,26 @@ class PokemonViewModel: ObservableObject, ErrorHandleable {
     @Published var pokemons: [PKMPokemon] = []
     @Published var currentPokemon: CurrentPokemon?
     
+    @Published var searchText: String = ""
+    @Published var filteredPokemons: [PKMPokemon] = []
+    
     @Published var state: ViewState = .idle
     @Published var pokemonNotFound: Bool = false
     
     private let pokemonService: PokemonService
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(pokemonService: PokemonService) {
         self.pokemonService = pokemonService
+        
+        $searchText
+                .removeDuplicates()
+                .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
+                .sink { [weak self] _ in
+                    self?.filterPokemons()
+                }
+                .store(in: &cancellables)
     }
     
     func loadInitialPage() async {
@@ -84,6 +97,18 @@ class PokemonViewModel: ObservableObject, ErrorHandleable {
                     await self?.loadPokemon(name: name)
                 }
             }
+        }
+    }
+    
+    func filterPokemons() {
+        if searchText.isEmpty {
+            filteredPokemons = pokemons
+            return
+        }
+
+        filteredPokemons = pokemons.filter {
+            $0.name?.starts(with: searchText.lowercased()) == true
+            //$0.name?.hasPrefix(searchText.lowercased()) == true
         }
     }
     

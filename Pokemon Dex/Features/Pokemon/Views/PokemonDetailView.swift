@@ -332,7 +332,7 @@ struct EvolutionChainSection: View {
 }
 
 #Preview {
-    PokemonDetailView(pokemonName: "bulbasaur")
+    PokemonDetailView(pokemonName: "umbreon")
         .environmentObject(NavigationRouter())
         .preferredColorScheme(.light)
 }

@@ -25,7 +25,7 @@ extension String {
         case "rock": return Color(red: 182/255, green: 161/255, blue: 54/255)
         case "ghost": return .purple.opacity(0.7)
         case "dragon": return Color(red: 83/255, green: 164/255, blue: 207/255)
-        case "dark": return .black
+        case "dark": return Color(red: 87/255, green: 88/255, blue: 96/255)
         case "steel": return .gray.opacity(0.6)
         case "fairy": return .pink
         case "normal": return Color(red: 168/255, green: 167/255, blue: 122/255)

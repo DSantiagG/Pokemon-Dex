@@ -39,5 +39,5 @@ struct AbilityDetailView: View {
 }
 
 #Preview {
-    AbilityDetailView(abilityName: "stench")
+    AbilityDetailView(abilityName: "drizzle")
 }

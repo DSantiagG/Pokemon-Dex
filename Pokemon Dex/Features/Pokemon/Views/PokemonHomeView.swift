@@ -42,6 +42,7 @@ struct PokemonHomeView: View {
                 await pokemonVM.loadInitialPage()
             }
         }
+        
     }
 }
 
