@@ -40,6 +40,7 @@ struct CardView<Content: View>: View {
         )
         .overlay (alignment: .top){
             Text(text)
+                .bold()
                 .padding(.vertical, 5)
                 .padding(.horizontal, 15)
                 .background(.background)

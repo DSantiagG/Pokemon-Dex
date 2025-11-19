@@ -29,7 +29,7 @@ struct PokemonDetailView: View {
                         PokemonHeaderView(color: pokemonColor, imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault)
                             .padding(.bottom, 87)
                         
-                        VStack(spacing: 16) {
+                        VStack(spacing: 25) {
                             
                             PokemonBasicInfoSection(
                                 order: pokemon.details.order ?? 0,
@@ -38,14 +38,13 @@ struct PokemonDetailView: View {
                                 flavorText: pokemon.species.englishFlavorText() ?? "No description available."
                             )
                             
-                            StatsSection(color: pokemonColor, stats: pokemon.details.stats ?? [])
+                            StatsSection(stats: pokemon.details.stats ?? [], color: pokemonColor)
                             
-                            EvolutionChainSection(color: pokemonColor, evolution: Array(pokemon.evolution))
+                            AbilitiesSection(abilities: pokemon.details.abilities ?? [], color: pokemonColor)
+                            
+                            EvolutionChainSection(evolution: pokemon.evolution, color: pokemonColor)
                                 .environmentObject(router)
                                 .padding(.bottom, 60)
-                            
-                            
-                            
                         }
                         .padding(.horizontal)
                     }
@@ -107,18 +106,18 @@ struct PokemonBasicInfoSection: View {
     let name: String
     let types: [PKMPokemonType]?
     let flavorText: String
-
+    
     var body: some View {
         VStack(spacing: 16) {
             
             Text(String(format: "#%03d", order))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, -16)
-
+            
             Text(name.capitalized)
                 .font(.largeTitle)
                 .fontWeight(.semibold)
-
+            
             HStack {
                 if let types {
                     ForEach(Array(types).enumerated(), id: \.offset) { _, type in
@@ -133,7 +132,7 @@ struct PokemonBasicInfoSection: View {
                     }
                 }
             }
-
+            
             Text(flavorText)
         }
     }
@@ -141,46 +140,173 @@ struct PokemonBasicInfoSection: View {
 
 struct StatsSection: View{
     
+    var stats: [PKMPokemonStat]
     let color: Color
-    let stats: [PKMPokemonStat]
     
     var body: some View {
         CardView(text: "Stats", color: color) {
-            
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(Array(stats.enumerated()), id: \.offset) { _, s in
+                    let name = (s.stat?.name ?? "stat")
+                        .replacingOccurrences(of: "special-attack", with: "Sp. Attack")
+                        .replacingOccurrences(of: "special-defense", with: "Sp. Defense")
+                        .capitalized
+                    
+                    let value = Double(s.baseStat ?? 0)
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 8) {
+                            Text(name)
+                                .font(.subheadline.bold())
+                                .foregroundColor(color)
+                                .frame(width: 87, alignment: .leading)
+                            
+                            Text("\(Int(value))")
+                                .foregroundStyle(.secondary)
+                            
+                            ProgressView(value: value, total: 255)
+                                .tint(color)
+                        }
+                    }
+                }
+                
+                let total = stats.compactMap { $0.baseStat }.reduce(0, +)
+                
+                HStack(spacing: 8) {
+                    Text("Total")
+                        .font(.subheadline.bold())
+                        .foregroundColor(color)
+                        .frame(width: 87, alignment: .leading)
+                    
+                    Text("\(total)")
+                        .foregroundStyle(.secondary)
+                    
+                }
+            }
+        }
+    }
+}
+
+struct AbilitiesSection: View {
+    
+    @State private var selectedAbility: IdentifiedString?
+    @State private var isHidden = false
+    
+    let abilities: [PKMPokemonAbility]
+    let color: Color
+    
+    var body: some View {
+        CardView(text: "Abilities", color: color) {
+            VStack(spacing: 16) {
+                ZStack(alignment: isHidden ? .trailing : .leading) {
+                    
+                    Color.gray.opacity(0.12)
+                        .frame(height: 30)
+                        .clipShape(Capsule())
+                    
+                    color
+                        .frame(width: 175, height: 30)
+                        .clipShape(Capsule())
+                    
+                    
+                    HStack(spacing: 0) {
+                        
+                        Text("Normal")
+                            .foregroundStyle(!isHidden ? .white : .gray)
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if isHidden {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        isHidden = false
+                                    }
+                                }
+                            }
+                        
+                        Text("Hidden")
+                            .foregroundStyle(isHidden ? .white : .gray)
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if !isHidden {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        isHidden = true
+                                    }
+                                }
+                            }
+                    }
+                    .bold()
+                }
+                
+                HStack {
+                    ForEach(
+                        abilities.filter { ($0.isHidden ?? false) == isHidden },
+                        id: \.slot
+                    ) { ability in
+                        let abilityName = (ability.ability?.name ?? "Unknown").capitalized
+                        
+                        Text(abilityName)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(color.opacity(0.9))
+                            .clipShape(Capsule())
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                            .onTapGesture {
+                                selectedAbility = IdentifiedString(abilityName)
+                            }
+                    }
+                }
+            }
+            .sheet(item: $selectedAbility) { abilityName in
+                AbilityDetailView(abilityName: abilityName.value)
+                        .padding(.top, 20)
+            }
         }
     }
 }
 
 struct EvolutionChainSection: View {
+    
     @EnvironmentObject private var router: NavigationRouter
-
-    let color: Color
+    
     private let rows: [[EvolutionStage]]
-
-    init(color: Color, evolution: [EvolutionStage]) {
+    private let hasEvolution: Bool
+    let color: Color
+    
+    init(evolution: [EvolutionStage], color: Color) {
         self.color = color
         self.rows = EvolutionChainSection.overlappedChunks(from: evolution, chunkSize: 3)
+        hasEvolution = self.rows.flatMap { $0 }.count > 1
     }
-
+    
     var body: some View {
         CardView(text: "Evolution Chain", color: color) {
             VStack {
-                ForEach(Array(rows.enumerated()), id: \.offset) { (_, row) in
-                    HStack {
-                        ForEach(Array(row.enumerated()), id: \.offset) { (col, evo) in
-                            VStack {
-                                URLImage(urlString: evo.sprite, contentMode: .fit)
-                                Text(evo.name.capitalized)
-                                    .fontWeight(.semibold)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.7)
-                            }
-                            .onTapGesture {
-                                router.push(.pokemonDetail(name: evo.name))
-                            }
-
-                            if col < row.count - 1 {
-                                Image(systemName: "arrow.forward")
+                if !hasEvolution {
+                    Text("No evolution chain for this Pokémon. It’s already as strong as it gets!")
+                        .foregroundStyle(.secondary)
+                        .padding(.vertical)
+                } else {
+                    ForEach(Array(rows.enumerated()), id: \.offset) { (_, row) in
+                        HStack (){
+                            ForEach(Array(row.enumerated()), id: \.offset) { (col, evo) in
+                                VStack (){
+                                    URLImage(urlString: evo.sprite, contentMode: .fit)
+                                    Text(evo.name.capitalized)
+                                        .fontWeight(.semibold)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.7)
+                                }
+                                .onTapGesture {
+                                    router.push(.pokemonDetail(name: evo.name))
+                                }
+                                
+                                if col < row.count - 1 {
+                                    Image(systemName: "arrow.forward")
+                                }
                             }
                         }
                     }
@@ -204,8 +330,6 @@ struct EvolutionChainSection: View {
         return result
     }
 }
-
-
 
 #Preview {
     PokemonDetailView(pokemonName: "bulbasaur")

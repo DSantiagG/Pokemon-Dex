@@ -21,10 +21,14 @@ struct AbilityDetailView: View {
                     InfoStateView(primaryText: "Oops!", secondaryText: "Looks like this ability isn’t in our Dex yet!")
                 } else if let ability = abilityVM.currentAbility {
                     ScrollView{
+                        
                         Text((ability.details.name ?? "Unknown Name").capitalized)
                             .font(.system(size: 30, weight: .bold, design: .rounded))
-                            .foregroundStyle(LinearGradient(colors: [.yellow, .blue], startPoint: .leading, endPoint: .trailing))
+                        
+                        Text((ability.details.flavorTextEntries?.first(where: { $0.language?.name == "en" })?.flavorText?.cleanFlavorText() ?? "No description available."))
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .padding(.horizontal)
                 }
             }
         }
