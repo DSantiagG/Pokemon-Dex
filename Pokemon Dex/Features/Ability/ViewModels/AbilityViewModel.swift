@@ -65,12 +65,9 @@ class AbilityViewModel: ObservableObject, ErrorHandleable {
         try await withThrowingTaskGroup(of: (isHidden: Bool, pokemon: PKMPokemon)?.self) { group in
             for abilityPokemon in abilityPokemons {
                 group.addTask { [pokemonService] in
-                    guard let pokemonResource = abilityPokemon.pokemon,
-                          let pokemonName = pokemonResource.name else {
-                        return nil
-                    }
+                    guard let pokemonResource = abilityPokemon.pokemon else { return nil }
                     
-                    let pokemon = try await pokemonService.fetchPokemon(name: pokemonName)
+                    let pokemon = try await pokemonService.fetchPokemon(resource: pokemonResource)
                     return (abilityPokemon.isHidden ?? false, pokemon)
                 }
             }

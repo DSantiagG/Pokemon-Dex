@@ -19,12 +19,12 @@ struct PokemonHomeView: View {
                 NavigationContainerView{
                     ScrollView {
                         VStack{
-                            Text("Pokémon Dex")
+                            Text("Pokémon")
                                 .font(.system(size: 36, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
                                 )
-                                .shadow(color: .red.opacity(0.4), radius: 1)
+                                .shadow(color: .red.opacity(0.4), radius: 0.5)
                             
                             ViewStateView(viewModel: pokemonVM) {
                                 PokemonListView()

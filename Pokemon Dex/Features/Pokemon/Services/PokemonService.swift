@@ -29,17 +29,31 @@ actor PokemonService {
         
         let next = try await api.pokemonService.fetchPokemonList(paginationState: .continuing(paged, .next))
         pagedObject = next
-        return try await fetchPokemons(from: next.results ?? [])
+        let pokemons = try await fetchPokemons(from: next.results ?? [])
+        return pokemons
+    }
+    
+    private func fetchPokemon(usingKey key: String, fetcher: () async throws -> PKMPokemon) async throws -> PKMPokemon {
+        if let cached = pokemonCache[key] {
+            print("Retornando de cache de pokemon: \(key)")
+            return cached
+        }
+        let pokemon = try await fetcher()
+        pokemonCache[key] = pokemon
+        return pokemon
     }
     
     func fetchPokemon(name: String) async throws -> PKMPokemon {
-        if let cached = pokemonCache[name] {
-            print("Retornando de cache de pokemon: \(name)")
-            return cached
+        try await fetchPokemon(usingKey: name) {
+            try await self.api.pokemonService.fetchPokemon(name)
         }
-        let pokemon = try await api.pokemonService.fetchPokemon(name)
-        pokemonCache[name] = pokemon
-        return pokemon
+    }
+    
+    func fetchPokemon(resource: PKMAPIResource<PKMPokemon>) async throws -> PKMPokemon {
+        let key = resource.name ?? resource.url ?? "unknown"
+        return try await fetchPokemon(usingKey: key) {
+            try await self.api.resourceService.fetch(resource)
+        }
     }
     
     func fetchSpecies(resource: PKMAPIResource<PKMPokemonSpecies>) async throws -> PKMPokemonSpecies {
@@ -97,8 +111,8 @@ actor PokemonService {
         try await withThrowingTaskGroup(of: (Int, PKMPokemon).self) { group in
             for (index, result) in results.enumerated() {
                 group.addTask {
-                    let name = result.name ?? ""
-                    let pokemon = try await self.fetchPokemon(name: name)
+                    //let pokemon = try await self.fetchPokemon(resource: result)
+                    let pokemon = try await self.api.pokemonService.fetchPokemon(result.name ?? "")
                     return (index, pokemon)
                 }
             }

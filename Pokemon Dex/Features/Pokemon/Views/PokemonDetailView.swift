@@ -244,7 +244,6 @@ struct AbilitiesSection: View {
                         id: \.slot
                     ) { ability in
                         let abilityName = (ability.ability?.name ?? "Unknown").capitalized
-                        
                         Text(abilityName)
                             .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(.white)
@@ -332,7 +331,7 @@ struct EvolutionChainSection: View {
 }
 
 #Preview {
-    PokemonDetailView(pokemonName: "umbreon")
+    PokemonDetailView(pokemonName: "bulbasaur")
         .environmentObject(NavigationRouter())
         .preferredColorScheme(.light)
 }
