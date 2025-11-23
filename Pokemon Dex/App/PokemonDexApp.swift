@@ -8,13 +8,15 @@
 import SwiftUI
 
 @main
-struct Pokemon_DexApp: App {
-    
+struct PokemonDexApp: App {
     init() {
+        configureURLCache()
+    }
+    
+    private func configureURLCache() {
         let memoryCapacity = 100 * 1024 * 1024 // 100 MB
         let diskCapacity = 500 * 1024 * 1024   // 500 MB
-        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity)
-        URLCache.shared = cache
+        URLCache.shared = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity)
     }
     
     var body: some Scene {

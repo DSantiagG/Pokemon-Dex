@@ -23,7 +23,7 @@ struct InfoStateView: View {
                 Image.pokemonPsyduck
                     .resizable()
                     .scaledToFit()
-                    .frame(width: expand ? 320 : 220, height: expand ? 320 : 220)
+                    .frame(width: expand ? 250 : 220, height: expand ? 250 : 220)
                     .shadow(color: .yellow, radius: 2)
                     .padding(.bottom, 20)
                     .rotationEffect(.degrees(animate ? 7 : -7))
@@ -43,18 +43,15 @@ struct InfoStateView: View {
                         .font(.system(size: 25, weight: .bold, design: .rounded))
                         .multilineTextAlignment(.center)
                         .transition(.opacity)
-                        .animation(.easeInOut(duration: 3), value: showText)
                         
-                    
                     Text(secondaryText)
                         .multilineTextAlignment(.center)
                         .transition(.opacity)
-                        .animation(.easeInOut(duration: 3), value: showText)
                 }
             }
         }
         .onAppear {
-            withAnimation(.easeIn.delay(1)) {
+            withAnimation(.easeIn.delay(0.3)) {
                 showText = true
             }
         }

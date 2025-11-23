@@ -19,7 +19,7 @@ struct NavigationContainerView<Content: View>: View {
     var body: some View {
         NavigationStack (path: $router.path){
             content()
-                .navigationDestination(for: NavigationRouter.Route.self) { route in
+                .navigationDestination(for: NavigationRouter.AppRoute.self) { route in
                     switch route{
                     case .pokemonDetail(name: let name):
                         PokemonDetailView(pokemonName: name)

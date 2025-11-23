@@ -10,6 +10,11 @@ import Combine
 @MainActor
 final class AppRouter: ObservableObject {
     @Published var pokemonRouter = NavigationRouter()
+    @Published var pokemonSearchRouter = NavigationRouter()
+    
     @Published var abilityRouter = NavigationRouter()
+    @Published var abilitySearchRouter = NavigationRouter()
+    
     @Published var berryRouter = NavigationRouter()
+    @Published var berrySearchRouter = NavigationRouter()
 }

@@ -26,7 +26,7 @@ extension String {
         if let name = pokemonName {
             let upper = name.uppercased()
             let capitalized = name.capitalized
-            // reemplazar solo si aparece en mayúsculas
+            
             text = text.replacingOccurrences(of: upper, with: capitalized)
         }
         

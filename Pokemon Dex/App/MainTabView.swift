@@ -9,9 +9,14 @@ import SwiftUI
 
 struct MainTabView: View {
     
+    private enum TabKey: Hashable {
+        case pokemon, abilities, berries, search
+    }
+    
     @StateObject var appRouter = AppRouter()
     
-    @State var text = ""
+    @State private var selection: TabKey = .pokemon
+    @State private var lastPrimarySelection: TabKey = .pokemon
     
     init() {
         let appearance = UITabBarAppearance()
@@ -25,26 +30,62 @@ struct MainTabView: View {
     
     var body: some View {
         
-        TabView {
-            PokemonHomeView()
-                .environmentObject(appRouter.pokemonRouter)
-                .tabItem {
-                    Label("Pokémon", systemImage: "bolt.circle.fill")
-                }
+        TabView (selection: $selection){
             
-             InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-                .tabItem {
-                    Label("Abilities", systemImage: "star.circle.fill")
-                }
+            Tab("Pokémon", systemImage: "bolt.circle.fill", value: TabKey.pokemon) {
+                PokemonHomeView()
+                    .environmentObject(appRouter.pokemonRouter)
+            }
             
-            InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-                .tabItem {
-                    Label("Berries", systemImage: "leaf.circle.fill")
+            Tab("Abilities", systemImage: "star.circle.fill", value: TabKey.abilities) {
+                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+            }
+            
+            Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
+                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+            }
+            
+            Tab(value: TabKey.search, role: .search) {
+                searchContainerView
+            }
+        }
+        .onChange(of: selection) { _ , newValue in
+            switch newValue {
+            case .pokemon, .abilities, .berries:
+                lastPrimarySelection = newValue
+            case .search:
+                break
+            }
+        }
+        .tabBarMinimizeBehavior(.onScrollDown)
+    }
+    
+    
+    var searchContainerView: some View {
+        Group{
+            switch lastPrimarySelection {
+            case .pokemon:
+                PokemonSearchView{
+                    selection = lastPrimarySelection
                 }
+                .environmentObject(appRouter.pokemonSearchRouter)
+            case .abilities:
+                NavigationStack{
+                    VStack{
+                        InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+                    }
+                }
+            case .berries:
+                NavigationStack{
+                    InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+                }
+            case .search:
+                EmptyView()
+            }
         }
     }
 }
 
-#Preview ("main"){
+#Preview{
     MainTabView()
 }

@@ -52,11 +52,21 @@ struct CardView<Content: View>: View {
     }
 }
 
-#Preview{
+#Preview ("Light"){
     CardView(text: "Evolution Chain", color: .green){
         Text("")
-            .frame(height: 200)
+            .frame(height: 100)
+    }
+    .padding()
+    .preferredColorScheme(.light)
+}
+
+#Preview ("Dark"){
+    CardView(text: "Evolution Chain", color: .green){
+        Text("")
+            .frame(height: 100)
     }
     .padding()
     .preferredColorScheme(.dark)
 }
+

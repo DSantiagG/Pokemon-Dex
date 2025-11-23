@@ -9,11 +9,11 @@ import SwiftUI
 
 struct PokemonHomeView: View {
     
-    @StateObject private var pokemonVM = PokemonViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var pokemonVM = PokemonHomeViewModel(pokemonService: DataProvider.shared.pokemonService)
     
     var body: some View {
         Group{
-            if case .loaded = pokemonVM.state, pokemonVM.pokemons.isEmpty {
+            if case .notFound = pokemonVM.state {
                 InfoStateView(primaryText: "No Pokémon found.", secondaryText: "Try catching some first!")
             }else{
                 NavigationContainerView{
@@ -27,8 +27,9 @@ struct PokemonHomeView: View {
                                 .shadow(color: .red.opacity(0.4), radius: 0.5)
                             
                             ViewStateView(viewModel: pokemonVM) {
-                                PokemonListView()
-                                
+                                PokemonListView(pokemons: pokemonVM.pokemons, onItemAppear: { pokemon in
+                                    Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
+                                })
                             }
                         }
                         .padding(.horizontal)
@@ -36,18 +37,15 @@ struct PokemonHomeView: View {
                 }
             }
         }
-        .environmentObject(pokemonVM)
         .task {
             if pokemonVM.pokemons.isEmpty {
                 await pokemonVM.loadInitialPage()
             }
         }
-        
     }
 }
 
 #Preview {
     PokemonHomeView()
-        .environmentObject(PokemonViewModel(pokemonService: PokemonService()))
         .environmentObject(NavigationRouter())
 }

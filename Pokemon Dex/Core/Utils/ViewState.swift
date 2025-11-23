@@ -10,5 +10,6 @@ enum ViewState {
     case idle
     case loading
     case loaded
+    case notFound
     case error(message: String, retryAction: () -> Void)
 }

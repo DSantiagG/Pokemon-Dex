@@ -7,22 +7,21 @@
 import PokemonAPI
 import Foundation
 
-//TODO: Ver si cado uno de los prints de cache si se ejecutan
 actor PokemonService {
     private let api = PokemonAPI()
     private var pagedObject: PKMPagedObject<PKMPokemon>?
-
+    
     private var pokemonCache = [String: PKMPokemon]()
     private var speciesCache = [String: PKMPokemonSpecies]()
     private var chainCache = [Int: [EvolutionStage]]()
     private var typeCache = [String: PKMType]()
-
+    
     func fetchInitialPage() async throws -> [PKMPokemon] {
         let result = try await api.pokemonService.fetchPokemonList(paginationState: .initial(pageLimit: 20))
         pagedObject = result
         return try await fetchPokemons(from: result.results ?? [])
     }
-
+    
     func fetchNextPage() async throws -> [PKMPokemon]? {
         guard let paged = pagedObject,
               paged.hasNext else { return nil }
@@ -33,14 +32,9 @@ actor PokemonService {
         return pokemons
     }
     
-    private func fetchPokemon(usingKey key: String, fetcher: () async throws -> PKMPokemon) async throws -> PKMPokemon {
-        if let cached = pokemonCache[key] {
-            print("Retornando de cache de pokemon: \(key)")
-            return cached
-        }
-        let pokemon = try await fetcher()
-        pokemonCache[key] = pokemon
-        return pokemon
+    func fetchAllPokemonResources() async throws -> [PKMAPIResource<PKMPokemon>] {
+        let result = try await api.pokemonService.fetchPokemonList(paginationState: .initial(pageLimit: 2000))
+        return result.results ?? []
     }
     
     func fetchPokemon(name: String) async throws -> PKMPokemon {
@@ -52,8 +46,21 @@ actor PokemonService {
     func fetchPokemon(resource: PKMAPIResource<PKMPokemon>) async throws -> PKMPokemon {
         let key = resource.name ?? resource.url ?? "unknown"
         return try await fetchPokemon(usingKey: key) {
-            try await self.api.resourceService.fetch(resource)
+            if let success = try? await self.api.resourceService.fetch(resource) {
+                return success
+            }
+            return try await self.api.pokemonService.fetchPokemon(resource.name ?? "")
         }
+    }
+    
+    private func fetchPokemon(usingKey key: String, fetcher: () async throws -> PKMPokemon) async throws -> PKMPokemon {
+        if let cached = pokemonCache[key] {
+            //print("Retornando de cache de pokemon: \(key)")
+            return cached
+        }
+        let pokemon = try await fetcher()
+        pokemonCache[key] = pokemon
+        return pokemon
     }
     
     func fetchSpecies(resource: PKMAPIResource<PKMPokemonSpecies>) async throws -> PKMPokemonSpecies {
@@ -79,14 +86,14 @@ actor PokemonService {
         let chain = try await api.resourceService.fetch(resource)
         guard let root = chain.chain else { return nil }
         
-        var names: [String] = []
-        extractNames(from: root, into: &names)
+        var pokemonResources: [PKMAPIResource<PKMPokemon>] = []
+        await extractNames(from: root, into: &pokemonResources)
         
         var stages: [EvolutionStage] = []
-        for name in names {
-            let poke = try await fetchPokemon(name: name)
+        for resource in pokemonResources {
+            let poke = try await fetchPokemon(resource: resource)
             let sprite = poke.sprites?.other?.officialArtwork?.frontDefault
-            stages.append(EvolutionStage(name: name, sprite: sprite))
+            stages.append(EvolutionStage(name: resource.name ?? "Unknown Name", sprite: sprite))
         }
         
         if let id = chain.id {
@@ -107,12 +114,11 @@ actor PokemonService {
         return type
     }
     
-    private func fetchPokemons(from results: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
+    func fetchPokemons(from results: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await withThrowingTaskGroup(of: (Int, PKMPokemon).self) { group in
             for (index, result) in results.enumerated() {
                 group.addTask {
-                    //let pokemon = try await self.fetchPokemon(resource: result)
-                    let pokemon = try await self.api.pokemonService.fetchPokemon(result.name ?? "")
+                    let pokemon = try await self.fetchPokemon(resource: result)
                     return (index, pokemon)
                 }
             }
@@ -124,13 +130,16 @@ actor PokemonService {
         }
     }
     
-    private func extractNames(from node: PKMChainLink, into array: inout [String]) {
-        if let speciesName = node.species?.name, !speciesName.isEmpty {
-            array.append(speciesName)
-        }
+    private func extractNames(from node: PKMChainLink, into array: inout [PKMAPIResource<PKMPokemon>]) async {
+        
+        guard let specieResource = node.species else { return }
+        guard let specie = try? await fetchSpecies(resource: specieResource),
+              let pokemon = specie.varieties?.first(where: { $0.isDefault == true })?.pokemon else { return }
+        
+        array.append(pokemon)
+        
         for next in node.evolvesTo ?? [] {
-            extractNames(from: next, into: &array)
+            await extractNames(from: next, into: &array)
         }
     }
 }
-

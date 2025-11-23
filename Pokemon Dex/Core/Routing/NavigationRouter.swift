@@ -9,24 +9,21 @@ import SwiftUI
 import Combine
 
 final class NavigationRouter: ObservableObject{
-    @Published var path: [Route] = []
+    @Published var path: [AppRoute] = []
     
-    enum Route: Hashable{
+    enum AppRoute: Hashable{
         case pokemonDetail(name: String)
         case abilityDetail(name: String)
     }
     
-    func push(_ route: Route) {
+    func push(_ route: AppRoute) {
         if path.last == route { return }
         
         if let index = path.firstIndex(of: route) {
-            let count = path.count - index - 1
-            for _ in 0..<count {
-                path.removeLast()
-            }
-            return
+            path = Array(path.prefix(index + 1))
+        } else {
+            path.append(route)
         }
-        path.append(route)
     }
     
     func pop(){

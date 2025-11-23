@@ -56,7 +56,14 @@ struct URLImage: View {
     }
 }
 
-#Preview {
+#Preview ("Success"){
     URLImage(urlString: "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jpg")
-    //URLImage(urlString: nil)
+}
+
+#Preview ("Error"){
+    Color.gray.opacity(0.5)
+        .frame(width: 300, height: 200)
+        .overlay {
+            URLImage(urlString: "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jp")
+        }
 }

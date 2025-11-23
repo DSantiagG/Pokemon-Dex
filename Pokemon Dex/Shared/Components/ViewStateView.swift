@@ -61,7 +61,7 @@ struct ErrorView: View {
             
             Text(message)
                 .multilineTextAlignment(.center)
-                .bold()
+                .fontWeight(.semibold)
             
             Button("Retry", action: retryAction)
                 .foregroundStyle(.white)
@@ -76,7 +76,6 @@ struct ErrorView: View {
 }
 
 private final class PreviewViewModel: ObservableObject, ErrorHandleable {
-    func setNotFoundAndClear() {}
     
     @Published var state: ViewState = .idle
     

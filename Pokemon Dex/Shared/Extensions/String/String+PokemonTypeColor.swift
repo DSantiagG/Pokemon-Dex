@@ -33,3 +33,10 @@ extension String {
         }
     }
 }
+
+extension PKMPokemonType {
+    var color: Color {
+        (self.type?.name ?? "unknown").pokemonTypeColor
+    }
+}
+
