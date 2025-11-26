@@ -1,5 +1,5 @@
 //
-//  ViewStateView.swift
+//  ViewStateHandler.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 10/11/25.
@@ -7,7 +7,7 @@
 import SwiftUI
 import Combine
 
-struct ViewStateView<VM: ObservableObject & ErrorHandleable, Content: View>: View {
+struct ViewStateHandler<VM: ObservableObject & ErrorHandleable, Content: View>: View {
     
     @ObservedObject private var viewModel: VM
     private let content: () -> Content
@@ -76,22 +76,20 @@ struct ErrorView: View {
 }
 
 private final class PreviewViewModel: ObservableObject, ErrorHandleable {
-    
     @Published var state: ViewState = .idle
-    
     init(state: ViewState = .idle) {
         self.state = state
     }
 }
 
 #Preview("Loading") {
-    ViewStateView(viewModel: PreviewViewModel(state: .loading)){
+    ViewStateHandler(viewModel: PreviewViewModel(state: .loading)){
         EmptyView()
     }
 }
 
 #Preview("Error") {
-    ViewStateView(viewModel: PreviewViewModel(
+    ViewStateHandler(viewModel: PreviewViewModel(
         state: .error(message: "Something went wrong.", retryAction: {})
     )) {
         EmptyView()

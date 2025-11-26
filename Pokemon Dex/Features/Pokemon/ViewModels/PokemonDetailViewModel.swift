@@ -13,7 +13,6 @@ import Combine
 class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     
     @Published var currentPokemon: CurrentPokemon?
-    
     @Published var state: ViewState = .idle
     
     private let pokemonService: PokemonService

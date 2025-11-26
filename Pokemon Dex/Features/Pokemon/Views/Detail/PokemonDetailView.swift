@@ -11,7 +11,6 @@ import PokemonAPI
 struct PokemonDetailView: View {
     
     @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService)
-    
     @EnvironmentObject private var router: NavigationRouter
     
     let pokemonName: String
@@ -21,13 +20,14 @@ struct PokemonDetailView: View {
     }
     
     var body: some View {
-        ViewStateView(viewModel: pokemonVM) {
+        ViewStateHandler(viewModel: pokemonVM) {
             VStack {
                 if case .notFound = pokemonVM.state {
-                    InfoStateView(primaryText: "Oops!", secondaryText: "Looks like this Pokémon ran away before we could catch it!")
+                    InfoStateView(primaryText: "Oops!", secondaryText: "Looks like we couldn't find this Pokémon!")
                 } else if let pokemon = pokemonVM.currentPokemon {
+                    
                     ScrollView {
-                        PokemonHeaderView(color: pokemonColor, imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault)
+                        PokemonHeader(color: pokemonColor, imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault)
                             .padding(.bottom, 87)
                         
                         VStack(spacing: 25) {
@@ -36,14 +36,14 @@ struct PokemonDetailView: View {
                                 order: pokemon.details.order ?? 0,
                                 name: pokemon.details.name ?? "Unknown",
                                 types: pokemon.details.types,
-                                flavorText: pokemon.species.englishFlavorText() ?? "No description available."
+                                description: pokemon.species.flavorTextEntries?.englishFlavorText() ?? "No description available."
                             )
                             
-                            StatsSection(stats: pokemon.details.stats ?? [], color: pokemonColor)
+                            PokemonStatsSection(stats: pokemon.details.stats ?? [], color: pokemonColor)
                             
-                            AbilitiesSection(abilities: pokemon.details.abilities ?? [], color: pokemonColor)
+                            PokemonAbilitiesSection(abilities: pokemon.details.abilities ?? [], color: pokemonColor)
                             
-                            EvolutionChainSection(evolution: pokemon.evolution, color: pokemonColor)
+                            PokemonEvolutionSection(evolution: pokemon.evolution, color: pokemonColor)
                                 .environmentObject(router)
                                 .padding(.bottom, 60)
                         }

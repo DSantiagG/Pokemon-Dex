@@ -1,5 +1,5 @@
 //
-//  PokemonViewModel.swift
+//  PokemonHomeViewModel.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 6/11/25.

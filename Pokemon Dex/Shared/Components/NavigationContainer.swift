@@ -1,12 +1,12 @@
 //
-//  NavigationContainerView.swift
+//  NavigationContainer.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 12/11/25.
 //
 import SwiftUI
 
-struct NavigationContainerView<Content: View>: View {
+struct NavigationContainer<Content: View>: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
@@ -32,7 +32,7 @@ struct NavigationContainerView<Content: View>: View {
 }
 
 #Preview {
-    NavigationContainerView{
+    NavigationContainer{
         EmptyView()
     }
     .environmentObject(NavigationRouter())

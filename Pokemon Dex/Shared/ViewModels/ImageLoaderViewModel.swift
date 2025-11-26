@@ -1,5 +1,5 @@
 //
-//  ImageLoader.swift
+//  ImageLoaderViewModel.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 12/11/25.
@@ -7,7 +7,7 @@
 import Combine
 import SwiftUI
 
-final class ImageLoader: ObservableObject {
+final class ImageLoaderViewModel: ObservableObject {
     @Published var image: Image?
     @Published var isLoading = false
 

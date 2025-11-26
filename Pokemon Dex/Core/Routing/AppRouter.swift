@@ -14,7 +14,4 @@ final class AppRouter: ObservableObject {
     
     @Published var abilityRouter = NavigationRouter()
     @Published var abilitySearchRouter = NavigationRouter()
-    
-    @Published var berryRouter = NavigationRouter()
-    @Published var berrySearchRouter = NavigationRouter()
 }

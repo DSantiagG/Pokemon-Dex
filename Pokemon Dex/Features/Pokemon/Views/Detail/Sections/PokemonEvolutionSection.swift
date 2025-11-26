@@ -1,5 +1,5 @@
 //
-//  EvolutionChainSection.swift
+//  PokemonEvolutionSection.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 23/11/25.
@@ -7,7 +7,7 @@
 import SwiftUI
 import PokemonAPI
 
-struct EvolutionChainSection: View {
+struct PokemonEvolutionSection: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
@@ -22,7 +22,7 @@ struct EvolutionChainSection: View {
     }
     
     var body: some View {
-        CardView(text: "Evolution Chain", color: color) {
+        SectionCard(text: "Evolution Chain", color: color) {
             VStack {
                 if !hasEvolution {
                     Text("No evolution chain for this Pokémon. It’s already as strong as it gets!")
@@ -56,11 +56,11 @@ struct EvolutionChainSection: View {
 }
 
 #Preview {
-    EvolutionChainSection(evolution: [
-        PokemonMockFactory.mockStageEvolution(),
-        PokemonMockFactory.mockStageEvolution(),
-        PokemonMockFactory.mockStageEvolution()
-    ], color: .green)
+    let pokemon = PokemonMockFactory.mockBulbasaur()
+    let evolution = EvolutionStage(name: pokemon.name ?? "", sprite: pokemon.sprites?.other?.officialArtwork?.frontDefault ?? "")
+    let list = Array(repeating: evolution, count: 3)
+    
+    PokemonEvolutionSection(evolution: list, color: .green)
         .environmentObject(NavigationRouter())
         .padding(.horizontal)
 }

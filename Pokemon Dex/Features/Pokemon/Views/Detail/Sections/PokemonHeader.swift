@@ -1,13 +1,14 @@
 //
-//  PokemonHeaderView.swift
+//  PokemonHeader.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 23/11/25.
 //
 
 import SwiftUI
+import PokemonAPI
 
-struct PokemonHeaderView: View {
+struct PokemonHeader: View {
     let color: Color
     let imageURL: String?
     
@@ -45,7 +46,7 @@ struct PokemonHeaderView: View {
 
 #Preview{
     ScrollView{
-        PokemonHeaderView(color: .green, imageURL: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png")
+        PokemonHeader(color: .green, imageURL: PokemonMockFactory.mockBulbasaur().sprites?.other?.officialArtwork?.frontDefault ?? "")
             .padding(.bottom, 87)
     }
 }

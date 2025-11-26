@@ -1,5 +1,5 @@
 //
-//  PokemonCardView.swift
+//  PokemonCard.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 7/11/25.
@@ -8,12 +8,12 @@
 import SwiftUI
 import PokemonAPI
 
-enum CardOrientation {
-    case vertical
-    case horizontal
-}
-
-struct PokemonCardView: View {
+struct PokemonCard: View {
+    
+    enum CardOrientation {
+        case vertical
+        case horizontal
+    }
     
     @Environment(\.colorScheme) private var colorScheme
     
@@ -88,44 +88,23 @@ struct PokemonCardView: View {
     private var typesView: some View {
         HStack {
             if let types = pokemon.types {
-                ForEach(Array(types).enumerated(), id: \.offset) { _, type in
-                    Text((type.type?.name ?? "Unknown Type").capitalized)
-                        .foregroundStyle(Color.white)
-                        .padding(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
-                        .background(RoundedRectangle(cornerRadius: 13)
-                            .fill(type.color))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                ForEach(Array(types).enumerated(), id: \.offset) { _, type in 
+                    CustomCapsule(text: (type.type?.name ?? "Unknown Type").capitalized, color: type.color)
                 }
             }
         }
     }
 }
 
-struct PokemonCardPreviewLoader: View {
-    @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: PokemonService())
-    
-    var layout: CardOrientation
-    
-    var body: some View {
-        VStack {
-            if let pokemon = pokemonVM.currentPokemon {
-                PokemonCardView(pokemon: pokemon.details, layout: layout)
-            }
-        }
-        .task {
-            await pokemonVM.loadPokemon(name: "bulbasaur")
-        }
-    }
-}
-
 #Preview ("Vertical") {
-    PokemonCardPreviewLoader(layout: .vertical)
+    let pokemon = PokemonMockFactory.mockBulbasaur()
+    PokemonCard(pokemon: pokemon, layout: .vertical)
         .padding()
 }
 
 #Preview ("Horizontal") {
-    PokemonCardPreviewLoader(layout: .horizontal)
-        .frame(height: 170)
+    let pokemon = PokemonMockFactory.mockBulbasaur()
+    PokemonCard(pokemon: pokemon, layout: .horizontal)
+        .frame(height: 100)
         .padding()
 }

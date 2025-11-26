@@ -13,131 +13,138 @@ enum PokemonMockFactory {
     // MARK: - Helper
     private static func load<T: Decodable>(_ json: String) -> T {
         let data = json.data(using: .utf8)!
-        
-        if let selfDecodableType = T.self as? any SelfDecodable.Type {
-            return try! selfDecodableType.decoder.decode(T.self, from: data)
-        } else {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try! decoder.decode(T.self, from: data)
+        do {
+            if let selfDecodableType = T.self as? any SelfDecodable.Type {
+                return try selfDecodableType.decoder.decode(T.self, from: data)
+            } else {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                return try decoder.decode(T.self, from: data)
+            }
+        } catch {
+            fatalError("PokemonMockFactory.load failed to decode JSON: \(error)\nJSON was:\n\(json)")
         }
     }
     
     // MARK: - Types
-    static func mockType(
-        slot: Int = 1,
-        name: String = "grass",
-        url: String = "https://pokeapi.co/api/v2/type/12/"
-    ) -> PKMPokemonType {
+    static func mockType(name: String) -> PKMPokemonType {
         load("""
         {
-            "slot": \(slot),
+            "slot": 1,
             "type": {
                 "name": "\(name)",
-                "url": "\(url)"
+                "url": ""
             }
         }
         """)
     }
     
     // MARK: - Stats
-    static func mockStat(
-        name: String = "hp",
-        baseStat: Int = 45,
-        url: String = "https://pokeapi.co/api/v2/stat/1/"
-    ) -> PKMPokemonStat {
+    static func mockStat(name: String, baseStat: Int) -> PKMPokemonStat {
         load("""
         {
             "base_stat": \(baseStat),
             "effort": 0,
             "stat": {
                 "name": "\(name)",
-                "url": "\(url)"
+                "url": ""
             }
         }
         """)
     }
     
     // MARK: - Ability
-    static func mockAbility(
-        name: String = "overgrow",
-        isHidden: Bool = false,
-        url: String = "https://pokeapi.co/api/v2/ability/65/",
-        slot: Int = 1
-    ) -> PKMPokemonAbility {
+    static func mockAbility(name: String, isHidden: Bool) -> PKMPokemonAbility {
         load("""
         {
             "ability": {
                 "name": "\(name)",
-                "url": "\(url)"
+                "url": ""
             },
             "is_hidden": \(isHidden),
-            "slot": \(slot)
+            "slot": 1
         }
         """)
     }
     
-    // MARK: - Species
-    static func mockSpecies(flavor: String) -> PKMPokemonSpecies {
-        load("""
-        {
-            "flavor_text_entries": [
-                {
-                    "flavor_text": "\(flavor)",
-                    "language": { "name": "en", "url": "" },
-                    "version": { "name": "red", "url": "" }
-                }
-            ],
-            "evolution_chain": {
-                "url": "https://pokeapi.co/api/v2/evolution-chain/1/"
-            }
-        }
-        """)
-    }
-    
-    // MARK: - Pokémon base (sin sprites)
-    static func mockPokemonBase(
+    // MARK: - Pokémon
+    static func mockPokemon(
         id: Int,
+        order: Int,
         name: String,
-        types: [PKMPokemonType]
+        sprite: String,
+        abilities: [PKMPokemonAbility] = [],
+        types: [PKMPokemonType] = [],
+        stats: [PKMPokemonStat] = []
     ) -> PKMPokemon {
+        
+        let abilitiesJSON = abilities
+            .map { """
+                    {"ability": {"name": "\($0.ability?.name ?? "")","url": ""},
+                    "is_hidden": \($0.isHidden ?? false),
+                    "slot": 1}
+                """}
+            .joined(separator: ",")
         
         let typesJSON = types
             .map { """
-            {"slot": \($0.slot ?? 1), "type": {"name": "\($0.type?.name ?? "grass")", "url": "\($0.type?.url ?? "")"}}
-            """ }
+                    {"slot": 1, 
+                    "type": {"name": "\($0.type?.name ?? "grass")", 
+                    "url": ""}}
+                """ }
+            .joined(separator: ",")
+        
+        let statsJSON = stats
+            .map { """
+                    {"base_stat": \($0.baseStat ?? 0),
+                    "effort": 0,
+                    "stat": {"name": "\($0.stat?.name ?? "")","url": ""}
+                    }
+                """}
             .joined(separator: ",")
         
         return load("""
         {
             "id": \(id),
+            "order": \(order),
             "name": "\(name)",
-            "height": 7,
-            "weight": 69,
+            "abilities": [\(abilitiesJSON)],
             "types": [\(typesJSON)],
-            "abilities": [],
-            "stats": []
+            "stats": [\(statsJSON)],
+            "sprites": {
+                "other": {
+                    "official-artwork": {"front_default": "\(sprite)"}
+                }
+            },
+            "past_types": [],
+            "past_abilities": []
         }
         """)
     }
     
-    // MARK: - Pokémon completo (Bulbasaur)
+    // MARK: - Pokémon (Bulbasaur)
     static func mockBulbasaur() -> PKMPokemon {
-        mockPokemonBase(
+        mockPokemon(
             id: 1,
+            order: 1,
             name: "bulbasaur",
+            sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+            abilities: [
+                mockAbility(name: "overgrow", isHidden: false),
+                mockAbility(name: "chlorophyll", isHidden: true)
+            ],
             types: [
                 mockType(name: "grass"),
                 mockType(name: "poison")
+            ],
+            stats: [
+                mockStat(name: "hp", baseStat: 45),
+                mockStat(name: "attack", baseStat: 49),
+                mockStat(name: "defense", baseStat: 49),
+                mockStat(name: "special-attack", baseStat: 65),
+                mockStat(name: "special-defense", baseStat: 65),
+                mockStat(name: "speed", baseStat: 45)
             ]
         )
-    }
-    
-    // MARK: - Evolution Chain (3 stages)
-    static func mockStageEvolution(
-        name: String = "bulbasaur",
-        sprite: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-    ) -> EvolutionStage {
-        return EvolutionStage(name: name, sprite: sprite)
     }
 }

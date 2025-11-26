@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    func cleanFlavorText(pokemonName: String? = nil) -> String {
+    func cleanFlavorText() -> String {
         var text = self
         
         text = text
@@ -21,15 +21,25 @@ extension String {
             .replacingOccurrences(of: "POKéMON", with: "Pokémon")
             .replacingOccurrences(of: "POKEMON", with: "Pokémon")
             .replacingOccurrences(of: "\u{00A0}", with: " ")   // non-breaking space -> space
-            .replacingOccurrences(of: " ", with: " ")         // double space
+            .replacingOccurrences(of: "  ", with: " ")         // double space
         
-        if let name = pokemonName {
-            let upper = name.uppercased()
-            let capitalized = name.capitalized
+        // Converts fully UPPERCASE words (with more than 1 letter) into capitalized format (only first letter uppercase)
+        let words = text.split(separator: " ")
+        
+        let fixedWords = words.map { word -> String in
+            let w = String(word)
             
-            text = text.replacingOccurrences(of: upper, with: capitalized)
+            if w == w.uppercased(), w.count > 1 {
+                return w.capitalized
+            }
+            return w
         }
         
-        return text.trimmingCharacters(in: .whitespacesAndNewlines)
+        text = fixedWords.joined(separator: " ")
+        
+        // Remove leading and trailing spaces/newlines
+        text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return text
     }
 }

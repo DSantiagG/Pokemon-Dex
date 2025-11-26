@@ -1,5 +1,5 @@
 //
-//  ErrorHandling.swift
+//  ErrorHandleable.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 14/11/25.
@@ -30,7 +30,9 @@ extension ErrorHandleable {
                     return
                 }
             case .other(let error):
-                if let urlError = error as? URLError, urlError.code == .cancelled { return }
+                if let urlError = error as? URLError, urlError.code == .cancelled {
+                    return
+                }
             default:
                 break
             }

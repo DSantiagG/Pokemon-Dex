@@ -55,7 +55,6 @@ actor PokemonService {
     
     private func fetchPokemon(usingKey key: String, fetcher: () async throws -> PKMPokemon) async throws -> PKMPokemon {
         if let cached = pokemonCache[key] {
-            //print("Retornando de cache de pokemon: \(key)")
             return cached
         }
         let pokemon = try await fetcher()

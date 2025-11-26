@@ -14,11 +14,11 @@ struct PokemonSearchView: View {
     @EnvironmentObject private var router: NavigationRouter
     @State private var isSearchFocused: Bool = true
     
-    var onDismissSearch: (() -> Void)? = nil
+    var onDismissSearch: (() -> Void)
     
     var body: some View {
         
-        NavigationContainerView{
+        NavigationContainer{
             Group {
                 if pokemonVM.searchText.isEmpty {
                     InfoStateView(primaryText: "Start your search",
@@ -29,7 +29,7 @@ struct PokemonSearchView: View {
                         .padding(.bottom, 80)
                 }else {
                     ScrollView {
-                        ViewStateView(viewModel: pokemonVM) {
+                        ViewStateHandler(viewModel: pokemonVM) {
                             PokemonListView(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn)
                         }
                         .padding(.horizontal)
@@ -46,13 +46,13 @@ struct PokemonSearchView: View {
         }
         .onChange(of: isSearchFocused) { _, focused in
             if !focused, pokemonVM.searchText.isEmpty {
-                onDismissSearch?()
+                onDismissSearch()
             }
         }
     }
 }
 
 #Preview {
-    PokemonSearchView()
+    PokemonSearchView{}
         .environmentObject(NavigationRouter())
 }

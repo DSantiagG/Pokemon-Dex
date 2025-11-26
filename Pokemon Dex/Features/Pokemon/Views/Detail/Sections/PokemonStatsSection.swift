@@ -1,5 +1,5 @@
 //
-//  StatsSection.swift
+//  PokemonStatsSection.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 23/11/25.
@@ -7,13 +7,13 @@
 import SwiftUI
 import PokemonAPI
 
-struct StatsSection: View{
+struct PokemonStatsSection: View{
     
     var stats: [PKMPokemonStat]
     let color: Color
     
     var body: some View {
-        CardView(text: "Stats", color: color) {
+        SectionCard(text: "Stats", color: color) {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(Array(stats.enumerated()), id: \.offset) { _, s in
                     let name = (s.stat?.name ?? "stat")
@@ -57,7 +57,7 @@ struct StatsSection: View{
 }
 
 #Preview{
-    StatsSection(stats: [
+    PokemonStatsSection(stats: [
         PokemonMockFactory.mockStat(name: "hp", baseStat: 45),
         PokemonMockFactory.mockStat(name: "attack", baseStat: 49),
         PokemonMockFactory.mockStat(name: "defence", baseStat: 49),

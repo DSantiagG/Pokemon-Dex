@@ -1,12 +1,12 @@
 //
-//  CardView.swift
+//  SectionCard.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 14/11/25.
 //
 import SwiftUI
 
-struct CardView<Content: View>: View {
+struct SectionCard<Content: View>: View {
     
     @Environment(\.colorScheme) private var colorScheme
     
@@ -25,7 +25,7 @@ struct CardView<Content: View>: View {
             content()
         }
         .padding()
-        .padding(.vertical, 25)
+        .padding(.vertical, 20)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -53,16 +53,17 @@ struct CardView<Content: View>: View {
 }
 
 #Preview ("Light"){
-    CardView(text: "Evolution Chain", color: .green){
+    SectionCard(text: "Evolution Chain", color: .green){
         Text("")
             .frame(height: 100)
+       
     }
     .padding()
     .preferredColorScheme(.light)
 }
 
 #Preview ("Dark"){
-    CardView(text: "Evolution Chain", color: .green){
+    SectionCard(text: "Evolution Chain", color: .green){
         Text("")
             .frame(height: 100)
     }

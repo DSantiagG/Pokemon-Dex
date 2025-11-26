@@ -1,5 +1,5 @@
 //
-//  LoadingState.swift
+//  ViewState.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 11/11/25.

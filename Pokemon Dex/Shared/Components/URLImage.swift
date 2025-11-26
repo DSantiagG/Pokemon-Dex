@@ -1,6 +1,6 @@
 //
 //  URLImage.swift
-//  Game Stream
+//  Pokemon Dex
 //
 //  Created by David Giron on 20/10/25.
 //
@@ -12,7 +12,7 @@ struct URLImage: View {
     var cornerRadius: CGFloat = 0
     var contentMode: ContentMode = .fit
     
-    @StateObject private var loader = ImageLoader()
+    @StateObject private var loader = ImageLoaderViewModel()
     
     var body: some View {
         Group {

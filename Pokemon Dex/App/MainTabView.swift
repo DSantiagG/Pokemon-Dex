@@ -32,12 +32,12 @@ struct MainTabView: View {
         
         TabView (selection: $selection){
             
-            Tab("Pokémon", systemImage: "bolt.circle.fill", value: TabKey.pokemon) {
+            Tab("Pokémon", systemImage: "circle.circle.fill", value: TabKey.pokemon) {
                 PokemonHomeView()
                     .environmentObject(appRouter.pokemonRouter)
             }
             
-            Tab("Abilities", systemImage: "star.circle.fill", value: TabKey.abilities) {
+            Tab("Abilities", systemImage: "bolt.circle.fill", value: TabKey.abilities) {
                 InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             }
             
@@ -70,15 +70,9 @@ struct MainTabView: View {
                 }
                 .environmentObject(appRouter.pokemonSearchRouter)
             case .abilities:
-                NavigationStack{
-                    VStack{
-                        InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-                    }
-                }
+                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             case .berries:
-                NavigationStack{
-                    InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-                }
+                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             case .search:
                 EmptyView()
             }

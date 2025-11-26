@@ -8,12 +8,12 @@
 import SwiftUI
 import PokemonAPI
 
-enum ListLayout {
-    case twoColumns
-    case singleColumn
-}
-
 struct PokemonListView: View {
+    
+    enum ListLayout {
+        case twoColumns
+        case singleColumn
+    }
     
     @EnvironmentObject private var router: NavigationRouter
     
@@ -21,6 +21,7 @@ struct PokemonListView: View {
     var layout: ListLayout = .twoColumns
     
     var onItemAppear: (PKMPokemon) -> Void = { _ in }
+    var onItemSelected: () -> Void = { }
     
     private let columns = [
         GridItem(.flexible()),
@@ -44,7 +45,7 @@ struct PokemonListView: View {
     
     private var pokemonsListView: some View {
         ForEach(Array(pokemons).enumerated(), id: \.offset) { _, pokemon in
-            PokemonCardView(
+            PokemonCard(
                 pokemon: pokemon,
                 layout: layout == .twoColumns ? .vertical : .horizontal
             )
@@ -54,37 +55,27 @@ struct PokemonListView: View {
             .padding(layout == .twoColumns ? 3 : 0)
             .onAppear { onItemAppear(pokemon) }
             .onTapGesture {
+                onItemSelected()
                 router.push(.pokemonDetail(name: pokemon.name ?? "Unknown Name"))
             }
         }
     }
 }
 
-struct PokemonListPreviewLoader: View {
-    @StateObject private var pokemonVM = PokemonHomeViewModel(pokemonService: PokemonService())
-    
-    var layout: ListLayout
-    
-    var body: some View {
-        ScrollView{
-            PokemonListView(pokemons: pokemonVM.pokemons, layout: layout, onItemAppear: { pokemon in
-                Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
-            })
+#Preview("Two Columns") {
+    let pokemon = PokemonMockFactory.mockBulbasaur()
+    let list = Array(repeating: pokemon, count: 30)
+    ScrollView{
+        PokemonListView(pokemons: list,layout: .twoColumns)
             .padding(.horizontal)
-        }
-        .environmentObject(NavigationRouter())
-        .task {
-            if pokemonVM.pokemons.isEmpty {
-                await pokemonVM.loadInitialPage()
-            }
-        }
     }
 }
 
-#Preview("Two Columns") {
-    PokemonListPreviewLoader(layout: .twoColumns)
-}
-
 #Preview("One Column") {
-    PokemonListPreviewLoader(layout: .singleColumn)
+    let pokemon = PokemonMockFactory.mockBulbasaur()
+    let list = Array(repeating: pokemon, count: 30)
+    ScrollView{
+        PokemonListView(pokemons: list,layout: .singleColumn)
+            .padding(.horizontal)
+    }
 }
