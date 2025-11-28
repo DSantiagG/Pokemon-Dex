@@ -20,7 +20,7 @@ struct PokemonBasicInfoSection: View {
                 .foregroundStyle(.secondary)
                 .padding(.bottom, -10)
             
-            Text(name.capitalized)
+            AdaptiveText(text: name.formattedName())
                 .font(.largeTitle)
                 .fontWeight(.semibold)
             

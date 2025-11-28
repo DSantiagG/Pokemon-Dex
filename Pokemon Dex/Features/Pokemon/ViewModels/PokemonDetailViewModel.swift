@@ -41,24 +41,41 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     
     private func fetchAllPokemonData(name: String) async throws -> CurrentPokemon? {
         
-        let pokemon = try await fetchPokemon(name: name)
+        guard let pokemon = try await fetchPokemon(name: name) else { return nil }
+        
+        guard let types = try await fetchTypes(for: pokemon) else { return nil }
         
         guard let species = try await fetchSpecies(for: pokemon) else { return nil }
         
         guard let evolution = try await fetchEvolution(for: species) else { return nil }
         
-        let types: [PKMType] = try await fetchTypes(for: pokemon)
+        guard let forms = try await fetchForms(for: species) else { return nil }
         
         return CurrentPokemon(
             details: pokemon,
+            types: types,
             species: species,
             evolution: evolution,
-            types: types
+            forms: forms
         )
     }
     
-    private func fetchPokemon(name: String) async throws -> PKMPokemon {
-        try await pokemonService.fetchPokemon(name: name)
+    private func fetchPokemon(name: String?) async throws -> PKMPokemon? {
+        guard let name = name else { return nil }
+        return try await pokemonService.fetchPokemon(name: name)
+    }
+    
+    private func fetchTypes(for pokemon: PKMPokemon) async throws -> [PKMType]? {
+        guard let pokemonTypes = pokemon.types else { return nil }
+
+        var types: [PKMType] = []
+
+        for t in pokemonTypes {
+            guard let typeResource = t.type else { continue }
+            let typeDetails = try await pokemonService.fetchType(resource: typeResource)
+            types.append(typeDetails)
+        }
+        return types
     }
     
     private func fetchSpecies(for pokemon: PKMPokemon) async throws -> PKMPokemonSpecies? {
@@ -71,16 +88,16 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         return try await pokemonService.fetchEvolutionChain(resource: resource)
     }
     
-    private func fetchTypes(for pokemon: PKMPokemon) async throws -> [PKMType] {
-        guard let pokemonTypes = pokemon.types else { return [] }
-
-        var types: [PKMType] = []
-
-        for t in pokemonTypes {
-            guard let typeResource = t.type else { continue }
-            let typeDetails = try await pokemonService.fetchType(resource: typeResource)
-            types.append(typeDetails)
+    private func fetchForms(for species: PKMPokemonSpecies) async throws -> [PokemonForm]? {
+        guard let varietiesResource = species.varieties else { return nil }
+        
+        var pokemonForms: [PokemonForm] = []
+        
+        for variety in varietiesResource {
+            guard let pokemon = try await fetchPokemon(name: variety.pokemon?.name) else { continue }
+            let sprite = pokemon.sprites?.other?.officialArtwork?.frontDefault
+            pokemonForms.append(.init(name: pokemon.name, sprite: sprite, isDefault: variety.isDefault ?? false))
         }
-        return types
+        return pokemonForms
     }
 }

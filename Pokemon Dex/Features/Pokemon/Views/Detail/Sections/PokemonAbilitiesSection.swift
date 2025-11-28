@@ -29,7 +29,7 @@ struct PokemonAbilitiesSection: View {
                     ForEach(
                         abilities.filter { ($0.isHidden ?? false) == (abilityKind == .hidden) }, id: \.slot) { ability in
                         let abilityName = (ability.ability?.name ?? "Unknown").capitalized
-                            CustomCapsule(text: abilityName, fontSize: 16, fontWeight: .medium, color: color.opacity(0.9), verticalPadding: 6, horizontalPadding: 12)
+                            CustomCapsule(text: abilityName.formattedName(), fontSize: 16, fontWeight: .medium, color: color.opacity(0.9), verticalPadding: 6, horizontalPadding: 12)
                                 .onTapGesture {
                                     selectedAbility = IdentifiedString(abilityName)
                                 }

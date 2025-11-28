@@ -11,7 +11,6 @@ import PokemonAPI
 struct PokemonDetailView: View {
     
     @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService)
-    @EnvironmentObject private var router: NavigationRouter
     
     let pokemonName: String
     
@@ -25,7 +24,6 @@ struct PokemonDetailView: View {
                 if case .notFound = pokemonVM.state {
                     InfoStateView(primaryText: "Oops!", secondaryText: "Looks like we couldn't find this Pokémon!")
                 } else if let pokemon = pokemonVM.currentPokemon {
-                    
                     ScrollView {
                         PokemonHeader(color: pokemonColor, imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault)
                             .padding(.bottom, 87)
@@ -38,16 +36,16 @@ struct PokemonDetailView: View {
                                 types: pokemon.details.types,
                                 description: pokemon.species.flavorTextEntries?.englishFlavorText() ?? "No description available."
                             )
-                            
                             PokemonStatsSection(stats: pokemon.details.stats ?? [], color: pokemonColor)
                             
                             PokemonAbilitiesSection(abilities: pokemon.details.abilities ?? [], color: pokemonColor)
                             
                             PokemonEvolutionSection(evolution: pokemon.evolution, color: pokemonColor)
-                                .environmentObject(router)
-                                .padding(.bottom, 60)
+                            
+                            PokemonFormsSection(for: pokemon.details.name ?? "Unknown", forms: pokemon.forms, color: pokemonColor)
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 50)
                     }
                 }
             }
@@ -59,7 +57,7 @@ struct PokemonDetailView: View {
 }
 
 #Preview {
-    PokemonDetailView(pokemonName: "pikachu-hoenn-cap")
+    PokemonDetailView(pokemonName: "mimikyu-disguised")
         .environmentObject(NavigationRouter())
         .preferredColorScheme(.light)
 }

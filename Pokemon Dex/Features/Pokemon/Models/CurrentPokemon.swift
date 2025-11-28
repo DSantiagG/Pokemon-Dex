@@ -8,7 +8,8 @@ import PokemonAPI
 
 struct CurrentPokemon {
     var details: PKMPokemon
+    var types: [PKMType]
     var species: PKMPokemonSpecies
     var evolution: [EvolutionStage]
-    var types: [PKMType]
+    var forms: [PokemonForm]
 }

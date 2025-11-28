@@ -61,7 +61,7 @@ private struct AbilityBasicInfoSection: View {
     
     var body: some View{
         VStack (spacing: 16){
-            Text(name)
+            Text(name.formattedName())
                 .font(.largeTitle)
                 .fontWeight(.semibold)
             

@@ -72,10 +72,8 @@ struct PokemonCard: View {
     }
 
     private var titleView: some View {
-        Text((pokemon.name ?? "Unknown Name").capitalized)
+        AdaptiveText(text: (pokemon.name ?? "Unknown Name").formattedName(), isMultiline: false)
             .bold()
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
     }
     
     private var orderView: some View {

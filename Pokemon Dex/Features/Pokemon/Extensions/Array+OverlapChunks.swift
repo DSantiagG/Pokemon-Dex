@@ -19,7 +19,7 @@ extension Array {
             let end = Swift.min(index + size, self.count)
             result.append(Array(self[index..<end]))
             if end == self.count { break }
-            index = end - 1
+            index = end - overlap
         }
         
         return result

@@ -7,6 +7,6 @@
 
 
 struct EvolutionStage {
-    let name: String
+    let name: String?
     let sprite: String?
 }

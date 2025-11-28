@@ -12,9 +12,9 @@ actor PokemonService {
     private var pagedObject: PKMPagedObject<PKMPokemon>?
     
     private var pokemonCache = [String: PKMPokemon]()
+    private var typeCache = [String: PKMType]()
     private var speciesCache = [String: PKMPokemonSpecies]()
     private var chainCache = [Int: [EvolutionStage]]()
-    private var typeCache = [String: PKMType]()
     
     func fetchInitialPage() async throws -> [PKMPokemon] {
         let result = try await api.pokemonService.fetchPokemonList(paginationState: .initial(pageLimit: 20))
@@ -62,6 +62,17 @@ actor PokemonService {
         return pokemon
     }
     
+    func fetchType(resource: PKMAPIResource<PKMType>) async throws -> PKMType {
+        let key = resource.name ?? resource.url ?? "unknown"
+        if let cached = typeCache[key] {
+            print("Retornando de cache de type: \(key)")
+            return cached
+        }
+        let type = try await api.resourceService.fetch(resource)
+        typeCache[key] = type
+        return type
+    }
+    
     func fetchSpecies(resource: PKMAPIResource<PKMPokemonSpecies>) async throws -> PKMPokemonSpecies {
         let key = resource.name ?? resource.url ?? "unknown"
         if let cached = speciesCache[key] {
@@ -92,7 +103,7 @@ actor PokemonService {
         for resource in pokemonResources {
             let poke = try await fetchPokemon(resource: resource)
             let sprite = poke.sprites?.other?.officialArtwork?.frontDefault
-            stages.append(EvolutionStage(name: resource.name ?? "Unknown Name", sprite: sprite))
+            stages.append(EvolutionStage(name: poke.name, sprite: sprite))
         }
         
         if let id = chain.id {
@@ -102,16 +113,6 @@ actor PokemonService {
         return stages
     }
     
-    func fetchType(resource: PKMAPIResource<PKMType>) async throws -> PKMType {
-        let key = resource.name ?? resource.url ?? "unknown"
-        if let cached = typeCache[key] {
-            print("Retornando de cache de type: \(key)")
-            return cached
-        }
-        let type = try await api.resourceService.fetch(resource)
-        typeCache[key] = type
-        return type
-    }
     
     func fetchPokemons(from results: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await withThrowingTaskGroup(of: (Int, PKMPokemon).self) { group in

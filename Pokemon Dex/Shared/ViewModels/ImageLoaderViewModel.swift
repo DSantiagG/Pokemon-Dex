@@ -10,9 +10,9 @@ import SwiftUI
 final class ImageLoaderViewModel: ObservableObject {
     @Published var image: Image?
     @Published var isLoading = false
-
+    
     private var task: Task<Void, Never>?
-
+    
     func load(from url: URL, retries: Int = 2) {
         guard task == nil else { return }
         task = Task { [weak self] in
@@ -44,9 +44,12 @@ final class ImageLoaderViewModel: ObservableObject {
             }
         }
     }
-
+    
     func cancel() {
         task?.cancel()
         task = nil
+        Task { @MainActor in
+            self.image = nil
+        }
     }
 }

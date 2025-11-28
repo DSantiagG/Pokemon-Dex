@@ -32,15 +32,14 @@ struct PokemonEvolutionSection: View {
                     ForEach(Array(rows.enumerated()), id: \.offset) { (_, row) in
                         HStack (){
                             ForEach(Array(row.enumerated()), id: \.offset) { (col, evo) in
+                                let evoName = evo.name ?? "Unknown Name"
                                 VStack (){
                                     URLImage(urlString: evo.sprite, contentMode: .fit)
-                                    Text(evo.name.capitalized)
+                                    AdaptiveText(text: evoName.capitalized)
                                         .fontWeight(.semibold)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
                                 }
                                 .onTapGesture {
-                                    router.push(.pokemonDetail(name: evo.name))
+                                    router.push(.pokemonDetail(name: evoName))
                                 }
                                 
                                 if col < row.count - 1 {

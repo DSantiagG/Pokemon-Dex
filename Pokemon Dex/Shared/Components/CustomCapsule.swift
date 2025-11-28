@@ -17,15 +17,13 @@ struct CustomCapsule: View {
     var horizontalPadding: CGFloat = 10
     
     var body: some View {
-        Text(text)
+        AdaptiveText(text: text)
             .foregroundStyle(Color.white)
             .font(.system(size: CGFloat(fontSize), weight: fontWeight))
             .padding(.vertical, verticalPadding)
             .padding(.horizontal, horizontalPadding)
             .background(color)
             .clipShape(Capsule())
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
     }
 }
 
