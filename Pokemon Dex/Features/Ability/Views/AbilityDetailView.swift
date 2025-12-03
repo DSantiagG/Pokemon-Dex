@@ -13,9 +13,10 @@ struct AbilityDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var abilityVM = AbilityDetailViewModel(abilityService: DataProvider.shared.abilityService, pokemonService: DataProvider.shared.pokemonService)
     
+    @State private var abilityColor: Color = .red
+    
     let abilityName: String
     var shouldAutoDismiss: Bool = false
-    var abilityColor: Color = .red
     
     var body: some View {
         ViewStateHandler(viewModel: abilityVM) {
@@ -48,6 +49,9 @@ struct AbilityDetailView: View {
         }
         .task {
             await abilityVM.loadAbility(name: abilityName)
+            if let color = abilityVM.currentAbility?.normalPokemons.first?.types?.first?.color {
+                abilityColor = color
+            }
         }
     }
 }

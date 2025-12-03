@@ -116,6 +116,9 @@ enum PokemonMockFactory {
                     "official-artwork": {"front_default": "\(sprite)"}
                 }
             },
+            "cries": {
+                "latest": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/132.ogg"
+            },
             "past_types": [],
             "past_abilities": []
         }

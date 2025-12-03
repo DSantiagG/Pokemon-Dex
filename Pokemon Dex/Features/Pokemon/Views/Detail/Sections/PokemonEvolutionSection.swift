@@ -36,7 +36,7 @@ struct PokemonEvolutionSection: View {
                                 VStack (){
                                     URLImage(urlString: evo.sprite, contentMode: .fit)
                                     AdaptiveText(text: evoName.capitalized)
-                                        .fontWeight(.semibold)
+                                        .fontWeight(.medium)
                                 }
                                 .onTapGesture {
                                     router.push(.pokemonDetail(name: evoName))

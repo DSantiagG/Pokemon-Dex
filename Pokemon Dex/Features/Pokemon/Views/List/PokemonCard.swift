@@ -49,6 +49,7 @@ struct PokemonCard: View {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(pokemonColor.opacity(0.1))

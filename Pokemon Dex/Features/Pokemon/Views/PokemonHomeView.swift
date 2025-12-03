@@ -16,23 +16,27 @@ struct PokemonHomeView: View {
             if case .notFound = pokemonVM.state {
                 InfoStateView(primaryText: "No Pokémon found.", secondaryText: "Try catching some first!")
             }else{
-                NavigationContainer{
+                NavigationContainer {
                     ScrollView {
-                        VStack{
+                        ViewStateHandler(viewModel: pokemonVM) {
+                            PokemonListView(pokemons: pokemonVM.pokemons, onItemAppear: { pokemon in
+                                Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
+                            })
+                        }
+                        .padding(.horizontal)
+                    }
+                    .toolbarRole(.editor)
+                    .toolbar {
+                        ToolbarItem(placement: .subtitle) {
                             Text("Pokémon")
-                                .font(.system(size: 36, weight: .black, design: .rounded))
+                                .font(.system(size: 32, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
                                 )
-                                .shadow(color: .red.opacity(0.4), radius: 0.5)
-                            
-                            ViewStateHandler(viewModel: pokemonVM) {
-                                PokemonListView(pokemons: pokemonVM.pokemons, onItemAppear: { pokemon in
-                                    Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
-                                })
-                            }
                         }
-                        .padding(.horizontal)
+                        ToolbarItem {
+                            Button {} label: { Image(systemName: "slider.horizontal.3") }
+                        }
                     }
                 }
             }

@@ -10,4 +10,9 @@ import SwiftUI
 extension Image {
     static let pokemonPsyduck = Image("pokemon-psyduck")
     static let pokeball = Image("pokeball-icon")
+    
+    enum gender {
+        static let femaleSymbol = Image("female-symbol")
+        static let maleSymbol = Image("male-symbol")
+    }
 }

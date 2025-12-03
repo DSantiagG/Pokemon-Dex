@@ -49,9 +49,7 @@ struct PokemonListView: View {
                 pokemon: pokemon,
                 layout: layout == .twoColumns ? .vertical : .horizontal
             )
-            .if(layout == .singleColumn, transform: { view in
-                view.frame(height: 90)
-            })
+            .frame(height: layout == .singleColumn ? 90 : 240)
             .padding(layout == .twoColumns ? 3 : 0)
             .onAppear { onItemAppear(pokemon) }
             .onTapGesture {

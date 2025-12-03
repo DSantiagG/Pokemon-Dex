@@ -46,11 +46,13 @@ struct PokemonFormsSection: View {
                         HStack (){
                             ForEach(Array(row.enumerated()), id: \.offset) { (_, form) in
                                 let formName = form.name ?? "Unknown Name"
-                                    formItem(form)
+                                Spacer()
+                                formItem(form)
                                     .onTapGesture {
                                         router.push(.pokemonDetail(name: formName))
                                     }
                             }
+                            Spacer()
                         }
                     }
                 }
@@ -62,7 +64,7 @@ struct PokemonFormsSection: View {
             URLImage(urlString: form.sprite, contentMode: .fit)
                 .frame(maxWidth: 120)
             AdaptiveText(text: form.name?.formattedName() ?? "Unknown Name")
-                .fontWeight(.semibold)
+                .fontWeight(.medium)
         }
     }
 }
@@ -70,8 +72,8 @@ struct PokemonFormsSection: View {
 #Preview {
     let sprite = PokemonMockFactory.mockBulbasaur().sprites?.other?.officialArtwork?.frontDefault
     let defaultPokemon = PokemonForm(name: "bulbasaur", sprite: sprite, isDefault: true)
-    let altPokemon1 = PokemonForm(name: "bulbasaur alternative 1", sprite: sprite, isDefault: false)
-    let altPokemon2 = PokemonForm(name: "bulbasaur alternative 2", sprite: sprite, isDefault: false)
+    let altPokemon1 = PokemonForm(name: "bulbasaur alt 1", sprite: sprite, isDefault: false)
+    let altPokemon2 = PokemonForm(name: "bulbasaur alt 2", sprite: sprite, isDefault: false)
     
     PokemonFormsSection(for: "bulbasaur", forms: [defaultPokemon, altPokemon1, altPokemon2], color: .green)
         .environmentObject(NavigationRouter())
