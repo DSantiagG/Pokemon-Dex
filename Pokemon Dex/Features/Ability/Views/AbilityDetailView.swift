@@ -44,6 +44,7 @@ struct AbilityDetailView: View {
                         }
                         .padding(.horizontal)
                     }
+                    
                 }
             }
         }
@@ -65,9 +66,9 @@ private struct AbilityBasicInfoSection: View {
     
     var body: some View{
         VStack (spacing: 16){
-            Text(name.formattedName())
-                .font(.largeTitle)
-                .fontWeight(.semibold)
+             Text(name.formattedName())
+                 .font(.largeTitle)
+                 .fontWeight(.semibold)
             
             CustomCapsule(text: generation, fontWeight: .semibold, color: color, horizontalPadding: 15)
             
@@ -104,7 +105,7 @@ private struct AbilityPokemonSection: View {
                 .init("Hidden", tag: .hidden)
             ])
             
-            PokemonListView(pokemons: (pokemonKind == .normal) ? normalPokemon : hiddenPokemon, layout: .singleColumn, onItemSelected: {
+            PokemonList(pokemons: (pokemonKind == .normal) ? normalPokemon : hiddenPokemon, layout: .singleColumn, onItemSelected: {
                 onSelectPokemon()
             })
         }

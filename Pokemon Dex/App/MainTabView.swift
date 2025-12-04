@@ -38,12 +38,15 @@ struct MainTabView: View {
             }
             
             Tab("Abilities", systemImage: "bolt.circle.fill", value: TabKey.abilities) {
-                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+                AbilityHomeView()
+                    .environmentObject(appRouter.abilityRouter)
             }
             
-            Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
-                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-            }
+            /*
+             Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
+                 InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+             }
+             */
             
             Tab(value: TabKey.search, role: .search) {
                 searchContainerView

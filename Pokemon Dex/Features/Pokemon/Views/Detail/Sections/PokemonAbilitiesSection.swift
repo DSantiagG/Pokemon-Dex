@@ -10,11 +10,12 @@ import PokemonAPI
 struct PokemonAbilitiesSection: View {
 
     @State private var selectedAbility: IdentifiedString?
-    
-    let abilities: [PKMPokemonAbility]
-    let color: Color
-    
     @State private var abilityKind: AbilityKind = .normal
+    
+    let normalAbilities: [PKMAbility]
+    let hiddenAbilities: [PKMAbility]
+    let color: Color
+    var onSelectAbility: () -> Void
     
     var body: some View {
         SectionCard(text: "Abilities", color: color) {
@@ -25,16 +26,10 @@ struct PokemonAbilitiesSection: View {
                     .init("Hidden", tag: .hidden)
                 ])
                 
-                HStack {
-                    ForEach(
-                        abilities.filter { ($0.isHidden ?? false) == (abilityKind == .hidden) }, id: \.slot) { ability in
-                        let abilityName = (ability.ability?.name ?? "Unknown").capitalized
-                            CustomCapsule(text: abilityName.formattedName(), fontSize: 16, fontWeight: .medium, color: color.opacity(0.9), verticalPadding: 6, horizontalPadding: 12)
-                                .onTapGesture {
-                                    selectedAbility = IdentifiedString(abilityName)
-                                }
-                    }
-                }.animation(.easeInOut(duration: 0.25), value: abilityKind)
+                AbilityList(abilities: (abilityKind == .normal) ? normalAbilities : hiddenAbilities, color: color, onItemSelected: { ability in
+                    selectedAbility = IdentifiedString(ability.name ?? "Unknown name")
+                    onSelectAbility()
+                })
             }
             .sheet(item: $selectedAbility) { abilityName in
                 AbilityDetailView(abilityName: abilityName.value, shouldAutoDismiss: true)
@@ -48,10 +43,17 @@ struct PokemonAbilitiesSection: View {
 }
 
 #Preview{
-    PokemonAbilitiesSection(abilities: [
-        PokemonMockFactory.mockAbility(name: "overgrow", isHidden: false),
-        PokemonMockFactory.mockAbility(name: "chlorophyll", isHidden: true),
-    ], color: .green)
+    PokemonAbilitiesSection(
+        normalAbilities: [
+            AbilityMockFactory.mockStench(),
+            AbilityMockFactory.mockStench()
+        ],
+        hiddenAbilities: [
+            AbilityMockFactory.mockStench()
+        ],
+        color: .green){
+            
+        }
         .padding(.horizontal)
         .environmentObject(NavigationRouter())
 }

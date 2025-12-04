@@ -1,26 +1,26 @@
 //
-//  PokemonHomeView.swift
+//  AbilityHomeView.swift
 //  Pokemon Dex
 //
-//  Created by David Giron on 12/11/25.
+//  Created by David Giron on 3/12/25.
 //
 
 import SwiftUI
 
-struct PokemonHomeView: View {
+struct AbilityHomeView: View {
     
-    @StateObject private var pokemonVM = PokemonHomeViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var abilityVM = AbilityHomeViewModel(abilityService: DataProvider.shared.abilityService)
     
     var body: some View {
         Group{
-            if case .notFound = pokemonVM.state {
-                InfoStateView(primaryText: "No Pokémon found.", secondaryText: "Try catching some first!")
+            if case .notFound = abilityVM.state {
+                InfoStateView(primaryText: "No Abilities found.", secondaryText: "There are currently no abilities.")
             }else{
                 NavigationContainer {
                     ScrollView {
-                        ViewStateHandler(viewModel: pokemonVM) {
-                            PokemonList(pokemons: pokemonVM.pokemons, onItemAppear: { pokemon in
-                                Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
+                        ViewStateHandler(viewModel: abilityVM) {
+                            AbilityList(abilities: abilityVM.abilities, onItemAppear: { ability in
+                                Task { await abilityVM.loadNextPageIfNeeded(ability: ability) }
                             })
                         }
                         .padding(.horizontal)
@@ -28,7 +28,7 @@ struct PokemonHomeView: View {
                     .toolbarRole(.editor)
                     .toolbar {
                         ToolbarItem(placement: .subtitle) {
-                            Text("Pokémon")
+                            Text("Abilities")
                                 .font(.system(size: 32, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -42,14 +42,14 @@ struct PokemonHomeView: View {
             }
         }
         .task {
-            if pokemonVM.pokemons.isEmpty {
-                await pokemonVM.loadInitialPage()
+            if abilityVM.abilities.isEmpty {
+                await abilityVM.loadInitialPage()
             }
         }
     }
 }
 
 #Preview {
-    PokemonHomeView()
+    AbilityHomeView()
         .environmentObject(NavigationRouter())
 }

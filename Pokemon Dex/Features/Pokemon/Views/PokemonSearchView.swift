@@ -30,7 +30,7 @@ struct PokemonSearchView: View {
                 }else {
                     ScrollView {
                         ViewStateHandler(viewModel: pokemonVM) {
-                            PokemonListView(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn)
+                            PokemonList(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn)
                         }
                         .padding(.horizontal)
                     }

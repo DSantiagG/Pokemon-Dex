@@ -8,7 +8,7 @@
 import SwiftUI
 import PokemonAPI
 
-struct PokemonListView: View {
+struct PokemonList: View {
     
     enum ListLayout {
         case twoColumns
@@ -64,16 +64,15 @@ struct PokemonListView: View {
     let pokemon = PokemonMockFactory.mockBulbasaur()
     let list = Array(repeating: pokemon, count: 30)
     ScrollView{
-        PokemonListView(pokemons: list,layout: .twoColumns)
+        PokemonList(pokemons: list,layout: .twoColumns)
             .padding(.horizontal)
     }
 }
 
 #Preview("One Column") {
-    let pokemon = PokemonMockFactory.mockBulbasaur()
-    let list = Array(repeating: pokemon, count: 30)
+    let list = Array(repeating: PokemonMockFactory.mockBulbasaur(), count: 30)
     ScrollView{
-        PokemonListView(pokemons: list,layout: .singleColumn)
+        PokemonList(pokemons: list,layout: .singleColumn)
             .padding(.horizontal)
     }
 }

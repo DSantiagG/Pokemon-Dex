@@ -22,7 +22,7 @@ class PokemonHomeViewModel: ObservableObject, ErrorHandleable {
     }
     
     func loadInitialPage() async {
-        print("Loading first page...")
+        print("Loading first pokemon page...")
         state = .loading
         
         do {
@@ -33,7 +33,7 @@ class PokemonHomeViewModel: ObservableObject, ErrorHandleable {
                 state = .loaded
             }
         } catch {
-            handle(error: error, debugMessage: "Loading first page failed", userMessage: "Oops! The Pokédex is having trouble loading your Pokémon. Please try again!") { [weak self] in
+            handle(error: error, debugMessage: "Loading first pokemon page failed", userMessage: "Oops! The Pokédex is having trouble loading your Pokémon. Please try again!") { [weak self] in
                 Task { @MainActor in
                     await self?.loadInitialPage()
                 }

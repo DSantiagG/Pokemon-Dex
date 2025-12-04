@@ -10,7 +10,7 @@ import PokemonAPI
 
 struct PokemonDetailView: View {
     
-    @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService)
     
     let pokemonName: String
     
@@ -65,9 +65,10 @@ struct PokemonDetailView: View {
                             )
                             
                             PokemonAbilitiesSection(
-                                abilities: pokemon.details.abilities ?? [],
+                                normalAbilities: pokemon.normalAbilities,
+                                hiddenAbilities: pokemon.hiddenAbilities,
                                 color: pokemonColor
-                            )
+                            ) {}
                             
                             PokemonCaptureSection(
                                 habit: pokemon.species.habitat?.name?.formattedName() ?? "Unknown",

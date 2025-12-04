@@ -16,9 +16,11 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     @Published var state: ViewState = .idle
     
     private let pokemonService: PokemonService
+    private let abilityService: AbilityService
     
-    init(pokemonService: PokemonService) {
+    init(pokemonService: PokemonService, abilityService: AbilityService) {
         self.pokemonService = pokemonService
+        self.abilityService = abilityService
     }
     
     func loadPokemon(name: String) async {
@@ -45,6 +47,11 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         guard let types = try await fetchTypes(for: pokemon) else { return nil }
         
+        let (normalAbilities, hiddenAbilities) = try await fetchAbilities(for: pokemon)
+        
+        guard let normalAbilities else { return nil }
+        guard let hiddenAbilities else { return nil }
+        
         guard let species = try await fetchSpecies(for: pokemon) else { return nil }
         
         guard let evolution = try await fetchEvolution(for: species) else { return nil }
@@ -54,6 +61,8 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         return CurrentPokemon(
             details: pokemon,
             types: types,
+            normalAbilities: normalAbilities,
+            hiddenAbilities: hiddenAbilities,
             species: species,
             evolution: evolution,
             forms: forms
@@ -76,6 +85,34 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
             types.append(typeDetails)
         }
         return types
+    }
+    
+    private func fetchAbilities(for pokemon: PKMPokemon) async throws -> (normal: [PKMAbility]?, hidden: [PKMAbility]?) {
+
+        guard let pokemonAbilities = pokemon.abilities else { return (nil, nil) }
+
+        var normalAbilities: [PKMAbility] = []
+        var hiddenAbilities: [PKMAbility] = []
+
+        try await withThrowingTaskGroup(of: (isHidden: Bool, ability: PKMAbility)?.self) { group in
+            for pokemonAbility in pokemonAbilities {
+                group.addTask { [abilityService] in
+                    guard let resource = pokemonAbility.ability else { return nil }
+                    let ability = try await abilityService.fetchAbility(resource: resource)
+                    return (pokemonAbility.isHidden ?? false, ability)
+                }
+            }
+            for try await result in group {
+                guard let result else { continue }
+
+                if result.isHidden {
+                    hiddenAbilities.append(result.ability)
+                } else {
+                    normalAbilities.append(result.ability)
+                }
+            }
+        }
+        return (normalAbilities, hiddenAbilities)
     }
     
     private func fetchSpecies(for pokemon: PKMPokemon) async throws -> PKMPokemonSpecies? {
@@ -101,3 +138,4 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         return pokemonForms
     }
 }
+

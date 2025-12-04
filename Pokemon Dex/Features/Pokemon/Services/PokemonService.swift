@@ -113,7 +113,6 @@ actor PokemonService {
         return stages
     }
     
-    
     func fetchPokemons(from results: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await withThrowingTaskGroup(of: (Int, PKMPokemon).self) { group in
             for (index, result) in results.enumerated() {
