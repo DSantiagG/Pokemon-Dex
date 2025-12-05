@@ -10,26 +10,19 @@ import PokemonAPI
 
 struct AbilityList: View {
     
-    @EnvironmentObject private var router: NavigationRouter
-    
     let abilities: [PKMAbility]
     var color: Color = .red
     
     var onItemAppear: (PKMAbility) -> Void = { _ in }
-    var onItemSelected: (PKMAbility) -> Void = { _ in }
+    var onItemSelected: (String) -> Void = { _ in }
     
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 8) {
             ForEach(Array(abilities).enumerated(), id: \.offset) { _, ability in
-                let abilityName = ability.name ?? "Unknown Name"
-                
                 AbilityCard(ability: ability, color: color)
                     .padding(3)
                     .onAppear { onItemAppear(ability) }
-                    .onTapGesture {
-                        onItemSelected(ability)
-                        router.push(.abilityDetail(name: abilityName))
-                    }
+                    .onTapGesture { onItemSelected(ability.name ?? "Unknown Name") }
             }
         }
     }
@@ -49,7 +42,7 @@ private struct AbilityCard: View {
                 .padding(.vertical, 2)
                 .padding(.horizontal, 11)
                 .foregroundStyle(.white)
-                .background(color)
+                .background(color.opacity(0.9))
                 .clipShape(Capsule())
             
             Text(ability.effectEntries?.first(where: { $0.language?.name == "en" })?.shortEffect?.cleanFlavorText() ?? "No effect available.")
@@ -72,8 +65,11 @@ private struct AbilityCard: View {
 
 #Preview {
     let list = Array(repeating: AbilityMockFactory.mockStench(), count: 50)
+    
     ScrollView{
-        AbilityList(abilities: list, color: .red)
+        AbilityList(abilities: list, color: .red, onItemSelected: { name in
+            print(name)
+        })
             .padding(.horizontal)
     }
 }

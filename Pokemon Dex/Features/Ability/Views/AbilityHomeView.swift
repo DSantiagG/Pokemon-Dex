@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AbilityHomeView: View {
     
+    @EnvironmentObject private var router: NavigationRouter
+    
     @StateObject private var abilityVM = AbilityHomeViewModel(abilityService: DataProvider.shared.abilityService)
     
     var body: some View {
@@ -19,9 +21,14 @@ struct AbilityHomeView: View {
                 NavigationContainer {
                     ScrollView {
                         ViewStateHandler(viewModel: abilityVM) {
-                            AbilityList(abilities: abilityVM.abilities, onItemAppear: { ability in
-                                Task { await abilityVM.loadNextPageIfNeeded(ability: ability) }
-                            })
+                            AbilityList(
+                                abilities: abilityVM.abilities,
+                                onItemAppear: { ability in
+                                    Task { await abilityVM.loadNextPageIfNeeded(ability: ability) }
+                                },
+                                onItemSelected: { abilityName in
+                                    router.push(.abilityDetail(name: abilityName))
+                                })
                         }
                         .padding(.horizontal)
                     }

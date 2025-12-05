@@ -22,20 +22,19 @@ struct PokemonHeader: View {
                 .opacity(0.8)
                 .frame(height: max(220 + (y > 0 ? y : 0), 200))
                 .clipShape(customShape)
-                .overlay(customShape.stroke(color, lineWidth: 1))
                 .shadow(color: color.opacity(0.7), radius: 20)
                 .overlay(
-                    ZStack(alignment: .center) {
-                        URLImage(urlString: imageURL, contentMode: .fit)
-                            .frame(width: 310, height: 310)
-                            .shadow(color: color, radius: 3)
-                        
-                        AudioPlayerButton(urlString: cryURL, color: color, iconSize: 35)
-                            .padding(.trailing, 25)
-                            .padding(.bottom, 20)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                    }
-                    .offset(y: 60 + (y > 0 ? y/2 : 0))
+                    URLImage(urlString: imageURL, contentMode: .fit)
+                        .frame(width: 310, height: 310)
+                        .shadow(color: color, radius: 3)
+                        .overlay(
+                            AudioPlayerButton(urlString: cryURL, color: color, iconSize: 35)
+                                .padding(.trailing, 25)
+                                .padding(.bottom, 20)
+                                .offset(x: 50),
+                            alignment: .bottomTrailing
+                        )
+                        .offset(y: 60 + (y > 0 ? y/2 : 0))
                 )
                 .offset(y: (y > 0) ? -y : 0)
         }

@@ -8,6 +8,9 @@ import SwiftUI
 import PokemonAPI
 
 struct PokemonAbilitiesSection: View {
+    
+    @EnvironmentObject private var router: NavigationRouter
+    @Environment(\.dismiss) private var dismiss
 
     @State private var selectedAbility: IdentifiedString?
     @State private var abilityKind: AbilityKind = .normal
@@ -15,7 +18,8 @@ struct PokemonAbilitiesSection: View {
     let normalAbilities: [PKMAbility]
     let hiddenAbilities: [PKMAbility]
     let color: Color
-    var onSelectAbility: () -> Void
+    
+    let context: NavigationContext
     
     var body: some View {
         SectionCard(text: "Abilities", color: color) {
@@ -26,34 +30,36 @@ struct PokemonAbilitiesSection: View {
                     .init("Hidden", tag: .hidden)
                 ])
                 
-                AbilityList(abilities: (abilityKind == .normal) ? normalAbilities : hiddenAbilities, color: color, onItemSelected: { ability in
-                    selectedAbility = IdentifiedString(ability.name ?? "Unknown name")
-                    onSelectAbility()
+                AbilityList(
+                    abilities: (abilityKind == .normal) ? normalAbilities : hiddenAbilities, color: color,
+                    onItemSelected: { abilityName in
+                        switch context {
+                        case .sheet:
+                            dismiss()
+                            router.push(.abilityDetail(name: abilityName))
+                        case .main:
+                            selectedAbility = IdentifiedString(abilityName)
+                        }
                 })
             }
             .sheet(item: $selectedAbility) { abilityName in
-                AbilityDetailView(abilityName: abilityName.value, shouldAutoDismiss: true)
-                        .padding(.top, 20)
+                AbilityDetailView(abilityName: abilityName.value, context: .sheet)
                         .presentationDetents([.medium, .large])
-                        .presentationDragIndicator(.visible)
                         .presentationBackground(Color(.systemBackground))
             }
         }
     }
 }
 
-#Preview{
-    PokemonAbilitiesSection(
-        normalAbilities: [
-            AbilityMockFactory.mockStench(),
-            AbilityMockFactory.mockStench()
-        ],
-        hiddenAbilities: [
-            AbilityMockFactory.mockStench()
-        ],
-        color: .green){
-            
-        }
-        .padding(.horizontal)
-        .environmentObject(NavigationRouter())
+#Preview {
+    NavigationStack{
+        PokemonAbilitiesSection(
+            normalAbilities: [ AbilityMockFactory.mockStench()],
+            hiddenAbilities: [ AbilityMockFactory.mockStench()],
+            color: .green,
+            context: .main)
+            .padding(.horizontal)
+            .environmentObject(NavigationRouter())
+    }
 }
+

@@ -15,13 +15,11 @@ struct PokemonList: View {
         case singleColumn
     }
     
-    @EnvironmentObject private var router: NavigationRouter
-    
     let pokemons: [PKMPokemon]
     var layout: ListLayout = .twoColumns
     
     var onItemAppear: (PKMPokemon) -> Void = { _ in }
-    var onItemSelected: () -> Void = { }
+    var onItemSelected: (String) -> Void = { _ in }
     
     private let columns = [
         GridItem(.flexible()),
@@ -52,10 +50,7 @@ struct PokemonList: View {
             .frame(height: layout == .singleColumn ? 90 : 240)
             .padding(layout == .twoColumns ? 3 : 0)
             .onAppear { onItemAppear(pokemon) }
-            .onTapGesture {
-                onItemSelected()
-                router.push(.pokemonDetail(name: pokemon.name ?? "Unknown Name"))
-            }
+            .onTapGesture { onItemSelected(pokemon.name ?? "Unknown Name") }
         }
     }
 }

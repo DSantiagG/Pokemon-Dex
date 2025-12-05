@@ -42,11 +42,9 @@ struct MainTabView: View {
                     .environmentObject(appRouter.abilityRouter)
             }
             
-            /*
              Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
                  InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
              }
-             */
             
             Tab(value: TabKey.search, role: .search) {
                 searchContainerView
@@ -73,7 +71,10 @@ struct MainTabView: View {
                 }
                 .environmentObject(appRouter.pokemonSearchRouter)
             case .abilities:
-                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+                 AbilitySearchView {
+                     selection = lastPrimarySelection
+                 }
+                 .environmentObject(appRouter.abilitySearchRouter)
             case .berries:
                 InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             case .search:

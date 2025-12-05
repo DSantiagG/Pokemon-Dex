@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PokemonHomeView: View {
     
+    @EnvironmentObject private var router: NavigationRouter
+    
     @StateObject private var pokemonVM = PokemonHomeViewModel(pokemonService: DataProvider.shared.pokemonService)
     
     var body: some View {
@@ -19,9 +21,14 @@ struct PokemonHomeView: View {
                 NavigationContainer {
                     ScrollView {
                         ViewStateHandler(viewModel: pokemonVM) {
-                            PokemonList(pokemons: pokemonVM.pokemons, onItemAppear: { pokemon in
-                                Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
-                            })
+                            PokemonList(
+                                pokemons: pokemonVM.pokemons,
+                                onItemAppear: { pokemon in
+                                    Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
+                                },
+                                onItemSelected: { pokemonName in
+                                    router.push(.pokemonDetail(name: pokemonName))
+                                })
                         }
                         .padding(.horizontal)
                     }

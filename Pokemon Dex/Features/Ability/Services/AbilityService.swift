@@ -31,6 +31,11 @@ actor AbilityService {
         return abilities
     }
     
+    func fetchAllAbilityResources() async throws -> [PKMAPIResource<PKMAbility>] {
+        let result = try await api.pokemonService.fetchAbilityList(paginationState: .initial(pageLimit: 2000))
+        return result.results ?? []
+    }
+    
     func fetchAbility(name: String) async throws -> PKMAbility {
         try await fetchAbility(usingKey: name) {
             try await self.api.pokemonService.fetchAbility(name)

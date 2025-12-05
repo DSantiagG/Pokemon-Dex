@@ -13,6 +13,7 @@ struct PokemonDetailView: View {
     @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService)
     
     let pokemonName: String
+    var context: NavigationContext = .main
     
     private var pokemonColor: Color {
         pokemonVM.currentPokemon?.details.types?.first?.color ?? .gray
@@ -67,8 +68,9 @@ struct PokemonDetailView: View {
                             PokemonAbilitiesSection(
                                 normalAbilities: pokemon.normalAbilities,
                                 hiddenAbilities: pokemon.hiddenAbilities,
-                                color: pokemonColor
-                            ) {}
+                                color: pokemonColor,
+                                context: context
+                            )
                             
                             PokemonCaptureSection(
                                 habit: pokemon.species.habitat?.name?.formattedName() ?? "Unknown",

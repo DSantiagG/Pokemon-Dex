@@ -1,15 +1,15 @@
 //
-//  PokemonSearchView.swift
+//  AbilitySearchView.swift
 //  Pokemon Dex
 //
-//  Created by David Giron on 20/11/25.
+//  Created by David Giron on 5/12/25.
 //
-import SwiftUI
-import PokemonAPI
 
-struct PokemonSearchView: View {
+import SwiftUI
+
+struct AbilitySearchView: View {
     
-    @StateObject private var pokemonVM = PokemonSearchViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var abilityVM = AbilitySearchViewModel(abilityService: DataProvider.shared.abilityService)
     
     @EnvironmentObject private var router: NavigationRouter
     @State private var isSearchFocused: Bool = false
@@ -19,18 +19,19 @@ struct PokemonSearchView: View {
     var body: some View {
         NavigationContainer{
             Group {
-                if pokemonVM.searchText.isEmpty {
+                if abilityVM.searchText.isEmpty {
                     InfoStateView(primaryText: "Start your search",
-                                  secondaryText: "Type a Pokémon name to find it.")
+                                  secondaryText: "Type an ability name to find it.")
                     .padding(.bottom, 80)
-                }else if case .notFound = pokemonVM.state {
-                    InfoStateView(primaryText: "No Pokémon found", secondaryText: "Try a different name or check your spelling.")
+                }else if case .notFound = abilityVM.state {
+                    InfoStateView(primaryText: "No Ability found", secondaryText: "Try a different name or check your spelling.")
                         .padding(.bottom, 80)
                 }else {
                     ScrollView {
-                        ViewStateHandler(viewModel: pokemonVM) {
-                            PokemonList(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn, onItemSelected:  { pokemonName in
-                                router.push(.pokemonDetail(name: pokemonName))
+                        ViewStateHandler(viewModel: abilityVM) {
+                            AbilityList(abilities: abilityVM.filteredAbilities, color: .red, onItemSelected: {
+                                abilityName in
+                                router.push(.abilityDetail(name: abilityName))
                             })
                         }
                         .padding(.horizontal)
@@ -40,7 +41,7 @@ struct PokemonSearchView: View {
             .navigationBarTitle("Search")
             .toolbarTitleDisplayMode(.inlineLarge)
         }
-        .searchable(text: $pokemonVM.searchText, isPresented: $isSearchFocused, placement: .automatic)
+        .searchable(text: $abilityVM.searchText, isPresented: $isSearchFocused, placement: .automatic)
         .searchPresentationToolbarBehavior(.avoidHidingContent)
         .onAppear{
             Task { @MainActor in
@@ -49,7 +50,7 @@ struct PokemonSearchView: View {
             }
         }
         .onChange(of: isSearchFocused) { _, focused in
-            if !focused, pokemonVM.searchText.isEmpty {
+            if !focused, abilityVM.searchText.isEmpty {
                 onDismissSearch()
             }
         }
@@ -57,6 +58,6 @@ struct PokemonSearchView: View {
 }
 
 #Preview {
-    PokemonSearchView{}
+    AbilitySearchView{}
         .environmentObject(NavigationRouter())
 }
