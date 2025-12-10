@@ -9,14 +9,11 @@ import SwiftUI
 
 struct MainTabView: View {
     
-    private enum TabKey: Hashable {
-        case pokemon, abilities, berries, search
-    }
-    
     @StateObject var appRouter = AppRouter()
     
     @State private var selection: TabKey = .pokemon
     @State private var lastPrimarySelection: TabKey = .pokemon
+    @State private var searchTarget: TabKey = .pokemon
     
     init() {
         let appearance = UITabBarAppearance()
@@ -42,44 +39,33 @@ struct MainTabView: View {
                     .environmentObject(appRouter.abilityRouter)
             }
             
-             Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
-                 InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-             }
+            Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
+                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
+            }
             
             Tab(value: TabKey.search, role: .search) {
-                searchContainerView
+                SearchView(searchTarget: searchTarget) {
+                    selection = searchTarget
+                }
+                .environmentObject(routerForCurrentTarget())
             }
         }
         .onChange(of: selection) { _ , newValue in
-            switch newValue {
-            case .pokemon, .abilities, .berries:
+            if newValue == .search {
+                searchTarget = lastPrimarySelection
+            } else {
                 lastPrimarySelection = newValue
-            case .search:
-                break
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
     }
     
-    
-    var searchContainerView: some View {
-        Group{
-            switch lastPrimarySelection {
-            case .pokemon:
-                PokemonSearchView{
-                    selection = lastPrimarySelection
-                }
-                .environmentObject(appRouter.pokemonSearchRouter)
-            case .abilities:
-                 AbilitySearchView {
-                     selection = lastPrimarySelection
-                 }
-                 .environmentObject(appRouter.abilitySearchRouter)
-            case .berries:
-                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
-            case .search:
-                EmptyView()
-            }
+    private func routerForCurrentTarget() -> NavigationRouter {
+        switch searchTarget {
+        case .pokemon: return appRouter.pokemonSearchRouter
+        case .abilities: return appRouter.abilitySearchRouter
+        case .berries: return appRouter.berrySearchRouter
+        default: return appRouter.pokemonSearchRouter
         }
     }
 }

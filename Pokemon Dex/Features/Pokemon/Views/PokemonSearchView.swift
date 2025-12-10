@@ -9,54 +9,39 @@ import PokemonAPI
 
 struct PokemonSearchView: View {
     
+    @EnvironmentObject private var router: NavigationRouter
+    
     @StateObject private var pokemonVM = PokemonSearchViewModel(pokemonService: DataProvider.shared.pokemonService)
     
-    @EnvironmentObject private var router: NavigationRouter
-    @State private var isSearchFocused: Bool = false
-    
-    var onDismissSearch: (() -> Void)
+    @Binding var searchText: String
     
     var body: some View {
-        NavigationContainer{
-            Group {
-                if pokemonVM.searchText.isEmpty {
-                    InfoStateView(primaryText: "Start your search",
-                                  secondaryText: "Type a Pokémon name to find it.")
+        Group {
+            if searchText.isEmpty {
+                InfoStateView(primaryText: "Start your search",
+                              secondaryText: "Type a Pokémon name to find it.")
+                .padding(.bottom, 80)
+            }else if case .notFound = pokemonVM.state {
+                InfoStateView(primaryText: "No Pokémon found", secondaryText: "Try a different name or check your spelling.")
                     .padding(.bottom, 80)
-                }else if case .notFound = pokemonVM.state {
-                    InfoStateView(primaryText: "No Pokémon found", secondaryText: "Try a different name or check your spelling.")
-                        .padding(.bottom, 80)
-                }else {
-                    ScrollView {
-                        ViewStateHandler(viewModel: pokemonVM) {
-                            PokemonList(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn, onItemSelected:  { pokemonName in
-                                router.push(.pokemonDetail(name: pokemonName))
-                            })
-                        }
-                        .padding(.horizontal)
+            }else {
+                ScrollView {
+                    ViewStateHandler(viewModel: pokemonVM) {
+                        PokemonList(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn, onItemSelected:  { pokemonName in
+                            router.push(.pokemonDetail(name: pokemonName))
+                        })
                     }
+                    .padding(.horizontal)
                 }
             }
-            .navigationBarTitle("Search")
-            .toolbarTitleDisplayMode(.inlineLarge)
         }
-        .searchable(text: $pokemonVM.searchText, isPresented: $isSearchFocused, placement: .automatic)
-        .searchPresentationToolbarBehavior(.avoidHidingContent)
-        .onAppear{
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 50_000_000)
-                isSearchFocused = true
-            }
-        }
-        .onChange(of: isSearchFocused) { _, focused in
-            if !focused, pokemonVM.searchText.isEmpty {
-                onDismissSearch()
-            }
+        .onChange(of: searchText) { _, newValue in
+            pokemonVM.search(newValue)
         }
     }
 }
 
 #Preview {
-    PokemonSearchView{}
+    PokemonSearchView(searchText: .constant(""))
         .environmentObject(NavigationRouter())
 }

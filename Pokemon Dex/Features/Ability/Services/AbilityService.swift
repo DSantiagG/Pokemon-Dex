@@ -13,6 +13,7 @@ actor AbilityService {
     private let api = PokemonAPI()
     private var pagedObject: PKMPagedObject<PKMAbility>?
     
+    private var abilityResourcesCache: [PKMAPIResource<PKMAbility>]?
     private var abilityCache = [String: PKMAbility]()
     
     func fetchInitialPage() async throws -> [PKMAbility] {
@@ -32,8 +33,11 @@ actor AbilityService {
     }
     
     func fetchAllAbilityResources() async throws -> [PKMAPIResource<PKMAbility>] {
+        if let cached = abilityResourcesCache { return cached }
         let result = try await api.pokemonService.fetchAbilityList(paginationState: .initial(pageLimit: 2000))
-        return result.results ?? []
+        let abilityResources = result.results ?? []
+        abilityResourcesCache = abilityResources
+        return abilityResources
     }
     
     func fetchAbility(name: String) async throws -> PKMAbility {

@@ -11,6 +11,8 @@ actor PokemonService {
     private let api = PokemonAPI()
     private var pagedObject: PKMPagedObject<PKMPokemon>?
     
+    private var pokemonResourcesCache: [PKMAPIResource<PKMPokemon>]?
+    
     private var pokemonCache = [String: PKMPokemon]()
     private var typeCache = [String: PKMType]()
     private var speciesCache = [String: PKMPokemonSpecies]()
@@ -33,8 +35,11 @@ actor PokemonService {
     }
     
     func fetchAllPokemonResources() async throws -> [PKMAPIResource<PKMPokemon>] {
+        if let cached = pokemonResourcesCache { return cached }
         let result = try await api.pokemonService.fetchPokemonList(paginationState: .initial(pageLimit: 2000))
-        return result.results ?? []
+        let pokemonResources = result.results ?? []
+        pokemonResourcesCache = pokemonResources
+        return pokemonResources
     }
     
     func fetchPokemon(name: String) async throws -> PKMPokemon {

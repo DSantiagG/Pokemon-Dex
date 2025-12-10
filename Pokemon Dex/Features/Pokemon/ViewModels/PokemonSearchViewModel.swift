@@ -12,19 +12,15 @@ import Combine
 @MainActor
 class PokemonSearchViewModel: ObservableObject, ErrorHandleable {
     
-    // MARK: - Inputs
-    @Published var searchText: String = ""
-    
     // MARK: - Outputs
-    @Published private(set) var normalizedSearch: String = ""
     @Published private(set) var filteredPokemons: [PKMPokemon] = []
     @Published var state: ViewState = .idle
     
     // MARK: - Dependencies
     private let pokemonService: PokemonService
     
-    // MARK: - Combine
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: - Debounce
+    private var debounceTask: Task<Void, Never>?
     
     // MARK: - Token anti-race-condition
     private var searchToken = UUID()
@@ -40,35 +36,32 @@ class PokemonSearchViewModel: ObservableObject, ErrorHandleable {
                 await loadAllPokemonResources()
             }
         }
-        
-        setupSearchListener()
     }
     
-    // MARK: - Combine Search Handler
-    private func setupSearchListener() {
-        $searchText
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
-            .sink { [weak self] text in
-                self?.normalizedSearch = text
-                self?.filterPokemons()
-            }
-            .store(in: &cancellables)
+    // MARK: - Debounce
+    func search(_ term: String) {
+        debounceTask?.cancel()
+
+        debounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 200_000_000) 
+
+            guard !Task.isCancelled else { return }
+
+            filter(searchText: term)
+        }
     }
     
     // MARK: - Filtering
-    func filterPokemons() {
+    private func filter(searchText: String) {
         
         guard !allPokemonResources.isEmpty else { return }
         
-        let term = normalizedSearch
+        let term = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         
         searchToken = UUID()
         let token = searchToken
         
         currentSearchTask?.cancel()
-        
         currentSearchTask = Task { @MainActor in
             
             guard !term.isEmpty else {
@@ -96,7 +89,7 @@ class PokemonSearchViewModel: ObservableObject, ErrorHandleable {
                 state = .loaded
             }catch {
                 handle(error: error, debugMessage: "Error loading filtered pokemons", userMessage: "Oops! An error occured while searching your pokemon. Please try again!") { [weak self] in
-                    self?.filterPokemons()
+                    self?.filter(searchText: term)
                 }
                 filteredPokemons = []
             }

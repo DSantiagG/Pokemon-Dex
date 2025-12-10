@@ -11,19 +11,16 @@ import Combine
 
 @MainActor
 class AbilitySearchViewModel: ObservableObject, ErrorHandleable {
-    // MARK: - Inputs
-    @Published var searchText: String = ""
     
     // MARK: - Outputs
-    @Published private(set) var normalizedSearch: String = ""
     @Published private(set) var filteredAbilities: [PKMAbility] = []
     @Published var state: ViewState = .idle
     
     // MARK: - Dependencies
     private let abilityService: AbilityService
     
-    // MARK: - Combine
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: - Debounce
+    private var debounceTask: Task<Void, Never>?
     
     // MARK: - Token anti-race-condition
     private var searchToken = UUID()
@@ -39,35 +36,32 @@ class AbilitySearchViewModel: ObservableObject, ErrorHandleable {
                 await loadAllAbilityResources()
             }
         }
-        
-        setupSearchListener()
     }
     
-    // MARK: - Combine Search Handler
-    private func setupSearchListener() {
-        $searchText
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
-            .sink { [weak self] text in
-                self?.normalizedSearch = text
-                self?.filterAbilities()
-            }
-            .store(in: &cancellables)
+    // MARK: - Debounce
+    func search(_ term: String) {
+        debounceTask?.cancel()
+
+        debounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 200_000_000)
+
+            guard !Task.isCancelled else { return }
+
+            filter(searchText: term)
+        }
     }
     
     // MARK: - Filtering
-    func filterAbilities() {
+    private func filter(searchText: String) {
         
         guard !allAbilityResources.isEmpty else { return }
         
-        let term = normalizedSearch
+        let term = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         
         searchToken = UUID()
         let token = searchToken
         
         currentSearchTask?.cancel()
-        
         currentSearchTask = Task { @MainActor in
             
             guard !term.isEmpty else {
@@ -95,7 +89,7 @@ class AbilitySearchViewModel: ObservableObject, ErrorHandleable {
                 state = .loaded
             }catch {
                 handle(error: error, debugMessage: "Error loading filtered abilities", userMessage: "Oops! An error occured while searching your ability. Please try again!") { [weak self] in
-                    self?.filterAbilities()
+                    self?.filter(searchText: term)
                 }
                 filteredAbilities = []
             }
