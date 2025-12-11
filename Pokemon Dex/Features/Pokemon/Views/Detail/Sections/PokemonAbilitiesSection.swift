@@ -12,7 +12,7 @@ struct PokemonAbilitiesSection: View {
     @EnvironmentObject private var router: NavigationRouter
     @Environment(\.dismiss) private var dismiss
 
-    @State private var selectedAbility: IdentifiedString?
+    @State private var selectedAbility: String?
     @State private var abilityKind: AbilityKind = .normal
     
     let normalAbilities: [PKMAbility]
@@ -38,12 +38,12 @@ struct PokemonAbilitiesSection: View {
                             dismiss()
                             router.push(.abilityDetail(name: abilityName))
                         case .main:
-                            selectedAbility = IdentifiedString(abilityName)
+                            selectedAbility = abilityName
                         }
                 })
             }
             .sheet(item: $selectedAbility) { abilityName in
-                AbilityDetailView(abilityName: abilityName.value, context: .sheet)
+                AbilityDetailView(abilityName: abilityName, context: .sheet)
                         .presentationDetents([.medium, .large])
                         .presentationBackground(Color(.systemBackground))
             }

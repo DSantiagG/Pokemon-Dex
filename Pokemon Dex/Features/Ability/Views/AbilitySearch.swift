@@ -1,5 +1,5 @@
 //
-//  AbilitySearchView.swift
+//  AbilitySearch.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 5/12/25.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct AbilitySearchView: View {
+struct AbilitySearch: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var abilityVM = AbilitySearchViewModel(abilityService: DataProvider.shared.abilityService)
+    @StateObject private var abilityVM = SearchViewModel(service: DataProvider.shared.abilityService)
     
     @Binding var searchText: String
     
@@ -27,7 +27,7 @@ struct AbilitySearchView: View {
             }else {
                 ScrollView {
                     ViewStateHandler(viewModel: abilityVM) {
-                        AbilityList(abilities: abilityVM.filteredAbilities, color: .red, onItemSelected: {
+                        AbilityList(abilities: abilityVM.results, color: .red, onItemSelected: {
                             abilityName in
                             router.push(.abilityDetail(name: abilityName))
                         })
@@ -43,6 +43,6 @@ struct AbilitySearchView: View {
 }
 
 #Preview {
-    AbilitySearchView(searchText: .constant(""))
+    AbilitySearch(searchText: .constant(""))
         .environmentObject(NavigationRouter())
 }

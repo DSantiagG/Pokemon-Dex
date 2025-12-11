@@ -1,5 +1,5 @@
 //
-//  PokemonSearchView.swift
+//  PokemonSearch.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 20/11/25.
@@ -7,11 +7,11 @@
 import SwiftUI
 import PokemonAPI
 
-struct PokemonSearchView: View {
+struct PokemonSearch: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var pokemonVM = PokemonSearchViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var pokemonVM = SearchViewModel(service: DataProvider.shared.pokemonService)
     
     @Binding var searchText: String
     
@@ -27,7 +27,7 @@ struct PokemonSearchView: View {
             }else {
                 ScrollView {
                     ViewStateHandler(viewModel: pokemonVM) {
-                        PokemonList(pokemons: pokemonVM.filteredPokemons, layout: .singleColumn, onItemSelected:  { pokemonName in
+                        PokemonList(pokemons: pokemonVM.results, layout: .singleColumn, onItemSelected:  { pokemonName in
                             router.push(.pokemonDetail(name: pokemonName))
                         })
                     }
@@ -42,6 +42,6 @@ struct PokemonSearchView: View {
 }
 
 #Preview {
-    PokemonSearchView(searchText: .constant(""))
+    PokemonSearch(searchText: .constant(""))
         .environmentObject(NavigationRouter())
 }

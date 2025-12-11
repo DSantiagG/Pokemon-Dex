@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     
-    let searchTarget: TabKey
+    let searchTarget: AppTab
     @State private var searchText: String = ""
     @State var isSearchFocused: Bool?
     
@@ -51,8 +51,8 @@ struct SearchView: View {
     @ViewBuilder
     var content: some View {
         switch searchTarget {
-        case .pokemon: PokemonSearchView(searchText: $searchText)
-        case .abilities: AbilitySearchView(searchText: $searchText)
+        case .pokemon: PokemonSearch(searchText: $searchText)
+        case .abilities: AbilitySearch(searchText: $searchText)
         case .berries: Text("Berry Search")
         case .search: EmptyView()
         }
@@ -60,6 +60,6 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView(searchTarget: .pokemon){}
+    SearchView(searchTarget: .abilities){}
         .environmentObject(NavigationRouter())
 }

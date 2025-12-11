@@ -11,7 +11,7 @@ struct PokemonHomeView: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var pokemonVM = PokemonHomeViewModel(pokemonService: DataProvider.shared.pokemonService)
+    @StateObject private var pokemonVM = PokemonHomeViewModel(service: DataProvider.shared.pokemonService)
     
     var body: some View {
         Group{
@@ -22,9 +22,9 @@ struct PokemonHomeView: View {
                     ScrollView {
                         ViewStateHandler(viewModel: pokemonVM) {
                             PokemonList(
-                                pokemons: pokemonVM.pokemons,
+                                pokemons: pokemonVM.items,
                                 onItemAppear: { pokemon in
-                                    Task { await pokemonVM.loadNextPageIfNeeded(pokemon: pokemon) }
+                                    Task { await pokemonVM.loadNextPageIfNeeded(item: pokemon) }
                                 },
                                 onItemSelected: { pokemonName in
                                     router.push(.pokemonDetail(name: pokemonName))
@@ -35,7 +35,7 @@ struct PokemonHomeView: View {
                     .toolbarRole(.editor)
                     .toolbar {
                         ToolbarItem(placement: .subtitle) {
-                            Text("Pokémon")
+                            Text(AppTab.pokemon.title)
                                 .font(.system(size: 32, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -49,7 +49,7 @@ struct PokemonHomeView: View {
             }
         }
         .task {
-            if pokemonVM.pokemons.isEmpty {
+            if pokemonVM.items.isEmpty {
                 await pokemonVM.loadInitialPage()
             }
         }

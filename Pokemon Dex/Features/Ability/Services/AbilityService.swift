@@ -8,76 +8,44 @@
 import Foundation
 import PokemonAPI
 
-actor AbilityService {
+private enum AbilityEndpoints: ResourceEndpoints {
+    static func fetchPage(_ state: PaginationState<PKMAbility>) async throws -> PKMPagedObject<PKMAbility> {
+        try await PokemonAPI().pokemonService.fetchAbilityList(paginationState: state)
+    }
+
+    static func fetchByName(_ name: String) async throws -> PKMAbility {
+        try await PokemonAPI().pokemonService.fetchAbility(name)
+    }
+}
+
+actor AbilityService: PagingService, SearchService {
     
-    private let api = PokemonAPI()
-    private var pagedObject: PKMPagedObject<PKMAbility>?
+    private let core = ResourceService<AbilityEndpoints>()
     
-    private var abilityResourcesCache: [PKMAPIResource<PKMAbility>]?
-    private var abilityCache = [String: PKMAbility]()
-    
+    // MARK: - Pagination
     func fetchInitialPage() async throws -> [PKMAbility] {
-        let result = try await api.pokemonService.fetchAbilityList(paginationState: .initial(pageLimit: 20))
-        pagedObject = result
-        return try await fetchAbilities(from: result.results ?? [])
+        try await core.fetchInitialPage()
     }
     
     func fetchNextPage() async throws -> [PKMAbility]? {
-        guard let paged = pagedObject,
-              paged.hasNext else { return nil }
-        
-        let next = try await api.pokemonService.fetchAbilityList(paginationState: .continuing(paged, .next))
-        pagedObject = next
-        let abilities = try await fetchAbilities(from: next.results ?? [])
-        return abilities
+        try await core.fetchNextPage()
     }
     
-    func fetchAllAbilityResources() async throws -> [PKMAPIResource<PKMAbility>] {
-        if let cached = abilityResourcesCache { return cached }
-        let result = try await api.pokemonService.fetchAbilityList(paginationState: .initial(pageLimit: 2000))
-        let abilityResources = result.results ?? []
-        abilityResourcesCache = abilityResources
-        return abilityResources
+    func fetchAllResources() async throws -> [PKMAPIResource<PKMAbility>] {
+        try await core.fetchAllResources()
     }
     
-    func fetchAbility(name: String) async throws -> PKMAbility {
-        try await fetchAbility(usingKey: name) {
-            try await self.api.pokemonService.fetchAbility(name)
-        }
+    // MARK: - Fetch by name / resource
+    func fetch(name: String) async throws -> PKMAbility {
+        try await core.fetch(byName: name)
     }
     
-    func fetchAbility(resource: PKMAPIResource<PKMAbility>) async throws -> PKMAbility {
-        let key = resource.name ?? resource.url ?? "unknown"
-        return try await fetchAbility(usingKey: key) {
-            if let success = try? await self.api.resourceService.fetch(resource) {
-                return success
-            }
-            return try await self.api.pokemonService.fetchAbility(resource.name ?? "")
-        }
+    func fetch(resource: PKMAPIResource<PKMAbility>) async throws -> PKMAbility {
+        try await core.fetch(byResource: resource)
     }
     
-    private func fetchAbility(usingKey key: String, fetcher: () async throws -> PKMAbility) async throws -> PKMAbility {
-        if let cached = abilityCache[key] {
-            return cached
-        }
-        let ability = try await fetcher()
-        abilityCache[key] = ability
-        return ability
-    }
-    
-    func fetchAbilities(from results: [PKMAPIResource<PKMAbility>]) async throws -> [PKMAbility] {
-        try await withThrowingTaskGroup(of: (Int, PKMAbility).self) { group in
-            for (index, result) in results.enumerated() {
-                group.addTask {
-                    let ability = try await self.fetchAbility(resource: result)
-                    return (index, ability)
-                }
-            }
-            var pairs: [(Int, PKMAbility)] = []
-            for try await pair in group {
-                pairs.append(pair)
-            }
-            return pairs.sorted { $0.0 < $1.0 }.map { $0.1 }
-        }
+    // MARK: - Fetch List
+    func fetch(from resources: [PKMAPIResource<PKMAbility>]) async throws -> [PKMAbility] {
+        try await core.fetch(from: resources)
     }
 }

@@ -58,7 +58,7 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
     }
     
     private func fetchAbility(name: String) async throws -> PKMAbility {
-        try await abilityService.fetchAbility(name: name)
+        try await abilityService.fetch(name: name)
     }
     
     private func fetchPokemons(for ability: PKMAbility) async throws -> (normal: [PKMPokemon], hidden: [PKMPokemon]) {
@@ -72,7 +72,7 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
             for abilityPokemon in abilityPokemons {
                 group.addTask { [pokemonService] in
                     guard let resource = abilityPokemon.pokemon else { return nil }
-                    let pokemon = try await pokemonService.fetchPokemon(resource: resource)
+                    let pokemon = try await pokemonService.fetch(resource: resource)
                     return (abilityPokemon.isHidden ?? false, pokemon)
                 }
             }

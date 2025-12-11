@@ -11,7 +11,7 @@ struct AbilityHomeView: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var abilityVM = AbilityHomeViewModel(abilityService: DataProvider.shared.abilityService)
+    @StateObject private var abilityVM = PaginationViewModel(service: DataProvider.shared.abilityService)
     
     var body: some View {
         Group{
@@ -22,9 +22,9 @@ struct AbilityHomeView: View {
                     ScrollView {
                         ViewStateHandler(viewModel: abilityVM) {
                             AbilityList(
-                                abilities: abilityVM.abilities,
+                                abilities: abilityVM.items,
                                 onItemAppear: { ability in
-                                    Task { await abilityVM.loadNextPageIfNeeded(ability: ability) }
+                                    Task { await abilityVM.loadNextPageIfNeeded(item: ability) }
                                 },
                                 onItemSelected: { abilityName in
                                     router.push(.abilityDetail(name: abilityName))
@@ -35,21 +35,21 @@ struct AbilityHomeView: View {
                     .toolbarRole(.editor)
                     .toolbar {
                         ToolbarItem(placement: .subtitle) {
-                            Text("Abilities")
+                            Text(AppTab.abilities.title)
                                 .font(.system(size: 32, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
                                 )
                         }
                         ToolbarItem {
-                            Button {} label: { Image(systemName: "slider.horizontal.3") }
+                            Color.clear.frame(width: 0, height: 0)
                         }
                     }
                 }
             }
         }
         .task {
-            if abilityVM.abilities.isEmpty {
+            if abilityVM.items.isEmpty {
                 await abilityVM.loadInitialPage()
             }
         }

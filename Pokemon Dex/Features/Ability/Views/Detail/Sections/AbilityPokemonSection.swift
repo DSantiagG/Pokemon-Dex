@@ -12,7 +12,7 @@ struct AbilityPokemonSection: View {
     @EnvironmentObject private var router: NavigationRouter
     @Environment(\.dismiss) private var dismiss
     
-    @State private var selectedPokemon: IdentifiedString?
+    @State private var selectedPokemon: String?
     @State private var pokemonKind: PokemonKind = .normal
     
     var normalPokemon: [PKMPokemon]
@@ -34,12 +34,12 @@ struct AbilityPokemonSection: View {
                     dismiss()
                     router.push(.pokemonDetail(name: pokemonName))
                 case .main:
-                    selectedPokemon = IdentifiedString(pokemonName)
+                    selectedPokemon = pokemonName
                 }
             })
         }
         .sheet(item: $selectedPokemon) { pokemonName in
-            PokemonDetailView(pokemonName: pokemonName.value, context: .sheet)
+            PokemonDetailView(pokemonName: pokemonName, context: .sheet)
                     .presentationDetents([.medium, .large])
                     .presentationBackground(Color(.systemBackground))
         }

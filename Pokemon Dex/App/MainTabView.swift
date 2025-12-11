@@ -11,9 +11,9 @@ struct MainTabView: View {
     
     @StateObject var appRouter = AppRouter()
     
-    @State private var selection: TabKey = .pokemon
-    @State private var lastPrimarySelection: TabKey = .pokemon
-    @State private var searchTarget: TabKey = .pokemon
+    @State private var selection: AppTab = .pokemon
+    @State private var lastPrimarySelection: AppTab = .pokemon
+    @State private var searchTarget: AppTab = .pokemon
     
     init() {
         let appearance = UITabBarAppearance()
@@ -29,21 +29,21 @@ struct MainTabView: View {
         
         TabView (selection: $selection){
             
-            Tab("Pokémon", systemImage: "circle.circle.fill", value: TabKey.pokemon) {
+            Tab(AppTab.pokemon.title, systemImage: AppTab.pokemon.systemImageName, value: AppTab.pokemon) {
                 PokemonHomeView()
                     .environmentObject(appRouter.pokemonRouter)
             }
             
-            Tab("Abilities", systemImage: "bolt.circle.fill", value: TabKey.abilities) {
+            Tab(AppTab.abilities.title, systemImage: AppTab.abilities.systemImageName, value: AppTab.abilities) {
                 AbilityHomeView()
                     .environmentObject(appRouter.abilityRouter)
             }
             
-            Tab("Berries", systemImage: "leaf.circle.fill", value: TabKey.berries) {
+            Tab(AppTab.berries.title, systemImage: AppTab.berries.systemImageName, value: AppTab.berries) {
                 InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             }
             
-            Tab(value: TabKey.search, role: .search) {
+            Tab(value: AppTab.search, role: .search) {
                 SearchView(searchTarget: searchTarget) {
                     selection = searchTarget
                 }
