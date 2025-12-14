@@ -12,7 +12,7 @@ struct AbilityDetailView: View {
     
     @StateObject private var abilityVM = AbilityDetailViewModel(abilityService: DataProvider.shared.abilityService, pokemonService: DataProvider.shared.pokemonService)
     
-    @State private var abilityColor: Color = .red
+    private var abilityColor: Color { abilityVM.currentAbility?.normalPokemons.first?.types?.first?.color ?? .gray }
     
     let abilityName: String
     var context: NavigationContext = .main
@@ -24,7 +24,6 @@ struct AbilityDetailView: View {
                     InfoStateView(primaryText: "Oops!", secondaryText: "Looks like this ability isn’t in our Dex yet!")
                 } else if let ability = abilityVM.currentAbility {
                     ScrollView{
-                        
                         AbilityBasicInfoSection(
                             name: (ability.details.name ?? "Unknown Name").capitalized,
                             generation: (ability.details.generation?.name ?? "Unknown Generation").formattedGeneration(),
@@ -40,6 +39,7 @@ struct AbilityDetailView: View {
                             AbilityPokemonSection(normalPokemon: ability.normalPokemons, hiddenPokemon: ability.hiddenPokemons, color: abilityColor, context: context)
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 30)
                     }
                     
                 }
@@ -47,9 +47,6 @@ struct AbilityDetailView: View {
         }
         .task {
             await abilityVM.loadAbility(name: abilityName)
-            if let color = abilityVM.currentAbility?.normalPokemons.first?.types?.first?.color {
-                abilityColor = color
-            }
         }
     }
 }

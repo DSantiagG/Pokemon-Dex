@@ -8,15 +8,15 @@
 
 enum AppTab: Hashable {
     case pokemon
+    case items
     case abilities
-    case berries
     case search
     
     var title: String {
         switch self {
         case .pokemon: return "Pokémon"
+        case .items: return "Items"
         case .abilities: return "Abilities"
-        case .berries: return "Berries"
         case .search: return "Search"
         }
     }
@@ -24,8 +24,8 @@ enum AppTab: Hashable {
     var systemImageName: String {
         switch self {
         case .pokemon: return "circle.circle.fill"
+        case .items: return "leaf.circle.fill"
         case .abilities: return "bolt.circle.fill"
-        case .berries: return "leaf.circle.fill"
         case .search: return "magnifyingglass"
         }
     }

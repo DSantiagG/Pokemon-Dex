@@ -11,24 +11,8 @@ import PokemonAPI
 
 enum AbilityMockFactory {
     
-    // MARK: - Helper
-    private static func load<T: Decodable>(_ json: String) -> T {
-        let data = json.data(using: .utf8)!
-        do {
-            if let selfDecodableType = T.self as? any SelfDecodable.Type {
-                return try selfDecodableType.decoder.decode(T.self, from: data)
-            } else {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                return try decoder.decode(T.self, from: data)
-            }
-        } catch {
-            fatalError("AbilityMockFactory.load failed to decode JSON: \(error)\nJSON was:\n\(json)")
-        }
-    }
-    
     // MARK: - Ability
-    /// Create a minimal PKMAbility containing only id, name, generation and the first pokemon entry.
+    /// Create a minimal PKMAbility
     static func mockAbility(
         id: Int,
         name: String,
@@ -38,7 +22,7 @@ enum AbilityMockFactory {
         firstPokemonName: String,
         firstPokemonIsHidden: Bool = true,
     ) -> PKMAbility {
-        return load(
+        return MockFactory.decode(
         """
         {
           "id": \(id),

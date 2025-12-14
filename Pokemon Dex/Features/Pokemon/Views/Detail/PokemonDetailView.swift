@@ -37,10 +37,10 @@ struct PokemonDetailView: View {
                     InfoStateView(primaryText: "Oops!", secondaryText: "Looks like we couldn't find this Pokémon!")
                 } else if let pokemon = pokemonVM.currentPokemon {
                     ScrollView {
-                        PokemonHeader(
+                        CustomHeader(
                             color: pokemonColor,
                             imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault,
-                            cryURL: pokemon.details.cries?.latest
+                            soundURL: pokemon.details.cries?.latest
                         )
                         .padding(.bottom, 87)
                         
@@ -122,6 +122,5 @@ struct PokemonDetailView: View {
     NavigationStack{
         PokemonDetailView(pokemonName: "bulbasaur")
             .environmentObject(NavigationRouter())
-            .preferredColorScheme(.light)
     }
 }

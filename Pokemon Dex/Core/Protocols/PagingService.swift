@@ -9,6 +9,6 @@
 protocol PagingService<Item> {
     associatedtype Item
     
-    func fetchInitialPage() async throws -> [Item]
+    func fetchInitialPage(limit: Int) async throws -> [Item]
     func fetchNextPage() async throws -> [Item]?
 }

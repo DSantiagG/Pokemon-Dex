@@ -10,25 +10,9 @@ import PokemonAPI
 
 enum PokemonMockFactory {
     
-    // MARK: - Helper
-    private static func load<T: Decodable>(_ json: String) -> T {
-        let data = json.data(using: .utf8)!
-        do {
-            if let selfDecodableType = T.self as? any SelfDecodable.Type {
-                return try selfDecodableType.decoder.decode(T.self, from: data)
-            } else {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                return try decoder.decode(T.self, from: data)
-            }
-        } catch {
-            fatalError("PokemonMockFactory.load failed to decode JSON: \(error)\nJSON was:\n\(json)")
-        }
-    }
-    
     // MARK: - Types
     static func mockType(name: String) -> PKMPokemonType {
-        load("""
+        MockFactory.decode("""
         {
             "slot": 1,
             "type": {
@@ -41,7 +25,7 @@ enum PokemonMockFactory {
     
     // MARK: - Stats
     static func mockStat(name: String, baseStat: Int) -> PKMPokemonStat {
-        load("""
+        MockFactory.decode("""
         {
             "base_stat": \(baseStat),
             "effort": 0,
@@ -55,7 +39,7 @@ enum PokemonMockFactory {
     
     // MARK: - Ability
     static func mockAbility(name: String, isHidden: Bool) -> PKMPokemonAbility {
-        load("""
+        MockFactory.decode("""
         {
             "ability": {
                 "name": "\(name)",
@@ -103,7 +87,7 @@ enum PokemonMockFactory {
                 """}
             .joined(separator: ",")
         
-        return load("""
+        return MockFactory.decode("""
         {
             "id": \(id),
             "order": \(order),

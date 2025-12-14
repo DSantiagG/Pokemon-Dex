@@ -6,7 +6,7 @@
 import Foundation
 import PokemonAPI
 
-actor ResourceService<Endpoint: ResourceEndpoints>: Sendable {
+actor ResourceService<Endpoint: ResourceEndpoints>: Sendable, PagingService, SearchService {
     
     typealias Model = Endpoint.Item
 
@@ -14,7 +14,7 @@ actor ResourceService<Endpoint: ResourceEndpoints>: Sendable {
     private var resourcesCache: [PKMAPIResource<Model>]?
     private var cache = [String: Model]()
 
-    func fetchInitialPage(limit: Int = 20) async throws -> [Model] {
+    func fetchInitialPage(limit: Int) async throws -> [Model] {
         let result = try await Endpoint.fetchPage(.initial(pageLimit: limit))
         pagedObject = result
         return try await fetch(from: result.results ?? [])

@@ -25,6 +25,8 @@ struct NavigationContainer<Content: View>: View {
                         PokemonDetailView(pokemonName: name)
                     case .abilityDetail(name: let name):
                         AbilityDetailView(abilityName: name)
+                    case .itemDetail(name: let name):
+                        ItemDetailView(itemName: name)
                     }
                 }
         }

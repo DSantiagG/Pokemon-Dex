@@ -22,7 +22,7 @@ class PaginationViewModel<Resource: IdentifiableResource>: ObservableObject, Err
     func loadInitialPage() async {
         state = .loading
         do {
-            items = try await service.fetchInitialPage()
+            items = try await service.fetchInitialPage(limit: 20)
             state = items.isEmpty ? .notFound : .loaded
         } catch {
             handle(

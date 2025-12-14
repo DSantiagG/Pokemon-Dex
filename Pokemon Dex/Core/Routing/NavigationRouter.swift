@@ -14,6 +14,7 @@ final class NavigationRouter: ObservableObject{
     enum AppRoute: Hashable{
         case pokemonDetail(name: String)
         case abilityDetail(name: String)
+        case itemDetail(name: String)
     }
     
     func push(_ route: AppRoute) {

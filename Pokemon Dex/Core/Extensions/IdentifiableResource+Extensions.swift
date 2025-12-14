@@ -16,6 +16,10 @@ extension PKMPokemon: IdentifiableResource {
     var resourceName: String { name ?? "unknown" }
 }
 
+extension PKMItem: IdentifiableResource {
+    var resourceName: String { name ?? "unknown" }
+}
+
 extension PKMAbility: IdentifiableResource {
     var resourceName: String { name ?? "unknown" }
 }

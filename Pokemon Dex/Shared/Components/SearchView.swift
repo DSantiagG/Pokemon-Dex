@@ -9,12 +9,10 @@ import SwiftUI
 
 struct SearchView: View {
     
-    let searchTarget: AppTab
     @State private var searchText: String = ""
-    @State var isSearchFocused: Bool?
+    @State private var isSearchFocused: Bool?
     
-    @State private var searchTask: Task<Void, Never>?
-    
+    let searchTarget: AppTab
     var onDismissSearch: (() -> Void)
     
     var body: some View {
@@ -53,7 +51,7 @@ struct SearchView: View {
         switch searchTarget {
         case .pokemon: PokemonSearch(searchText: $searchText)
         case .abilities: AbilitySearch(searchText: $searchText)
-        case .berries: Text("Berry Search")
+        case .items: ItemSearch(searchText: $searchText)
         case .search: EmptyView()
         }
     }

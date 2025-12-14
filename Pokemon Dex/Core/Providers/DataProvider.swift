@@ -15,9 +15,11 @@ class DataProvider: ObservableObject {
 
     let pokemonService: PokemonService
     let abilityService: AbilityService
+    let itemService: ItemService
 
     private init() {
         self.pokemonService = PokemonService()
         self.abilityService = AbilityService()
+        self.itemService = ItemService()
     }
 }

@@ -35,11 +35,7 @@ struct PokemonHomeView: View {
                     .toolbarRole(.editor)
                     .toolbar {
                         ToolbarItem(placement: .subtitle) {
-                            Text(AppTab.pokemon.title)
-                                .font(.system(size: 32, weight: .black, design: .rounded))
-                                .foregroundStyle(
-                                    LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
-                                )
+                            CustomTitle(title: AppTab.pokemon.title)
                         }
                         ToolbarItem {
                             Button {} label: { Image(systemName: "slider.horizontal.3") }

@@ -64,7 +64,7 @@ class SearchViewModel<S: SearchService>: ObservableObject, ErrorHandleable {
         currentSearchTask = Task { @MainActor in
             
             let matches = allResources.filter { resource in
-                resource.resourceName.localizedCaseInsensitiveContains(term) == true
+                resource.resourceName.formattedName().localizedCaseInsensitiveContains(term) == true
             }
             
             guard !matches.isEmpty else {

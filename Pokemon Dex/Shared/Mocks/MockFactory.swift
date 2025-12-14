@@ -2,25 +2,15 @@
 //  MockFactory.swift
 //  Pokemon Dex
 //
-//  Created by David Giron on 24/11/25.
+//  Created by David Giron on 11/12/25.
 //
+
 import Foundation
 import PokemonAPI
 
-class MockFactory {
-
-    static func loadPokemon(from filename: String) -> PKMPokemon {
-        loadJSON(filename)
-    }
-
-    private static func loadJSON<T: Decodable>(_ name: String) -> T {
-        guard
-            let url = Bundle.main.url(forResource: name, withExtension: "json"),
-            let data = try? Data(contentsOf: url)
-        else {
-            fatalError("Missing file: \(name).json")
-        }
-
+enum MockFactory {
+    static func decode<T: Decodable>(_ json: String, file: StaticString = #file, line: UInt = #line) -> T {
+        let data = json.data(using: .utf8)!
         do {
             if let selfDecodableType = T.self as? any SelfDecodable.Type {
                 return try selfDecodableType.decoder.decode(T.self, from: data)
@@ -30,7 +20,7 @@ class MockFactory {
                 return try decoder.decode(T.self, from: data)
             }
         } catch {
-            fatalError("MockFactory failed to decode \(name).json: \(error)")
+            fatalError("Mock decode failed: \(error)\nJSON:\n\(json)", file: file, line: line)
         }
     }
 }

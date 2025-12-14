@@ -10,54 +10,30 @@ import PokemonAPI
 
 struct PokemonList: View {
     
-    enum ListLayout {
-        case twoColumns
-        case singleColumn
-    }
-    
     let pokemons: [PKMPokemon]
     var layout: ListLayout = .twoColumns
     
     var onItemAppear: (PKMPokemon) -> Void = { _ in }
     var onItemSelected: (String) -> Void = { _ in }
     
-    private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-    
     var body: some View {
-        Group{
-            switch layout {
-            case .twoColumns:
-                LazyVGrid(columns: columns) {
-                    pokemonsListView
-                }
-            case .singleColumn:
-                LazyVStack(alignment: .leading, spacing: 8) {
-                    pokemonsListView
-                }
-            }
-        }
-    }
-    
-    private var pokemonsListView: some View {
-        ForEach(Array(pokemons).enumerated(), id: \.offset) { _, pokemon in
-            PokemonCard(
-                pokemon: pokemon,
-                layout: layout == .twoColumns ? .vertical : .horizontal
-            )
-            .frame(height: layout == .singleColumn ? 90 : 240)
-            .padding(layout == .twoColumns ? 3 : 0)
-            .onAppear { onItemAppear(pokemon) }
-            .onTapGesture { onItemSelected(pokemon.name ?? "Unknown Name") }
-        }
+        CardList(
+            items: pokemons,
+            layout: layout,
+            onItemAppear: onItemAppear,
+            onItemSelected: { p in onItemSelected(p.name ?? "Unknown Name")},
+            content: { pokemon, layout in
+                PokemonCard(
+                    pokemon: pokemon,
+                    layout: layout == .twoColumns ? .vertical : .horizontal
+                )
+                .frame(height: layout == .singleColumn ? 90 : 220)
+            })
     }
 }
 
 #Preview("Two Columns") {
-    let pokemon = PokemonMockFactory.mockBulbasaur()
-    let list = Array(repeating: pokemon, count: 30)
+    let list = Array(repeating: PokemonMockFactory.mockBulbasaur(), count: 30)
     ScrollView{
         PokemonList(pokemons: list,layout: .twoColumns)
             .padding(.horizontal)

@@ -34,13 +34,14 @@ struct MainTabView: View {
                     .environmentObject(appRouter.pokemonRouter)
             }
             
+            Tab(AppTab.items.title, systemImage: AppTab.items.systemImageName, value: AppTab.items) {
+                ItemHomeView()
+                    .environmentObject(appRouter.itemRouter)
+            }
+            
             Tab(AppTab.abilities.title, systemImage: AppTab.abilities.systemImageName, value: AppTab.abilities) {
                 AbilityHomeView()
                     .environmentObject(appRouter.abilityRouter)
-            }
-            
-            Tab(AppTab.berries.title, systemImage: AppTab.berries.systemImageName, value: AppTab.berries) {
-                InfoStateView(primaryText: "This feature is still under construction.", secondaryText: "Please check back soon!")
             }
             
             Tab(value: AppTab.search, role: .search) {
@@ -63,8 +64,8 @@ struct MainTabView: View {
     private func routerForCurrentTarget() -> NavigationRouter {
         switch searchTarget {
         case .pokemon: return appRouter.pokemonSearchRouter
+        case .items: return appRouter.itemSearchRouter
         case .abilities: return appRouter.abilitySearchRouter
-        case .berries: return appRouter.berrySearchRouter
         default: return appRouter.pokemonSearchRouter
         }
     }

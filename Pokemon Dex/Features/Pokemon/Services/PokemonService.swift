@@ -19,9 +19,13 @@ enum PokemonEndpoints: ResourceEndpoints {
 
 actor PokemonService: PagingService, SearchService {
     
-    private let api = PokemonAPI()
+    private let api: PokemonAPI
+    private let core: ResourceService<PokemonEndpoints>
     
-    private let core = ResourceService<PokemonEndpoints>()
+    init() {
+        self.api = PokemonAPI()
+        self.core = ResourceService<PokemonEndpoints>()
+    }
     
     private var typeCache = [String: PKMType]()
     private var speciesCache = [String: PKMPokemonSpecies]()
@@ -29,8 +33,8 @@ actor PokemonService: PagingService, SearchService {
     
     // MARK: - Pagination
     
-    func fetchInitialPage() async throws -> [PKMPokemon] {
-        try await core.fetchInitialPage()
+    func fetchInitialPage(limit: Int) async throws -> [PKMPokemon] {
+        try await core.fetchInitialPage(limit: limit)
     }
     
     func fetchNextPage() async throws -> [PKMPokemon]? {

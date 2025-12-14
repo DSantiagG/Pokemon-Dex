@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import PokemonAPI
 import Combine
+
+import PokemonAPI
 
 class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
     
@@ -44,11 +45,15 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
         }
     }
     
+    // MARK: - Private
     private func fetchAllAbilityData(name: String) async throws -> CurrentAbility? {
         
         let ability = try await fetchAbility(name: name)
 
         let (normal, hidden) = try await fetchPokemons(for: ability)
+        
+        guard let normal else { return nil }
+        guard let hidden else { return nil }
 
         return CurrentAbility(
             details: ability,
@@ -58,12 +63,12 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
     }
     
     private func fetchAbility(name: String) async throws -> PKMAbility {
-        try await abilityService.fetch(name: name)
+        try await abilityService.fetch(byName: name)
     }
     
-    private func fetchPokemons(for ability: PKMAbility) async throws -> (normal: [PKMPokemon], hidden: [PKMPokemon]) {
+    private func fetchPokemons(for ability: PKMAbility) async throws -> (normal: [PKMPokemon]?, hidden: [PKMPokemon]?) {
 
-        guard let abilityPokemons = ability.pokemon else { return ([], []) }
+        guard let abilityPokemons = ability.pokemon else { return (nil, nil) }
 
         var normalPokemons: [PKMPokemon] = []
         var hiddenPokemons: [PKMPokemon] = []

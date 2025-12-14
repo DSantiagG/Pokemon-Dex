@@ -15,9 +15,10 @@ struct CustomCapsule: View {
     var color: Color
     var verticalPadding: CGFloat = 3
     var horizontalPadding: CGFloat = 10
+    var isMultiline = true
     
     var body: some View {
-        AdaptiveText(text: text)
+        AdaptiveText(text: text, isMultiline: isMultiline)
             .foregroundStyle(Color.white)
             .font(.system(size: CGFloat(fontSize), weight: fontWeight))
             .padding(.vertical, verticalPadding)

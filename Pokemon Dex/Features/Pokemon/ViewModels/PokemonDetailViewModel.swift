@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import PokemonAPI
 import Combine
+
+import PokemonAPI
 
 @MainActor
 class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
@@ -32,7 +33,7 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
             currentPokemon = try await fetchAllPokemonData(name: name)
             state = .loaded
         } catch {
-            handle(error: error, debugMessage: "Loading pokemon with name : \(name) failed", userMessage: "This Pokémon is hiding… tap retry to find it!") { [weak self] in
+            handle(error: error, debugMessage: "Loading pokemon with name : \(name) failed", userMessage: "This Pokémon is hiding. Tap retry to find it!") { [weak self] in
                 Task { @MainActor in
                     await self?.loadPokemon(name: name)
                 }
@@ -70,7 +71,7 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     }
     
     private func fetchPokemon(name: String?) async throws -> PKMPokemon? {
-        guard let name = name else { return nil }
+        guard let name else { return nil }
         return try await pokemonService.fetch(name: name)
     }
     
@@ -98,7 +99,7 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
             for pokemonAbility in pokemonAbilities {
                 group.addTask { [abilityService] in
                     guard let resource = pokemonAbility.ability else { return nil }
-                    let ability = try await abilityService.fetch(resource: resource)
+                    let ability = try await abilityService.fetch(byResource: resource)
                     return (pokemonAbility.isHidden ?? false, ability)
                 }
             }

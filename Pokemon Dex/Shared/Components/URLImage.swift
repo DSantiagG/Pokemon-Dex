@@ -57,13 +57,13 @@ struct URLImage: View {
 }
 
 #Preview ("Success"){
-    URLImage(urlString: "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jpg")
+    URLImage(urlString: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png")
 }
 
 #Preview ("Error"){
     Color.gray.opacity(0.5)
         .frame(width: 300, height: 200)
         .overlay {
-            URLImage(urlString: "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jp")
+            URLImage(urlString: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.pn")
         }
 }

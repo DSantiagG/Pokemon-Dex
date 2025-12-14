@@ -31,7 +31,8 @@ struct PokemonAbilitiesSection: View {
                 ])
                 
                 AbilityList(
-                    abilities: (abilityKind == .normal) ? normalAbilities : hiddenAbilities, color: color,
+                    abilities: (abilityKind == .normal) ? normalAbilities : hiddenAbilities,
+                    color: color,
                     onItemSelected: { abilityName in
                         switch context {
                         case .sheet:

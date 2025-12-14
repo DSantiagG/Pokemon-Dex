@@ -35,14 +35,10 @@ struct AbilityHomeView: View {
                     .toolbarRole(.editor)
                     .toolbar {
                         ToolbarItem(placement: .subtitle) {
-                            Text(AppTab.abilities.title)
-                                .font(.system(size: 32, weight: .black, design: .rounded))
-                                .foregroundStyle(
-                                    LinearGradient(colors: [.red, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
-                                )
+                            CustomTitle(title: AppTab.abilities.title)
                         }
                         ToolbarItem {
-                            Color.clear.frame(width: 0, height: 0)
+                            Button {} label: { Image(systemName: "slider.horizontal.3") }
                         }
                     }
                 }

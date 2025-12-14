@@ -8,10 +8,11 @@
 import SwiftUI
 import PokemonAPI
 
-struct PokemonHeader: View {
+struct CustomHeader: View {
     let color: Color
     let imageURL: String?
-    let cryURL: String?
+    var showSoundButton: Bool = true
+    var soundURL: String? = nil
     
     var body: some View {
         
@@ -20,7 +21,7 @@ struct PokemonHeader: View {
             
             color
                 .opacity(0.8)
-                .frame(height: max(220 + (y > 0 ? y : 0), 200))
+                .frame(height: max(210 + (y > 0 ? y : 0), 200))
                 .clipShape(customShape)
                 .shadow(color: color.opacity(0.7), radius: 20)
                 .overlay(
@@ -28,17 +29,22 @@ struct PokemonHeader: View {
                         .frame(width: 310, height: 310)
                         .shadow(color: color, radius: 3)
                         .overlay(
-                            AudioPlayerButton(urlString: cryURL, color: color, iconSize: 35)
-                                .padding(.trailing, 25)
-                                .padding(.bottom, 20)
-                                .offset(x: 50),
+                            ZStack {
+                                if showSoundButton {
+                                    AudioPlayerButton(urlString: soundURL, color: color, iconSize: 35)
+                                        .padding(.trailing, 25)
+                                        .padding(.bottom, 20)
+                                        .offset(x: 50)
+                                }
+                            },
                             alignment: .bottomTrailing
                         )
                         .offset(y: 60 + (y > 0 ? y/2 : 0))
+                    
                 )
                 .offset(y: (y > 0) ? -y : 0)
         }
-        .frame(height: 220)
+        .frame(height: 210)
     }
     
     private var customShape: UnevenRoundedRectangle {
@@ -53,7 +59,10 @@ struct PokemonHeader: View {
 
 #Preview{
     ScrollView{
-        PokemonHeader(color: .green, imageURL: PokemonMockFactory.mockBulbasaur().sprites?.other?.officialArtwork?.frontDefault, cryURL: PokemonMockFactory.mockBulbasaur().cries?.latest)
-            .padding(.bottom, 87)
+        CustomHeader(
+            color: .green,
+            imageURL: PokemonMockFactory.mockBulbasaur().sprites?.other?.officialArtwork?.frontDefault,
+            soundURL: PokemonMockFactory.mockBulbasaur().cries?.latest)
+        .padding(.bottom, 87)
     }
 }
