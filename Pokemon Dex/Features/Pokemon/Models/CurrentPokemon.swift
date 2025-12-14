@@ -14,4 +14,5 @@ struct CurrentPokemon {
     var species: PKMPokemonSpecies
     var evolution: [EvolutionStage]
     var forms: [PokemonForm]
+    var items: [PKMItem]
 }

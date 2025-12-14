@@ -23,7 +23,6 @@ struct ItemCard: View {
             VStack(alignment: .center, spacing: 8) {
                 image
                 title
-                order
                 category
             }
         } contentHorizontal: {
@@ -36,7 +35,6 @@ struct ItemCard: View {
                 Spacer()
                 VStack{
                     Spacer()
-                    order
                 }
             }
         }
@@ -54,13 +52,6 @@ struct ItemCard: View {
     private var title: some View {
         AdaptiveText(text: (item.name ?? "Unknown Name").formattedName(), isMultiline: false)
             .bold()
-    }
-    
-    private var order: some View {
-        Text(String(format: "#%03d", item.id ?? 0))
-            .font(.system(size: layout == .vertical ? 15 : 20, weight: .semibold, design: .rounded))
-            .foregroundStyle(itemColor)
-            .shadow(color: itemColor, radius: 4)
     }
     
     private var category: some View {

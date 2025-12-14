@@ -34,7 +34,7 @@ struct AbilityDetailView: View {
                         
                         VStack (spacing: 25) {
                             
-                            AbilityEffectSection(effectDescription: ability.details.effectEntries?.first(where: { $0.language?.name == "en" })?.effect?.cleanFlavorText() ?? "No effect available.", color: abilityColor)
+                            EffectSection(effectDescription: ability.details.effectEntries?.first(where: { $0.language?.name == "en" })?.effect?.cleanFlavorText() ?? "No effect available.", color: abilityColor)
                             
                             AbilityPokemonSection(normalPokemon: ability.normalPokemons, hiddenPokemon: ability.hiddenPokemons, color: abilityColor, context: context)
                         }

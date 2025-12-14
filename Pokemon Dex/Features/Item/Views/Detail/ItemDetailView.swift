@@ -1,4 +1,3 @@
-//
 //  ItemDetailView.swift
 //  Pokemon Dex
 //
@@ -15,10 +14,6 @@ struct ItemDetailView: View {
     let itemName: String
     var context: NavigationContext = .main
     
-    private var itemColor: Color {
-        itemVM.currentItem?.details.category?.name?.categoryColor ?? .gray
-    }
-    
     var body: some View {
         ViewStateHandler(viewModel: itemVM){
             VStack {
@@ -27,14 +22,32 @@ struct ItemDetailView: View {
                 } else if let item = itemVM.currentItem {
                     ScrollView {
                         CustomHeader(
-                            color: itemColor,
+                            color: itemVM.displayColor,
                             imageURL: item.details.sprites?.default,
                             showSoundButton: false
                         )
-                        .padding(.bottom, 87)
+                        .padding(.bottom, 60)
                         
                         VStack(spacing: 25) {
+                            ItemBasicInfoSection(
+                                name: itemVM.displayName,
+                                category: itemVM.displayCategory,
+                                cost: itemVM.displayCost,
+                                description: itemVM.displayDescription,
+                                color: itemVM.displayColor)
                             
+                            ItemAttributesSection(
+                                attributes: itemVM.displayAttributes,
+                                color: itemVM.displayColor)
+                            
+                            EffectSection(
+                                effectDescription: itemVM.displayEffect,
+                                color: itemVM.displayColor)
+                            
+                            ItemPokemonSection(
+                                pokemons: item.holdingPokemon,
+                                color: itemVM.displayColor,
+                                context: context)
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 30)
@@ -50,7 +63,7 @@ struct ItemDetailView: View {
 
 #Preview {
     NavigationStack{
-        ItemDetailView(itemName: "master-ball")
+        ItemDetailView(itemName: "dragon-scale")
             .environmentObject(NavigationRouter())
     }
 }

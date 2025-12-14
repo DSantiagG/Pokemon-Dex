@@ -18,10 +18,12 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     
     private let pokemonService: PokemonService
     private let abilityService: AbilityService
+    private let itemService: ItemService
     
-    init(pokemonService: PokemonService, abilityService: AbilityService) {
+    init(pokemonService: PokemonService, abilityService: AbilityService, itemService: ItemService) {
         self.pokemonService = pokemonService
         self.abilityService = abilityService
+        self.itemService = itemService
     }
     
     func loadPokemon(name: String) async {
@@ -59,6 +61,8 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         guard let forms = try await fetchForms(for: species) else { return nil }
         
+        guard let items = try await fetchHeldItems(for: pokemon) else { return nil }
+        
         return CurrentPokemon(
             details: pokemon,
             types: types,
@@ -66,7 +70,8 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
             hiddenAbilities: hiddenAbilities,
             species: species,
             evolution: evolution,
-            forms: forms
+            forms: forms,
+            items: items
         )
     }
     
@@ -137,5 +142,12 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
             pokemonForms.append(.init(name: pokemon.name, sprite: sprite, isDefault: variety.isDefault ?? false))
         }
         return pokemonForms
+    }
+    
+    private func fetchHeldItems(for pokemon: PKMPokemon) async throws -> [PKMItem]? {
+        guard let heldItems = pokemon.heldItems else { return nil }
+        
+        let heldItemsResources = heldItems.compactMap { $0.item }
+        return try await itemService.fetch(from: heldItemsResources)
     }
 }

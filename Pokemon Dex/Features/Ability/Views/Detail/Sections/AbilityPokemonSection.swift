@@ -30,18 +30,20 @@ struct AbilityPokemonSection: View {
             
             PokemonList(pokemons: (pokemonKind == .normal) ? normalPokemon : hiddenPokemon, layout: .singleColumn, onItemSelected: { pokemonName in
                 switch context {
-                case .sheet:
+                case .sheet(.pokemon):
                     dismiss()
                     router.push(.pokemonDetail(name: pokemonName))
-                case .main:
+                case .main, .sheet(.ability):
                     selectedPokemon = pokemonName
+                case .sheet(.item):
+                    break
                 }
             })
         }
         .sheet(item: $selectedPokemon) { pokemonName in
-            PokemonDetailView(pokemonName: pokemonName, context: .sheet)
-                    .presentationDetents([.medium, .large])
-                    .presentationBackground(Color(.systemBackground))
+            PokemonDetailView(pokemonName: pokemonName, context: .sheet(.ability))
+                .presentationDetents([.medium, .large])
+                .presentationBackground(Color(.systemBackground))
         }
     }
 }

@@ -73,7 +73,7 @@ enum ItemMockFactory {
         mockItem(
             id: 1,
             name: "master-ball",
-            cost: 0,
+            cost: 10,
             category: "standard-balls",
             effect: "Used in battle: Catches a wild Pokémon without fail. If used in a trainer battle, nothing happens and the ball is lost.",
             shortEffect: "Catches a wild Pokémon every time.",

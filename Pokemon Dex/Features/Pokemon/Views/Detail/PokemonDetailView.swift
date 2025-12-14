@@ -10,7 +10,7 @@ import PokemonAPI
 
 struct PokemonDetailView: View {
     
-    @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService)
+    @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService, itemService: DataProvider.shared.itemService)
     
     let pokemonName: String
     var context: NavigationContext = .main
@@ -90,15 +90,22 @@ struct PokemonDetailView: View {
                                 color: pokemonColor
                             )
                             
+                            PokemonItemsSection(
+                                items: pokemon.items,
+                                color: pokemonColor,
+                                context: context)
+                            
                             PokemonEvolutionSection(
                                 evolution: pokemon.evolution,
-                                color: pokemonColor
+                                color: pokemonColor,
+                                context: context
                             )
                             
                             PokemonFormsSection(
                                 for: pokemon.details.name ?? "Unknown",
                                 forms: pokemon.forms,
-                                color: pokemonColor
+                                color: pokemonColor,
+                                context: context
                             )
                         }
                         .padding(.horizontal)
@@ -120,7 +127,7 @@ struct PokemonDetailView: View {
 
 #Preview {
     NavigationStack{
-        PokemonDetailView(pokemonName: "bulbasaur")
+        PokemonDetailView(pokemonName: "meowth")
             .environmentObject(NavigationRouter())
     }
 }

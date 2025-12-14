@@ -11,7 +11,7 @@ struct PokemonAbilitiesSection: View {
     
     @EnvironmentObject private var router: NavigationRouter
     @Environment(\.dismiss) private var dismiss
-
+    
     @State private var selectedAbility: String?
     @State private var abilityKind: AbilityKind = .normal
     
@@ -35,18 +35,25 @@ struct PokemonAbilitiesSection: View {
                     color: color,
                     onItemSelected: { abilityName in
                         switch context {
-                        case .sheet:
+                        case .sheet(.ability):
                             dismiss()
                             router.push(.abilityDetail(name: abilityName))
-                        case .main:
+                            
+                        case .main, .sheet(.item), .sheet(.pokemon):
                             selectedAbility = abilityName
                         }
-                })
+                    })
             }
             .sheet(item: $selectedAbility) { abilityName in
-                AbilityDetailView(abilityName: abilityName, context: .sheet)
-                        .presentationDetents([.medium, .large])
-                        .presentationBackground(Color(.systemBackground))
+                AbilityDetailView(
+                    abilityName: abilityName,
+                    context: {
+                        if case .main = context { return .sheet(.pokemon) }
+                        return context
+                    }()
+                )
+                .presentationDetents([.medium, .large])
+                .presentationBackground(Color(.systemBackground))
             }
         }
     }
@@ -59,8 +66,8 @@ struct PokemonAbilitiesSection: View {
             hiddenAbilities: [ AbilityMockFactory.mockStench()],
             color: .green,
             context: .main)
-            .padding(.horizontal)
-            .environmentObject(NavigationRouter())
+        .padding(.horizontal)
+        .environmentObject(NavigationRouter())
     }
 }
 

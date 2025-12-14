@@ -8,5 +8,11 @@
 
 enum NavigationContext {
     case main
-    case sheet
+    case sheet(SheetKind)
+
+    enum SheetKind {
+        case pokemon
+        case ability
+        case item
+    }
 }

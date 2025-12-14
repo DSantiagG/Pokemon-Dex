@@ -9,6 +9,9 @@ import Combine
 
 @MainActor
 final class AppRouter: ObservableObject {
+    
+    static let shared = AppRouter()
+    
     @Published var pokemonRouter = NavigationRouter()
     @Published var abilityRouter = NavigationRouter()
     @Published var itemRouter = NavigationRouter()
@@ -16,4 +19,6 @@ final class AppRouter: ObservableObject {
     @Published var pokemonSearchRouter = NavigationRouter()
     @Published var abilitySearchRouter = NavigationRouter()
     @Published var itemSearchRouter = NavigationRouter()
+    
+    @Published var sheetRouter = NavigationRouter()
 }

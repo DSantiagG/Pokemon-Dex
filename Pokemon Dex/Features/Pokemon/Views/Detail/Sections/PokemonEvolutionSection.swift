@@ -14,9 +14,11 @@ struct PokemonEvolutionSection: View {
     private let rows: [[EvolutionStage]]
     private let hasEvolution: Bool
     let color: Color
+    let context: NavigationContext
     
-    init(evolution: [EvolutionStage], color: Color) {
+    init(evolution: [EvolutionStage], color: Color, context: NavigationContext) {
         self.color = color
+        self.context = context
         self.rows = evolution.overlappedChunks(size: 3, overlap: 1)
         hasEvolution = self.rows.flatMap { $0 }.count > 1
     }
@@ -39,7 +41,9 @@ struct PokemonEvolutionSection: View {
                                         .fontWeight(.medium)
                                 }
                                 .onTapGesture {
-                                    router.push(.pokemonDetail(name: evoName))
+                                    if case .main = context {
+                                        router.push(.pokemonDetail(name: evoName))
+                                    }
                                 }
                                 
                                 if col < row.count - 1 {
@@ -59,7 +63,8 @@ struct PokemonEvolutionSection: View {
     let evolution = EvolutionStage(name: pokemon.name ?? "", sprite: pokemon.sprites?.other?.officialArtwork?.frontDefault ?? "")
     let list = Array(repeating: evolution, count: 3)
     
-    PokemonEvolutionSection(evolution: list, color: .green)
+    PokemonEvolutionSection(evolution: list, color: .green, context: .main)
         .environmentObject(NavigationRouter())
         .padding(.horizontal)
 }
+

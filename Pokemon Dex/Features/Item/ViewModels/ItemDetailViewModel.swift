@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 import PokemonAPI
 
@@ -65,7 +66,39 @@ class ItemDetailViewModel: ObservableObject, ErrorHandleable{
     private func fetchPokemons(for item: PKMItem) async throws -> [PKMPokemon]? {
         guard let pokemons = item.heldByPokemon else { return nil }
         
-        let pokemonResources: [PKMAPIResource<PKMPokemon>] = pokemons.compactMap { $0.pokemon }
+        let pokemonResources = pokemons.compactMap { $0.pokemon }
         return try await pokemonService.fetch(from: pokemonResources)
+    }
+}
+
+// MARK: - Presentation
+extension ItemDetailViewModel {
+    
+    var displayName: String {
+        currentItem?.details.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    var displayCategory: String {
+        currentItem?.details.category?.name?.formattedName() ?? "Unknown Category"
+    }
+    
+    var displayDescription: String {
+        currentItem?.details.flavorTextEntries?.englishFlavorText() ?? "No description available."
+    }
+    
+    var displayColor: Color {
+        currentItem?.details.category?.name?.categoryColor ?? .gray
+    }
+    
+    var displayCost: Int {
+        currentItem?.details.cost ?? 0
+    }
+    
+    var displayAttributes: [String] {
+        currentItem?.details.attributes?.compactMap { $0.name?.formattedName() } ?? []
+    }
+    
+    var displayEffect: String {
+        currentItem?.details.effectEntries?.first(where: { $0.language?.name == "en" })?.effect?.cleanFlavorText() ?? "No effect available."
     }
 }

@@ -17,14 +17,16 @@ struct PokemonFormsSection: View {
     private var isDefault: Bool
     
     let color: Color
+    let context: NavigationContext
     
-    init(for pokemonName: String, forms: [PokemonForm], color: Color) {
+    init(for pokemonName: String, forms: [PokemonForm], color: Color, context: NavigationContext) {
         self.color = color
         hasForms = forms.count > 1
         
         guard hasForms else {
             self.rows = []
             self.isDefault = true
+            self.context = context
             return
         }
 
@@ -36,6 +38,7 @@ struct PokemonFormsSection: View {
         let filtered = forms.filter { $0.isDefault == shouldShowDefaultForm }
 
         self.rows = filtered.overlappedChunks(size: 3, overlap: 0)
+        self.context = context
     }
     
     var body: some View {
@@ -49,7 +52,9 @@ struct PokemonFormsSection: View {
                                 Spacer()
                                 formItem(form)
                                     .onTapGesture {
-                                        router.push(.pokemonDetail(name: formName))
+                                        if case .main = context {
+                                            router.push(.pokemonDetail(name: formName))
+                                        }
                                     }
                             }
                             Spacer()
@@ -75,7 +80,7 @@ struct PokemonFormsSection: View {
     let altPokemon1 = PokemonForm(name: "bulbasaur alt 1", sprite: sprite, isDefault: false)
     let altPokemon2 = PokemonForm(name: "bulbasaur alt 2", sprite: sprite, isDefault: false)
     
-    PokemonFormsSection(for: "bulbasaur", forms: [defaultPokemon, altPokemon1, altPokemon2], color: .green)
+    PokemonFormsSection(for: "bulbasaur", forms: [defaultPokemon, altPokemon1, altPokemon2], color: .green, context: .main)
         .environmentObject(NavigationRouter())
         .padding(.horizontal)
 }

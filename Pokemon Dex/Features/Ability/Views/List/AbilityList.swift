@@ -27,7 +27,8 @@ struct AbilityList: View {
              content: { ability, _ in
                  AbilityCard(
                     ability: ability,
-                    layout: layout == .twoColumns ? .vertical : .horizontal)
+                    layout: layout == .twoColumns ? .vertical : .horizontal,
+                    color: color)
              })
     }
 }
