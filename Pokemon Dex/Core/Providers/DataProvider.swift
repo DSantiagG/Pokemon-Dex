@@ -16,10 +16,12 @@ class DataProvider: ObservableObject {
     let pokemonService: PokemonService
     let abilityService: AbilityService
     let itemService: ItemService
+    let listLayoutStorage: ListLayoutStorageProtocol
 
     private init() {
         self.pokemonService = PokemonService()
         self.abilityService = AbilityService()
         self.itemService = ItemService()
+        self.listLayoutStorage = ListLayoutStorage()
     }
 }

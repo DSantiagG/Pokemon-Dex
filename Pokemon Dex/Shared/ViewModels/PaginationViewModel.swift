@@ -13,10 +13,21 @@ class PaginationViewModel<Resource: IdentifiableResource>: ObservableObject, Err
     @Published var items: [Resource] = []
     @Published var state: ViewState = .idle
     
-    private let service: any PagingService<Resource>
+    @Published var layout: ListLayout {
+        didSet {
+            layoutStorage.setLayout(layout, for: layoutKey)
+        }
+    }
     
-    init(service: any PagingService<Resource>) {
+    private let service: any PagingService<Resource>
+    private let layoutKey: ListLayoutKey
+    private let layoutStorage: ListLayoutStorageProtocol
+    
+    init(service: any PagingService<Resource>, layoutKey: ListLayoutKey) {
         self.service = service
+        self.layoutKey = layoutKey
+        self.layoutStorage = DataProvider.shared.listLayoutStorage
+        self.layout = layoutStorage.getLayout(for: layoutKey)
     }
     
     func loadInitialPage() async {

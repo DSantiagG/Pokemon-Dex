@@ -11,7 +11,7 @@ struct ItemHomeView: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var itemVM = PaginationViewModel(service: DataProvider.shared.itemService)
+    @StateObject private var itemVM = PaginationViewModel(service: DataProvider.shared.itemService, layoutKey: .item)
     
     var body: some View {
         Group{
@@ -23,6 +23,7 @@ struct ItemHomeView: View {
                         ViewStateHandler(viewModel: itemVM) {
                             ItemList(
                                 items: itemVM.items,
+                                layout: itemVM.layout,
                                 onItemAppear: { item in
                                     Task { await itemVM.loadNextPageIfNeeded(item: item) }
                                 },
@@ -38,7 +39,7 @@ struct ItemHomeView: View {
                             CustomTitle(title: AppTab.items.title)
                         }
                         ToolbarItem {
-                            Button {} label: { Image(systemName: "slider.horizontal.3") }
+                            PresentationOptionsMenu(layout: $itemVM.layout)
                         }
                     }
                 }

@@ -6,7 +6,7 @@
 //
 
 
-enum ListLayout {
+enum ListLayout: String, Codable {
     case singleColumn
     case twoColumns
 }

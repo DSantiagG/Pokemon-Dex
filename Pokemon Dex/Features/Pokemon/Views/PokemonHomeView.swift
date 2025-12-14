@@ -11,8 +11,10 @@ struct PokemonHomeView: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    @StateObject private var pokemonVM = PokemonHomeViewModel(service: DataProvider.shared.pokemonService)
+    @StateObject private var pokemonVM = PokemonHomeViewModel(service: DataProvider.shared.pokemonService, layoutKey: .pokemon)
     
+    @State private var showFilters = false
+
     var body: some View {
         Group{
             if case .notFound = pokemonVM.state {
@@ -23,6 +25,7 @@ struct PokemonHomeView: View {
                         ViewStateHandler(viewModel: pokemonVM) {
                             PokemonList(
                                 pokemons: pokemonVM.items,
+                                layout: pokemonVM.layout,
                                 onItemAppear: { pokemon in
                                     Task { await pokemonVM.loadNextPageIfNeeded(item: pokemon) }
                                 },
@@ -38,8 +41,18 @@ struct PokemonHomeView: View {
                             CustomTitle(title: AppTab.pokemon.title)
                         }
                         ToolbarItem {
-                            Button {} label: { Image(systemName: "slider.horizontal.3") }
+                            PresentationOptionsMenu(
+                                layout: $pokemonVM.layout,
+                                showsFilters: true) {
+                                showFilters = true
+                            }
                         }
+                    }
+                    .sheet(isPresented: $showFilters) {
+                        Text("Filters coming soon 👀")
+                            .presentationDetents([.medium])
+                            .presentationBackground(Color(.systemBackground))
+                            .presentationDragIndicator(.visible)
                     }
                 }
             }
