@@ -11,16 +11,16 @@ struct PokemonEvolutionSection: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    private let rows: [[EvolutionStage]]
+    private let rows: [[EvolutionStageViewModel]]
     private let hasEvolution: Bool
     let color: Color
     let context: NavigationContext
     
-    init(evolution: [EvolutionStage], color: Color, context: NavigationContext) {
+    init(evolution: [EvolutionStageViewModel], color: Color, context: NavigationContext) {
         self.color = color
         self.context = context
         self.rows = evolution.overlappedChunks(size: 3, overlap: 1)
-        hasEvolution = self.rows.flatMap { $0 }.count > 1
+        self.hasEvolution = self.rows.flatMap { $0 }.count > 1
     }
     
     var body: some View {
@@ -34,15 +34,14 @@ struct PokemonEvolutionSection: View {
                     ForEach(Array(rows.enumerated()), id: \.offset) { (_, row) in
                         HStack (){
                             ForEach(Array(row.enumerated()), id: \.offset) { (col, evo) in
-                                let evoName = evo.name ?? "Unknown Name"
                                 VStack (){
-                                    URLImage(urlString: evo.sprite, contentMode: .fit)
-                                    AdaptiveText(text: evoName.capitalized)
+                                    URLImage(urlString: evo.spriteURL, contentMode: .fit)
+                                    AdaptiveText(text: evo.displayName)
                                         .fontWeight(.medium)
                                 }
                                 .onTapGesture {
-                                    if case .main = context {
-                                        router.push(.pokemonDetail(name: evoName))
+                                    if case .main = context, let name = evo.rawName {
+                                        router.push(.pokemonDetail(name: name))
                                     }
                                 }
                                 
@@ -60,8 +59,8 @@ struct PokemonEvolutionSection: View {
 
 #Preview {
     let pokemon = PokemonMockFactory.mockBulbasaur()
-    let evolution = EvolutionStage(name: pokemon.name ?? "", sprite: pokemon.sprites?.other?.officialArtwork?.frontDefault ?? "")
-    let list = Array(repeating: evolution, count: 3)
+    let evolution = EvolutionStage(name: pokemon.name, sprite: pokemon.sprites?.other?.officialArtwork?.frontDefault)
+    let list = Array(repeating: EvolutionStageViewModel(stage: evolution), count: 3)
     
     PokemonEvolutionSection(evolution: list, color: .green, context: .main)
         .environmentObject(NavigationRouter())

@@ -15,8 +15,18 @@ struct PokemonCard: View {
     var pokemon: PKMPokemon
     var layout: CardOrientation = .vertical
     
-    private var pokemonColor: Color { pokemon.types?.first?.color ?? .gray }
-
+    private var pokemonColor: Color {
+        pokemon.types?.first?.color ?? .gray
+    }
+    
+    private var displayName: String {
+        pokemon.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    private var displayTypes: [String] {
+        pokemon.types?.map { $0.type?.name?.formattedName() ?? "Unknown Type" } ?? []
+    }
+    
     var body: some View{
         CardContainer(color: pokemonColor, layout: layout) {
             VStack(alignment: .center, spacing: 8) {
@@ -49,9 +59,9 @@ struct PokemonCard: View {
         )
         .shadow(color: pokemonColor, radius: 6)
     }
-
+    
     private var title: some View {
-        AdaptiveText(text: (pokemon.name ?? "Unknown Name").formattedName(), isMultiline: false)
+        AdaptiveText(text: displayName, isMultiline: false)
             .bold()
     }
     
@@ -61,13 +71,11 @@ struct PokemonCard: View {
             .foregroundStyle(pokemonColor)
             .shadow(color: pokemonColor, radius: 4)
     }
-
+    
     private var types: some View {
         HStack {
-            if let types = pokemon.types {
-                ForEach(Array(types).enumerated(), id: \.offset) { _, type in 
-                    CustomCapsule(text: (type.type?.name ?? "Unknown Type").capitalized, color: type.color)
-                }
+            ForEach(displayTypes, id: \.self) { type in
+                CustomCapsule(text: type, color: type.pokemonTypeColor)
             }
         }
     }

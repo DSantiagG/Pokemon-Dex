@@ -15,7 +15,7 @@ struct AbilityList: View {
     var color: Color = .red
     
     var onItemAppear: (PKMAbility) -> Void = { _ in }
-    var onItemSelected: (String) -> Void = { _ in }
+    var onItemSelected: (String?) -> Void = { _ in }
     
     var body: some View {
         
@@ -23,7 +23,7 @@ struct AbilityList: View {
              items: abilities,
              layout: layout,
              onItemAppear: onItemAppear,
-             onItemSelected: { a in onItemSelected(a.name ?? "Unknown Name")},
+             onItemSelected: { a in onItemSelected(a.name)},
              content: { ability, _ in
                  AbilityCard(
                     ability: ability,

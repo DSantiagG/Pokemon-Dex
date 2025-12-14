@@ -26,10 +26,16 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         self.itemService = itemService
     }
     
-    func loadPokemon(name: String) async {
+    func loadPokemon(name: String?) async {
+        
+        currentPokemon = nil
+        
+        guard let name, !name.isEmpty else {
+            state = .notFound
+            return
+        }
         
         state = .loading
-        currentPokemon = nil
         
         do{
             currentPokemon = try await fetchAllPokemonData(name: name)

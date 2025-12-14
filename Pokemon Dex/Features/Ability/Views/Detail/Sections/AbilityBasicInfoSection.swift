@@ -40,7 +40,7 @@ struct AbilityBasicInfoSection: View {
                 .clipShape(headerShape)
                 .shadow(color: color.opacity(0.7), radius: 15)
                 .overlay(
-                    Text(name.formattedName())
+                    Text(name)
                         .font(.largeTitle)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
@@ -62,7 +62,7 @@ struct AbilityBasicInfoSection: View {
 
 #Preview {
     ScrollView{
-        AbilityBasicInfoSection(name: "stench", generation: "Generation III", description: "Helps repel wild Pokemon.", color: .green)
+        AbilityBasicInfoSection(name: "Stench", generation: "Generation III", description: "Helps repel wild Pokemon.", color: .green)
             .padding(.bottom)
     }
     

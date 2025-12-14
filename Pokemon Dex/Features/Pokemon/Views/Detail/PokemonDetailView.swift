@@ -12,23 +12,8 @@ struct PokemonDetailView: View {
     
     @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService, itemService: DataProvider.shared.itemService)
     
-    let pokemonName: String
+    let pokemonName: String?
     var context: NavigationContext = .main
-    
-    private var pokemonColor: Color {
-        pokemonVM.currentPokemon?.details.types?.first?.color ?? .gray
-    }
-    
-    private var femaleRatioPercent: Double? {
-        guard let rate = pokemonVM.currentPokemon?.species.genderRate,
-              rate != -1 else { return nil }
-        return (Double(rate) / 8.0) * 100.0
-    }
-
-    private var maleRatioPercent: Double? {
-        guard let female = femaleRatioPercent else { return nil }
-        return 100.0 - female
-    }
     
     var body: some View {
         ViewStateHandler(viewModel: pokemonVM) {
@@ -38,7 +23,7 @@ struct PokemonDetailView: View {
                 } else if let pokemon = pokemonVM.currentPokemon {
                     ScrollView {
                         CustomHeader(
-                            color: pokemonColor,
+                            color: pokemonVM.displayColor,
                             imageURL: pokemon.details.sprites?.other?.officialArtwork?.frontDefault,
                             soundURL: pokemon.details.cries?.latest
                         )
@@ -47,64 +32,63 @@ struct PokemonDetailView: View {
                         VStack(spacing: 25) {
                             
                             PokemonBasicInfoSection(
-                                order: pokemon.details.order ?? 0,
-                                name: pokemon.details.name ?? "Unknown",
-                                types: pokemon.details.types,
-                                description: pokemon.species.flavorTextEntries?.englishFlavorText() ?? "No description available."
-                            )
+                                order: pokemonVM.displayOrder,
+                                name: pokemonVM.displayName,
+                                types: pokemonVM.displayTypes,
+                                description: pokemonVM.displayDescription)
                             
                             PokemonCharacteristicsSection(
-                                generation: pokemon.species.generation?.name?.formattedGeneration() ?? "Unknown",
-                                weight: (pokemon.details.weight.map(Double.init)).map { $0 / 10.0 } ?? 0.0,
-                                height: (pokemon.details.height.map(Double.init)).map { $0 / 10.0 } ?? 0.0,
-                                color: pokemonColor
+                                generation: pokemonVM.displayGeneration,
+                                weight: pokemonVM.displayWeight,
+                                height: pokemonVM.displayHeight,
+                                color: pokemonVM.displayColor
                             )
                         
                             PokemonStatsSection(
-                                stats: pokemon.details.stats ?? [],
-                                color: pokemonColor
+                                stats: pokemonVM.displayStats,
+                                color: pokemonVM.displayColor
                             )
                             
                             PokemonAbilitiesSection(
                                 normalAbilities: pokemon.normalAbilities,
                                 hiddenAbilities: pokemon.hiddenAbilities,
-                                color: pokemonColor,
+                                color: pokemonVM.displayColor,
                                 context: context
                             )
                             
                             PokemonCaptureSection(
-                                habit: pokemon.species.habitat?.name?.formattedName() ?? "Unknown",
-                                captureRate: pokemon.species.captureRate ?? 0,
-                                baseExperience: pokemon.details.baseExperience ?? 0,
-                                growthRate: pokemon.species.growthRate?.name?.formattedName() ?? "Unknown",
-                                color: pokemonColor
+                                habit: pokemonVM.displayHabit,
+                                captureRate: pokemonVM.displayCaptureRate,
+                                baseExperience: pokemonVM.displayBaseExperience,
+                                growthRate: pokemonVM.displayGrowthRate,
+                                color: pokemonVM.displayColor
                             )
                             
                             PokemonBreedingSection(
                                 genderRatio: .init(
-                                    femaleRatio: femaleRatioPercent,
-                                    maleRatio: maleRatioPercent
+                                    femaleRatio: pokemonVM.displayFemaleRatioPercent,
+                                    maleRatio: pokemonVM.displayFemaleRatioPercent
                                 ),
-                                eggCycles: pokemon.species.hatchCounter ?? 0,
-                                eggGroups: pokemon.species.eggGroups?.compactMap { $0.name?.formattedName() } ?? [],
-                                color: pokemonColor
+                                eggCycles: pokemonVM.displayEggCycles,
+                                eggGroups: pokemonVM.displayEggGroups,
+                                color: pokemonVM.displayColor
                             )
                             
                             PokemonItemsSection(
                                 items: pokemon.items,
-                                color: pokemonColor,
+                                color: pokemonVM.displayColor,
                                 context: context)
                             
                             PokemonEvolutionSection(
-                                evolution: pokemon.evolution,
-                                color: pokemonColor,
+                                evolution: pokemonVM.displayEvolutionStages,
+                                color: pokemonVM.displayColor,
                                 context: context
                             )
                             
                             PokemonFormsSection(
-                                for: pokemon.details.name ?? "Unknown",
-                                forms: pokemon.forms,
-                                color: pokemonColor,
+                                for: pokemon.details.name,
+                                forms: pokemonVM.displayPokemonForms,
+                                color: pokemonVM.displayColor,
                                 context: context
                             )
                         }

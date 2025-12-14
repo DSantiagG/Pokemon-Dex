@@ -12,9 +12,7 @@ struct AbilityDetailView: View {
     
     @StateObject private var abilityVM = AbilityDetailViewModel(abilityService: DataProvider.shared.abilityService, pokemonService: DataProvider.shared.pokemonService)
     
-    private var abilityColor: Color { abilityVM.currentAbility?.normalPokemons.first?.types?.first?.color ?? .gray }
-    
-    let abilityName: String
+    let abilityName: String?
     var context: NavigationContext = .main
     
     var body: some View {
@@ -25,18 +23,23 @@ struct AbilityDetailView: View {
                 } else if let ability = abilityVM.currentAbility {
                     ScrollView{
                         AbilityBasicInfoSection(
-                            name: (ability.details.name ?? "Unknown Name").capitalized,
-                            generation: (ability.details.generation?.name ?? "Unknown Generation").formattedGeneration(),
-                            description: ability.details.flavorTextEntries?.englishFlavorText() ?? "No description available.",
-                            color: abilityColor
-                        )
+                            name: abilityVM.displayName,
+                            generation: abilityVM.displayGeneration,
+                            description: abilityVM.displayDescription,
+                            color: abilityVM.displayColor)
                         .padding(.bottom)
                         
                         VStack (spacing: 25) {
                             
-                            EffectSection(effectDescription: ability.details.effectEntries?.first(where: { $0.language?.name == "en" })?.effect?.cleanFlavorText() ?? "No effect available.", color: abilityColor)
+                            EffectSection(
+                                effectDescription: abilityVM.displayEffect,
+                                color: abilityVM.displayColor)
                             
-                            AbilityPokemonSection(normalPokemon: ability.normalPokemons, hiddenPokemon: ability.hiddenPokemons, color: abilityColor, context: context)
+                            AbilityPokemonSection(
+                                normalPokemon: ability.normalPokemons,
+                                hiddenPokemon: ability.hiddenPokemons,
+                                color: abilityVM.displayColor,
+                                context: context)
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 30)

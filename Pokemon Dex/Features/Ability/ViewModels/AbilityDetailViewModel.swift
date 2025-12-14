@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import Combine
 
 import PokemonAPI
@@ -27,10 +28,16 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
     }
     
     // MARK: - Public
-    func loadAbility(name: String) async {
+    func loadAbility(name: String?) async {
+        
+        currentAbility = nil
+        
+        guard let name, !name.isEmpty else {
+            state = .notFound
+            return
+        }
         
         state = .loading
-        currentAbility = nil
         
         do{
             currentAbility = try await fetchAllAbilityData(name: name)
@@ -92,5 +99,29 @@ class AbilityDetailViewModel: ObservableObject, ErrorHandleable {
             }
         }
         return (normalPokemons, hiddenPokemons)
+    }
+}
+
+// MARK: - Presentation
+extension AbilityDetailViewModel {
+    
+    var displayName: String {
+        currentAbility?.details.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    var displayColor: Color {
+        currentAbility?.normalPokemons.first?.types?.first?.color ?? .gray
+    }
+    
+    var displayGeneration: String {
+        currentAbility?.details.generation?.name?.formattedGeneration() ?? "Unknown Generation"
+    }
+    
+    var displayDescription: String{
+        currentAbility?.details.flavorTextEntries?.englishFlavorText() ?? "No description available."
+    }
+    
+    var displayEffect: String {
+        currentAbility?.details.effectEntries?.first(where: { $0.language?.name == "en" })?.effect?.cleanFlavorText() ?? "No effect available."
     }
 }

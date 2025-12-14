@@ -11,7 +11,7 @@ struct ItemDetailView: View {
     
     @StateObject private var itemVM = ItemDetailViewModel(itemService: DataProvider.shared.itemService, pokemonService: DataProvider.shared.pokemonService)
     
-    let itemName: String
+    let itemName: String?
     var context: NavigationContext = .main
     
     var body: some View {

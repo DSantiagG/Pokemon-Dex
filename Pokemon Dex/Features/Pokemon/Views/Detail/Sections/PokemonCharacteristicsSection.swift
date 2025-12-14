@@ -41,7 +41,7 @@ struct PokemonCharacteristicsSection: View {
 
 #Preview {
     ScrollView{
-        PokemonCharacteristicsSection(generation: "Generation II", weight: 6.3, height: 0.5, color: .green)
+        PokemonCharacteristicsSection(generation: "Generation II", weight: 6.38, height: 0.5, color: .green)
             .padding()
     }
 }

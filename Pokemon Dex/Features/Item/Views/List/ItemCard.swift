@@ -15,7 +15,17 @@ struct ItemCard: View {
     var item: PKMItem
     var layout: CardOrientation = .vertical
     
-    private var itemColor: Color { item.category?.name?.categoryColor ?? .gray }
+    private var itemColor: Color {
+        item.category?.name?.categoryColor ?? .gray
+    }
+    
+    private var displayName: String {
+        item.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    private var displayCategory: String {
+        item.category?.name?.formattedName() ?? "Unknown Category"
+    }
     
     var body: some View {
         
@@ -50,12 +60,12 @@ struct ItemCard: View {
     }
     
     private var title: some View {
-        AdaptiveText(text: (item.name ?? "Unknown Name").formattedName(), isMultiline: false)
+        AdaptiveText(text: displayName, isMultiline: false)
             .bold()
     }
     
     private var category: some View {
-        CustomCapsule(text: (item.category?.name ?? "Unknown Category").formattedName(), color: itemColor)
+        CustomCapsule(text: displayCategory, color: itemColor)
     }
 }
 

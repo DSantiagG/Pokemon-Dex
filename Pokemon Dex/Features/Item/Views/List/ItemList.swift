@@ -14,14 +14,14 @@ struct ItemList: View {
     var layout: ListLayout = .twoColumns
     
     var onItemAppear: (PKMItem) -> Void = { _ in }
-    var onItemSelected: (String) -> Void = { _ in }
+    var onItemSelected: (String?) -> Void = { _ in }
     
     var body: some View {
         CardList(
             items: items,
             layout: layout,
             onItemAppear: onItemAppear,
-            onItemSelected: { i in onItemSelected(i.name ?? "Unknown Name")},
+            onItemSelected: { i in onItemSelected(i.name)},
             content: { item, layout in
                 ItemCard(
                     item: item,

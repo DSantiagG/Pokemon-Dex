@@ -12,25 +12,25 @@ struct PokemonFormsSection: View {
     
     @EnvironmentObject private var router: NavigationRouter
     
-    private var rows: [[PokemonForm]]
+    private var rows: [[PokemonFormViewModel]]
     private let hasForms: Bool
     private var isDefault: Bool
     
     let color: Color
     let context: NavigationContext
     
-    init(for pokemonName: String, forms: [PokemonForm], color: Color, context: NavigationContext) {
+    init(for pokemonName: String?, forms: [PokemonFormViewModel], color: Color, context: NavigationContext) {
         self.color = color
         hasForms = forms.count > 1
         
-        guard hasForms else {
+        guard hasForms, let pokemonName else {
             self.rows = []
             self.isDefault = true
             self.context = context
             return
         }
 
-        let current = forms.first(where: { $0.name == pokemonName })
+        let current = forms.first(where: { $0.rawName == pokemonName })
 
         self.isDefault = current?.isDefault ?? true
         
@@ -47,13 +47,12 @@ struct PokemonFormsSection: View {
                 VStack {
                     ForEach(Array(rows.enumerated()), id: \.offset) { (_, row) in
                         HStack (){
-                            ForEach(Array(row.enumerated()), id: \.offset) { (_, form) in
-                                let formName = form.name ?? "Unknown Name"
+                            ForEach(row, id: \.id) { form in
                                 Spacer()
                                 formItem(form)
                                     .onTapGesture {
-                                        if case .main = context {
-                                            router.push(.pokemonDetail(name: formName))
+                                        if case .main = context, let name = form.rawName {
+                                            router.push(.pokemonDetail(name: name))
                                         }
                                     }
                             }
@@ -64,11 +63,11 @@ struct PokemonFormsSection: View {
             }
         }
     }
-    private func formItem(_ form: PokemonForm) -> some View {
+    private func formItem(_ form: PokemonFormViewModel) -> some View {
         VStack {
-            URLImage(urlString: form.sprite, contentMode: .fit)
+            URLImage(urlString: form.spriteURL, contentMode: .fit)
                 .frame(maxWidth: 120)
-            AdaptiveText(text: form.name?.formattedName() ?? "Unknown Name")
+            AdaptiveText(text: form.displayName)
                 .fontWeight(.medium)
         }
     }
@@ -76,9 +75,9 @@ struct PokemonFormsSection: View {
 
 #Preview {
     let sprite = PokemonMockFactory.mockBulbasaur().sprites?.other?.officialArtwork?.frontDefault
-    let defaultPokemon = PokemonForm(name: "bulbasaur", sprite: sprite, isDefault: true)
-    let altPokemon1 = PokemonForm(name: "bulbasaur alt 1", sprite: sprite, isDefault: false)
-    let altPokemon2 = PokemonForm(name: "bulbasaur alt 2", sprite: sprite, isDefault: false)
+    let defaultPokemon = PokemonFormViewModel(form: PokemonForm(name: "bulbasaur", sprite: sprite, isDefault: true))
+    let altPokemon1 = PokemonFormViewModel(form: PokemonForm(name: "bulbasaur alt 1", sprite: sprite, isDefault: false))
+    let altPokemon2 = PokemonFormViewModel(form: PokemonForm(name: "bulbasaur alt 2", sprite: sprite, isDefault: false))
     
     PokemonFormsSection(for: "bulbasaur", forms: [defaultPokemon, altPokemon1, altPokemon2], color: .green, context: .main)
         .environmentObject(NavigationRouter())

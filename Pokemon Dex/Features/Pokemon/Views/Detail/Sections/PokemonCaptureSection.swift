@@ -46,7 +46,7 @@ struct PokemonCaptureSection: View {
 
 #Preview {
     ScrollView{
-        PokemonCaptureSection(habit: "Grassland", captureRate: 45, baseExperience: 65, growthRate: "Medium-Slow", color: .green)
+        PokemonCaptureSection(habit: "Grassland", captureRate: 45, baseExperience: 65, growthRate: "Medium Slow", color: .green)
             .padding()
     }
 }

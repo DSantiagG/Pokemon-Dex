@@ -28,10 +28,16 @@ class ItemDetailViewModel: ObservableObject, ErrorHandleable{
     }
     
     // MARK: - Public
-    func loadItem(name: String) async {
+    func loadItem(name: String?) async {
+        
+        currentItem = nil
+        
+        guard let name, !name.isEmpty else {
+            state = .notFound
+            return
+        }
         
         state = .loading
-        currentItem = nil
         
         do{
             currentItem = try await fetchAllItemData(name: name)

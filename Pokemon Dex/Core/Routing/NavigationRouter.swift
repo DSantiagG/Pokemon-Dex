@@ -12,9 +12,9 @@ final class NavigationRouter: ObservableObject{
     @Published var path: [AppRoute] = []
     
     enum AppRoute: Hashable{
-        case pokemonDetail(name: String)
-        case abilityDetail(name: String)
-        case itemDetail(name: String)
+        case pokemonDetail(name: String?)
+        case abilityDetail(name: String?)
+        case itemDetail(name: String?)
     }
     
     func push(_ route: AppRoute) {

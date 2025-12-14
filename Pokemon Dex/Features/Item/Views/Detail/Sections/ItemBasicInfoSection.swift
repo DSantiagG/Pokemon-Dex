@@ -22,7 +22,7 @@ struct ItemBasicInfoSection: View {
                 .fontWeight(.semibold)
             
             HStack{
-                CustomCapsule(text: name, fontSize: 19, fontWeight: .semibold, color: color, horizontalPadding: 15)
+                CustomCapsule(text: category, fontSize: 19, fontWeight: .semibold, color: color, horizontalPadding: 15)
                 
                 HStack{
                     Image(systemName: "dollarsign.circle")

@@ -15,6 +15,18 @@ struct AbilityCard: View {
     var layout: CardOrientation = .horizontal
     var color: Color = .red
     
+    private var displayName: String {
+        ability.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    private var displayGeneration: String {
+        ability.generation?.name?.formattedGeneration() ?? "Unknown Generation"
+    }
+    
+    private var displayShortEffect: String {
+        ability.effectEntries?.first(where: { $0.language?.name == "en" })?.shortEffect?.cleanFlavorText() ?? "No effect available"
+    }
+    
     var body: some View {
         CardContainer(color: color, layout: layout) {
             VStack{
@@ -32,7 +44,7 @@ struct AbilityCard: View {
     
     private var title: some View {
         CustomCapsule(
-            text: ability.name?.formattedName() ?? "Unknown Name",
+            text: displayName,
             fontWeight: .bold,
             color: color.opacity(0.9),
             verticalPadding: 2,
@@ -41,13 +53,13 @@ struct AbilityCard: View {
     }
     
     private var generation: some View{
-        Text(ability.generation?.name?.formattedGeneration() ?? "Unknown Generation")
+        Text(displayGeneration)
             .foregroundStyle(color)
             .shadow(color: color, radius: 4)
     }
     
     private var shortEffect: some View {
-        Text(ability.effectEntries?.first(where: { $0.language?.name == "en" })?.shortEffect?.cleanFlavorText() ?? "No effect available.")
+        Text(displayShortEffect)
     }
 }
 
