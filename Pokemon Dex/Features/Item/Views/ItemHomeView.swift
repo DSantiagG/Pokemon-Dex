@@ -14,11 +14,11 @@ struct ItemHomeView: View {
     @StateObject private var itemVM = PaginationViewModel(service: DataProvider.shared.itemService, layoutKey: .item)
     
     var body: some View {
-        Group{
-            if case .notFound = itemVM.state {
-                InfoStateView(primaryText: "No Items found.", secondaryText: "There are currently no items.")
-            }else{
-                NavigationContainer {
+        NavigationContainer {
+            Group{
+                if case .notFound = itemVM.state {
+                    InfoStateView(primaryText: "No Items found.", secondaryText: "There are currently no items.")
+                }else{
                     ScrollView {
                         ViewStateHandler(viewModel: itemVM) {
                             ItemList(
@@ -33,15 +33,15 @@ struct ItemHomeView: View {
                         }
                         .padding(.horizontal)
                     }
-                    .toolbarRole(.editor)
-                    .toolbar {
-                        ToolbarItem(placement: .subtitle) {
-                            CustomTitle(title: AppTab.items.title)
-                        }
-                        ToolbarItem {
-                            PresentationOptionsMenu(layout: $itemVM.layout)
-                        }
-                    }
+                }
+            }
+            .toolbarRole(.editor)
+            .toolbar {
+                ToolbarItem(placement: .subtitle) {
+                    CustomTitle(title: AppTab.items.title)
+                }
+                ToolbarItem {
+                    PresentationOptionsMenu(layout: $itemVM.layout)
                 }
             }
         }

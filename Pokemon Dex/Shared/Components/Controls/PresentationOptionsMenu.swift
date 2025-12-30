@@ -11,8 +11,6 @@ import SwiftUI
 struct PresentationOptionsMenu: View {
     
     @Binding var layout: ListLayout
-    var showsFilters: Bool = false
-    var onFiltersTapped: (() -> Void)? = nil
     
     var body: some View {
         Menu {
@@ -33,18 +31,6 @@ struct PresentationOptionsMenu: View {
                     systemImage: layout == .singleColumn ? "checkmark" : ""
                 )
             }
-            if showsFilters {
-                Divider()
-                
-                Button {
-                    onFiltersTapped?()
-                } label: {
-                    Label(
-                        "Filters",
-                        systemImage: "line.3.horizontal.decrease.circle"
-                    )
-                }
-            }
         } label: {
             Image(systemName: "slider.horizontal.3")
         }
@@ -52,5 +38,5 @@ struct PresentationOptionsMenu: View {
 }
 
 #Preview {
-    PresentationOptionsMenu(layout: .constant(.twoColumns), showsFilters: true)
+    PresentationOptionsMenu(layout: .constant(.twoColumns))
 }

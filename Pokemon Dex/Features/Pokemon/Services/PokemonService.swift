@@ -31,6 +31,8 @@ actor PokemonService: PagingService, SearchService {
     private var speciesCache = [String: PKMPokemonSpecies]()
     private var chainCache = [Int: [EvolutionStage]]()
     
+    private var typeResourcesCache: [PKMAPIResource<PKMType>]?
+    
     // MARK: - Pagination
     
     func fetchInitialPage(limit: Int) async throws -> [PKMPokemon] {
@@ -55,9 +57,28 @@ actor PokemonService: PagingService, SearchService {
         try await core.fetch(byResource: resource)
     }
     
-    // MARK: - Fetch List
+    // MARK: - Fetch List by resources / types
     func fetch(from resources: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await core.fetch(from: resources)
+    }
+    
+    func fetch(byTypes types: [PKMAPIResource<PKMType>]) async throws -> [PKMPokemon] {
+        var pokemonsPerType: [[PKMAPIResource<PKMPokemon>]] = []
+
+        for typeResource in types {
+            let type = try await fetchType(resource: typeResource)
+            pokemonsPerType.append(type.pokemon?.compactMap{ $0.pokemon } ?? [])
+        }
+
+        guard let basePokemons = pokemonsPerType.first else { return [] }
+        
+        let intersectedPokemons = basePokemons.filter { pokemon in
+            pokemonsPerType.dropFirst().allSatisfy { typeList in
+                typeList.contains { $0.name == pokemon.name }
+            }
+        }
+
+        return try await fetch(from: intersectedPokemons)
     }
     
     // MARK: - Types
@@ -110,10 +131,20 @@ actor PokemonService: PagingService, SearchService {
         return stages
     }
     
+    // MARK: - Types List
+    
+    func fetchAllTypeResources() async throws -> [PKMAPIResource<PKMType>] {
+        if let cached = typeResourcesCache { return cached }
+        
+        let result = try await api.pokemonService.fetchTypeList()
+        let res = result.results ?? []
+        typeResourcesCache = res
+        return res
+    }
+    
     // MARK: --- Helpers
     
     private func extractNames(from node: PKMChainLink, into array: inout [PKMAPIResource<PKMPokemon>]) async {
-        
         guard let specieResource = node.species else { return }
         guard let specie = try? await fetchSpecies(resource: specieResource),
               let pokemon = specie.varieties?.first(where: { $0.isDefault == true })?.pokemon else { return }
@@ -124,4 +155,6 @@ actor PokemonService: PagingService, SearchService {
             await extractNames(from: next, into: &array)
         }
     }
+    
+    
 }

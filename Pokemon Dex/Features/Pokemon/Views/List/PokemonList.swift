@@ -21,7 +21,7 @@ struct PokemonList: View {
             items: pokemons,
             layout: layout,
             onItemAppear: onItemAppear,
-            onItemSelected: { p in onItemSelected(p.name)},
+            onItemSelected: { p in onItemSelected(p.name) },
             content: { pokemon, layout in
                 PokemonCard(
                     pokemon: pokemon,

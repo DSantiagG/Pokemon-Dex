@@ -14,11 +14,11 @@ struct AbilityHomeView: View {
     @StateObject private var abilityVM = PaginationViewModel(service: DataProvider.shared.abilityService, layoutKey: .ability)
     
     var body: some View {
-        Group{
-            if case .notFound = abilityVM.state {
-                InfoStateView(primaryText: "No Abilities found.", secondaryText: "There are currently no abilities.")
-            }else{
-                NavigationContainer {
+        NavigationContainer {
+            Group{
+                if case .notFound = abilityVM.state {
+                    InfoStateView(primaryText: "No Abilities found.", secondaryText: "There are currently no abilities.")
+                }else{
                     ScrollView {
                         ViewStateHandler(viewModel: abilityVM) {
                             AbilityList(
@@ -33,15 +33,15 @@ struct AbilityHomeView: View {
                         }
                         .padding(.horizontal)
                     }
-                    .toolbarRole(.editor)
-                    .toolbar {
-                        ToolbarItem(placement: .subtitle) {
-                            CustomTitle(title: AppTab.abilities.title)
-                        }
-                        ToolbarItem {
-                            PresentationOptionsMenu(layout: $abilityVM.layout)
-                        }
-                    }
+                }
+            }
+            .toolbarRole(.editor)
+            .toolbar {
+                ToolbarItem(placement: .subtitle) {
+                    CustomTitle(title: AppTab.abilities.title)
+                }
+                ToolbarItem {
+                    PresentationOptionsMenu(layout: $abilityVM.layout)
                 }
             }
         }

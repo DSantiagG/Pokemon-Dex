@@ -29,7 +29,7 @@ extension String {
         case "steel": return .gray.opacity(0.6)
         case "fairy": return .pink
         case "normal": return Color(red: 168/255, green: 167/255, blue: 122/255)
-        case "stellar": return .white.opacity(0.8)
+        case "stellar": return Color(red: 60/255, green: 80/255, blue: 230/255)
         default: return .gray
         }
     }

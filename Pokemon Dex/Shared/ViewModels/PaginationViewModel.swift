@@ -8,7 +8,7 @@ import Foundation
 import Combine
 
 @MainActor
-class PaginationViewModel<Resource: IdentifiableResource>: ObservableObject, ErrorHandleable {
+class PaginationViewModel<Resource: IdentifiableResource, Service: PagingService<Resource>>: ObservableObject, ErrorHandleable {
     
     @Published var items: [Resource] = []
     @Published var state: ViewState = .idle
@@ -19,11 +19,11 @@ class PaginationViewModel<Resource: IdentifiableResource>: ObservableObject, Err
         }
     }
     
-    private let service: any PagingService<Resource>
+    let service: Service
     private let layoutKey: ListLayoutKey
     private let layoutStorage: ListLayoutStorageProtocol
     
-    init(service: any PagingService<Resource>, layoutKey: ListLayoutKey) {
+    init(service: Service, layoutKey: ListLayoutKey) {
         self.service = service
         self.layoutKey = layoutKey
         self.layoutStorage = DataProvider.shared.listLayoutStorage
