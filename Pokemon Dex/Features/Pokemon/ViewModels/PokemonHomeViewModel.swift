@@ -9,14 +9,27 @@ import Foundation
 import PokemonAPI
 import Combine
 
+enum PokemonBrowseMode {
+    case all
+    case filteredByTypes
+    case favorites
+}
+
 @MainActor
 class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
     
+    @Published var browseMode: PokemonBrowseMode = .all {
+        didSet {
+            Task { @MainActor in
+                await handleBrowseModeChange()
+            }
+        }
+    }
+    @Published var favoritePokemons: [PKMPokemon] = []
     @Published var filteredPokemons: [PKMPokemon] = []
-    @Published var showFiltersError = false
     
-    /// True only when filters are applied AND results exist
-    var showFilteredResults: Bool { !filteredPokemons.isEmpty }
+    @Published var selectedTypes: [String] = []
+    @Published var showFiltersError = false
     
     // MARK: - Type Resources
     private var typeResources: [PKMAPIResource<PKMType>]?
@@ -28,11 +41,33 @@ class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
         }
     }
     
-    func filterPokemons(byTypes types: [String]) async {
+    func toggleFavorites () {
+        browseMode = browseMode == .favorites ? .all : .favorites
+    }
+    
+    func loadFavoritePokemons() async {
+        state = .loading
+        do {
+            favoritePokemons = try await service.fetchFavoritePokemons()
+            state = favoritePokemons.isEmpty ? .notFound : .loaded
+        } catch {
+            handle(
+                error: error,
+                debugMessage: "Failed to load favorite Pokémons",
+                userMessage: "We couldn't load your favorite Pokémon. Please try again."
+            ) { [weak self] in
+                Task { @MainActor in
+                    await self?.loadFavoritePokemons()
+                }
+            }
+        }
+    }
+    
+    func filterPokemons() async {
         
-        guard !types.isEmpty else {
+        guard !selectedTypes.isEmpty else {
             filteredPokemons = []
-            state = items.isEmpty ? .notFound : .loaded
+            browseMode = .all
             return
         }
         guard let typeResources else {
@@ -40,7 +75,9 @@ class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
             return
         }
         
-        let selectedTypeResources = typeResources.filter { types.contains($0.resourceName) }
+        let selectedTypeResources = typeResources.filter { selectedTypes.contains($0.resourceName) }
+        
+        browseMode = .filteredByTypes
         state = .loading
         
         do {
@@ -53,7 +90,7 @@ class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
                 userMessage: "Oops! Something went wrong while filtering. Please try again!."
             ) { [weak self] in
                 Task { @MainActor in
-                    await self?.loadInitialPage()
+                    await self?.filterPokemons()
                 }
             }
         }
@@ -69,9 +106,37 @@ class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
             typeResources = nil
         }
     }
+    
+    func refreshIfNeededOnAppear() async {
+        if browseMode == .favorites {
+            await loadFavoritePokemons()
+        }
+    }
+
+    private func handleBrowseModeChange() async {
+        switch browseMode {
+        case .favorites:
+            await loadFavoritePokemons()
+        case .all:
+            state = items.isEmpty ? .notFound : .loaded
+        case .filteredByTypes:
+            break
+        }
+    }
 }
 
 extension PokemonHomeViewModel {
+    
+    var displayPokemons: [PKMPokemon] {
+        switch browseMode {
+        case .all:
+            return items
+        case .filteredByTypes:
+            return filteredPokemons
+        case .favorites:
+            return favoritePokemons
+        }
+    }
     
     private var fallbackTypes: [String] {
         ["normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy", "stellar", "unknown"]

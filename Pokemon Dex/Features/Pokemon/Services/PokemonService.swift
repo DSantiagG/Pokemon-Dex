@@ -11,7 +11,7 @@ enum PokemonEndpoints: ResourceEndpoints {
     static func fetchPage(_ state: PaginationState<PKMPokemon>) async throws -> PKMPagedObject<PKMPokemon> {
         try await PokemonAPI().pokemonService.fetchPokemonList(paginationState: state)
     }
-
+    
     static func fetchByName(_ name: String) async throws -> PKMPokemon {
         try await PokemonAPI().pokemonService.fetchPokemon(name)
     }
@@ -22,9 +22,12 @@ actor PokemonService: PagingService, SearchService {
     private let api: PokemonAPI
     private let core: ResourceService<PokemonEndpoints>
     
+    let favoritesService: PokemonFavoritesService
+    
     init() {
         self.api = PokemonAPI()
         self.core = ResourceService<PokemonEndpoints>()
+        self.favoritesService = PokemonFavoritesService()
     }
     
     private var typeCache = [String: PKMType]()
@@ -57,19 +60,24 @@ actor PokemonService: PagingService, SearchService {
         try await core.fetch(byResource: resource)
     }
     
-    // MARK: - Fetch List by resources / types
+    // MARK: - Fetch List by names / resources / types
+    
+    func fetch(from names: [String]) async throws -> [PKMPokemon] {
+        try await core.fetch(from: names)
+    }
+    
     func fetch(from resources: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await core.fetch(from: resources)
     }
     
     func fetch(byTypes types: [PKMAPIResource<PKMType>]) async throws -> [PKMPokemon] {
         var pokemonsPerType: [[PKMAPIResource<PKMPokemon>]] = []
-
+        
         for typeResource in types {
             let type = try await fetchType(resource: typeResource)
             pokemonsPerType.append(type.pokemon?.compactMap{ $0.pokemon } ?? [])
         }
-
+        
         guard let basePokemons = pokemonsPerType.first else { return [] }
         
         let intersectedPokemons = basePokemons.filter { pokemon in
@@ -77,7 +85,7 @@ actor PokemonService: PagingService, SearchService {
                 typeList.contains { $0.name == pokemon.name }
             }
         }
-
+        
         return try await fetch(from: intersectedPokemons)
     }
     
@@ -140,6 +148,21 @@ actor PokemonService: PagingService, SearchService {
         let res = result.results ?? []
         typeResourcesCache = res
         return res
+    }
+    
+    // MARK: - Favorites
+    
+    func toggleFavorite(pokemon: PKMPokemon) async {
+        await favoritesService.toggle(name: pokemon.resourceName)
+    }
+    
+    func fetchFavoritePokemons() async throws -> [PKMPokemon] {
+        let names = await favoritesService.getAll()
+        return try await fetch(from: names)
+    }
+    
+    func isFavorite(name: String) async -> Bool {
+        await favoritesService.isFavorite(name: name)
     }
     
     // MARK: --- Helpers

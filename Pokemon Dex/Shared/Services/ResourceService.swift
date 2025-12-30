@@ -61,11 +61,27 @@ actor ResourceService<Endpoint: ResourceEndpoints>: Sendable, PagingService, Sea
         return value
     }
 
-    func fetch(from results: [PKMAPIResource<Model>]) async throws -> [Model] {
+    func fetch(from resources: [PKMAPIResource<Model>]) async throws -> [Model] {
         try await withThrowingTaskGroup(of: (Int, Model).self) { group in
-            for (index, res) in results.enumerated() {
+            for (index, res) in resources.enumerated() {
                 group.addTask {
                     let value = try await self.fetch(byResource: res)
+                    return (index, value)
+                }
+            }
+            var output: [(Int, Model)] = []
+            for try await pair in group {
+                output.append(pair)
+            }
+            return output.sorted { $0.0 < $1.0 }.map { $0.1 }
+        }
+    }
+    
+    func fetch(from names: [String]) async throws -> [Model] {
+        try await withThrowingTaskGroup(of: (Int, Model).self) { group in
+            for (index, name) in names.enumerated() {
+                group.addTask {
+                    let value = try await self.fetch(byName: name)
                     return (index, value)
                 }
             }

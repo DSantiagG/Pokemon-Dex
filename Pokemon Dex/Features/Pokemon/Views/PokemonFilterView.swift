@@ -58,7 +58,6 @@ struct PokemonFilterView: View {
                         applyFilters()
                         dismiss()
                     }
-                    .disabled(!hasSelectedTypes)
                 }
                  ToolbarItem(placement: .topBarTrailing) {
                      Button {

@@ -15,6 +15,7 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     
     @Published var currentPokemon: CurrentPokemon?
     @Published var state: ViewState = .idle
+    @Published var isFavorite: Bool = false
     
     private let pokemonService: PokemonService
     private let abilityService: AbilityService
@@ -24,6 +25,12 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         self.pokemonService = pokemonService
         self.abilityService = abilityService
         self.itemService = itemService
+    }
+    
+    func toggleFavorite() async {
+        guard let pokemon = currentPokemon?.details else { return }
+        await pokemonService.toggleFavorite(pokemon: pokemon)
+        isFavorite.toggle()
     }
     
     func loadPokemon(name: String?) async {
@@ -39,6 +46,7 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         do{
             currentPokemon = try await fetchAllPokemonData(name: name)
+            await loadIsFavorite()
             state = .loaded
         } catch {
             handle(error: error, debugMessage: "Loading pokemon with name : \(name) failed", userMessage: "This Pokémon is hiding. Tap retry to find it!") { [weak self] in
@@ -155,5 +163,10 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         let heldItemsResources = heldItems.compactMap { $0.item }
         return try await itemService.fetch(from: heldItemsResources)
+    }
+    
+    private func loadIsFavorite() async {
+        guard let name = currentPokemon?.details.name else { return }
+        isFavorite = await pokemonService.isFavorite(name: name)
     }
 }

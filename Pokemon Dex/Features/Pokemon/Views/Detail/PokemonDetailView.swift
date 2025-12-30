@@ -96,9 +96,15 @@ struct PokemonDetailView: View {
                         .padding(.bottom, 30)
                     }
                     .toolbar {
-                        Button {} label: {
-                            Image(systemName: "heart")
+                        Button {
+                            Task{
+                                await pokemonVM.toggleFavorite()
+                            }
+                        } label: {
+                            Image(systemName: pokemonVM.isFavorite ? "heart.fill" : "heart")
                         }
+                        .buttonStyle(.borderedProminent)
+                        .tint(pokemonVM.displayColor)
                     }
                 }
             }
