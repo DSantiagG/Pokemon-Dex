@@ -5,11 +5,15 @@
 //  Created by David Giron on 11/11/25.
 //
 
+
 import SwiftUI
 
-/// hola
+
+/// A service that manages favorite Pokémon using UserDefaults.
 ///
-/// sdf
+/// Use this service to add or remove favorites and query favorite Pokémon.
+/// - Author: David Giron
+/// - Version: 1.0
 struct MainTabView: View {
     
     @StateObject var appRouter = AppRouter()
