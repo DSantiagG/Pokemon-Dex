@@ -7,6 +7,7 @@
 import SwiftUI
 import PokemonAPI
 
+///no se que hace
 struct PokemonBasicInfoSection: View {
     let order: Int
     let name: String
