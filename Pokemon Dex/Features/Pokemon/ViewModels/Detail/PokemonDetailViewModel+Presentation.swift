@@ -25,7 +25,7 @@ extension PokemonDetailViewModel {
     }
     
     var displayTypes: [String] {
-        currentPokemon?.types.map { $0.name?.formattedName() ?? "Unknown Type" } ?? []
+        return currentPokemon?.details.types?.map { $0.type?.name?.formattedName() ?? "Unknown Type"} ?? []
     }
     
     var displayDescription: String {
@@ -99,3 +99,4 @@ extension PokemonDetailViewModel {
         currentPokemon?.forms.map { PokemonFormViewModel(form: $0) } ?? []
     }
 }
+

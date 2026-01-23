@@ -62,8 +62,6 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         guard let pokemon = try await fetchPokemon(name: name) else { return nil }
         
-        guard let types = try await fetchTypes(for: pokemon) else { return nil }
-        
         let (normalAbilities, hiddenAbilities) = try await fetchAbilities(for: pokemon)
         
         guard let normalAbilities else { return nil }
@@ -79,7 +77,6 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
         
         return CurrentPokemon(
             details: pokemon,
-            types: types,
             normalAbilities: normalAbilities,
             hiddenAbilities: hiddenAbilities,
             species: species,
@@ -92,19 +89,6 @@ class PokemonDetailViewModel: ObservableObject, ErrorHandleable {
     private func fetchPokemon(name: String?) async throws -> PKMPokemon? {
         guard let name else { return nil }
         return try await pokemonService.fetch(name: name)
-    }
-    
-    private func fetchTypes(for pokemon: PKMPokemon) async throws -> [PKMType]? {
-        guard let pokemonTypes = pokemon.types else { return nil }
-
-        var types: [PKMType] = []
-
-        for t in pokemonTypes {
-            guard let typeResource = t.type else { continue }
-            let typeDetails = try await pokemonService.fetchType(resource: typeResource)
-            types.append(typeDetails)
-        }
-        return types
     }
     
     private func fetchAbilities(for pokemon: PKMPokemon) async throws -> (normal: [PKMAbility]?, hidden: [PKMAbility]?) {

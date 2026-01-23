@@ -58,7 +58,7 @@ struct MainTabView: View {
                 lastPrimarySelection = newValue
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        //.tabBarMinimizeBehavior(.onScrollDown)
     }
     
     private func routerForCurrentTarget() -> NavigationRouter {

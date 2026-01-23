@@ -15,6 +15,11 @@ enum PokemonBrowseMode {
     case favorites
 }
 
+struct PokemonTypeFilterItem: Identifiable, Hashable {
+    let id: String
+    let displayName: String
+}
+
 @MainActor
 class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
     
@@ -62,6 +67,7 @@ class PokemonHomeViewModel: PaginationViewModel<PKMPokemon, PokemonService> {
             }
         }
     }
+    
     
     func filterPokemons() async {
         

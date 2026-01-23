@@ -8,7 +8,6 @@ import PokemonAPI
 
 struct CurrentPokemon {
     var details: PKMPokemon
-    var types: [PKMType]
     var normalAbilities: [PKMAbility]
     var hiddenAbilities: [PKMAbility]
     var species: PKMPokemonSpecies

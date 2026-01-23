@@ -20,7 +20,7 @@ struct PokemonAbilitiesSection: View {
     let color: Color
     
     let context: NavigationContext
-    
+
     var body: some View {
         SectionCard(text: "Abilities", color: color) {
             VStack(spacing: 16) {

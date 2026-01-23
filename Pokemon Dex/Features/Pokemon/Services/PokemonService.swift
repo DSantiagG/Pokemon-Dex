@@ -89,17 +89,6 @@ actor PokemonService: PagingService, SearchService {
         return try await fetch(from: intersectedPokemons)
     }
     
-    // MARK: - Types
-    
-    func fetchType(resource: PKMAPIResource<PKMType>) async throws -> PKMType {
-        let key = resource.name ?? resource.url ?? "unknown"
-        if let cached = typeCache[key] { return cached }
-        
-        let type = try await api.resourceService.fetch(resource)
-        typeCache[key] = type
-        return type
-    }
-    
     // MARK: - Species
     
     func fetchSpecies(resource: PKMAPIResource<PKMPokemonSpecies>) async throws -> PKMPokemonSpecies {
@@ -166,6 +155,15 @@ actor PokemonService: PagingService, SearchService {
     }
     
     // MARK: --- Helpers
+    
+    private func fetchType(resource: PKMAPIResource<PKMType>) async throws -> PKMType {
+        let key = resource.name ?? resource.url ?? "unknown"
+        if let cached = typeCache[key] { return cached }
+        
+        let type = try await api.resourceService.fetch(resource)
+        typeCache[key] = type
+        return type
+    }
     
     private func extractNames(from node: PKMChainLink, into array: inout [PKMAPIResource<PKMPokemon>]) async {
         guard let specieResource = node.species else { return }
