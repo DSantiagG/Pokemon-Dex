@@ -7,18 +7,26 @@
 
 import SwiftUI
 
+/// The app's entry point that performs global configuration and hosts the root scene.
+///
+/// This type configures global resources (URL cache) during
+/// initialization and exposes the main window group containing ``MainTabView``.
 @main
 struct PokemonDexApp: App {
+    // MARK: - Lifecycle
+
+    /// Creates a new application instance and performs one-time configuration.
+    ///
+    /// Currently this configures shared URL cache settings used by network requests.
     init() {
-        configureURLCache()
+        URLCacheConfigurator.configure()
     }
-    
-    private func configureURLCache() {
-        let memoryCapacity = 100 * 1024 * 1024 // 100 MB
-        let diskCapacity = 500 * 1024 * 1024   // 500 MB
-        URLCache.shared = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity)
-    }
-    
+
+    // MARK: - Scenes
+
+    /// The application's scene graph.
+    ///
+    /// The `WindowGroup` hosts the app's root ``MainTabView``.
     var body: some Scene {
         WindowGroup {
             MainTabView()

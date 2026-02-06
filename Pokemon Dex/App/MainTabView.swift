@@ -5,75 +5,60 @@
 //  Created by David Giron on 11/11/25.
 //
 
-
 import SwiftUI
 
-
-/// A service that manages favorite Pokémon using UserDefaults.
+/// The root tab view for the application.
 ///
-/// Use this service to add or remove favorites and query favorite Pokémon.
-/// - Author: David Giron
-/// - Version: 1.0
+/// `MainTabView` is responsible for presenting the app's primary feature tabs
+/// (Pokémon, Items, Abilities) plus the Search tab. It holds a shared
+/// ``AppRouter`` instance and manages the currently selected tab and the last
+/// non-search selection so the search target can default to the previously
+/// active primary tab.
 struct MainTabView: View {
-    
+    // MARK: - Properties
+
+    /// Shared application router that provides per-feature routers
+    /// and coordinates navigation between feature modules.
     @StateObject var appRouter = AppRouter()
-    
+
+    /// The currently selected tab in the `TabView`.
     @State private var selection: AppTab = .pokemon
+
+    /// The last selected primary tab (used to restore the search target).
     @State private var lastPrimarySelection: AppTab = .pokemon
+
+    /// The tab that should receive search actions when the Search tab is used.
     @State private var searchTarget: AppTab = .pokemon
-    
+
+    // MARK: - Init TabBar appearance
+
+    /// Configure the global `UITabBar` appearance used by this view.
     init() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.stackedLayoutAppearance.selected.iconColor = .systemRed
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        UITabBar.configureAppearance()
     }
-    
+
+    // MARK: - Body
+
+    /// The content of this view: a `TabView` that iterates over the primary
+    /// tabs and also provides a Search tab. The Search tab delegates search
+    /// routing back to the appropriate per-feature router using `searchTarget`.
     var body: some View {
-        
         TabView (selection: $selection){
-            
-            Tab(AppTab.pokemon.title, systemImage: AppTab.pokemon.systemImageName, value: AppTab.pokemon) {
-                PokemonHomeView()
-                    .environmentObject(appRouter.pokemonRouter)
+            ForEach(AppTab.primaryTabs, id: \.self) { tab in
+                Tab(tab.title, systemImage: tab.systemImageName, value: tab) {
+                    tab.view(appRouter: appRouter)
+                }
             }
-            
-            Tab(AppTab.items.title, systemImage: AppTab.items.systemImageName, value: AppTab.items) {
-                ItemHomeView()
-                    .environmentObject(appRouter.itemRouter)
-            }
-            
-            Tab(AppTab.abilities.title, systemImage: AppTab.abilities.systemImageName, value: AppTab.abilities) {
-                AbilityHomeView()
-                    .environmentObject(appRouter.abilityRouter)
-            }
-            
+
             Tab(value: AppTab.search, role: .search) {
                 SearchView(searchTarget: searchTarget) {
                     selection = searchTarget
                 }
-                .environmentObject(routerForCurrentTarget())
+                .environmentObject(searchTarget.searchRouter(appRouter: appRouter))
             }
         }
         .onChange(of: selection) { _ , newValue in
-            if newValue == .search {
-                searchTarget = lastPrimarySelection
-            } else {
-                lastPrimarySelection = newValue
-            }
-        }
-        //.tabBarMinimizeBehavior(.onScrollDown)
-    }
-    
-    private func routerForCurrentTarget() -> NavigationRouter {
-        switch searchTarget {
-        case .pokemon: return appRouter.pokemonSearchRouter
-        case .items: return appRouter.itemSearchRouter
-        case .abilities: return appRouter.abilitySearchRouter
-        default: return appRouter.pokemonSearchRouter
+            newValue == .search ? (searchTarget = lastPrimarySelection) : (lastPrimarySelection = newValue)
         }
     }
 }
