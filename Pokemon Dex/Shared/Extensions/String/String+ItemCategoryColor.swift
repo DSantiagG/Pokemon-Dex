@@ -10,6 +10,14 @@ import SwiftUI
 import CryptoKit
 
 extension String {
+    /// Deterministic color for an item category name.
+    ///
+    /// This computed property hashes the string and maps the result into a
+    /// visually pleasant hue/saturation/brightness band. The output is stable
+    /// for the same input string and is intended for lightweight tinting of
+    /// item category UI elements.
+    ///
+    /// - Returns: A deterministic `Color` derived from the string suitable for UI tinting.
     var categoryColor: Color {
         let digest = SHA256.hash(data: Data(self.utf8))
         let firstByte = digest.withUnsafeBytes { rawBuffer -> UInt8 in

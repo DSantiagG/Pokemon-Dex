@@ -8,9 +8,16 @@
 import Foundation
 import PokemonAPI
 
+/// Helpers to construct minimal `PKMItem` and related resources for tests and previews.
+///
+/// These functions produce decoded model objects using `MockFactory.decode(_:)`.
 enum ItemMockFactory {
     
     // MARK: - Atribute
+    /// Build a minimal `PKMAPIResource<PKMItemAttribute>` with the given name.
+    ///
+    /// - Parameter name: Attribute slug (e.g. "countable").
+    /// - Returns: A decoded `PKMAPIResource<PKMItemAttribute>`.
     static func mockAtribute(name: String) -> PKMAPIResource<PKMItemAttribute> {
         MockFactory.decode("""
         {
@@ -21,7 +28,18 @@ enum ItemMockFactory {
     }
     
     // MARK: - Item
-    /// Create a minimal PKMItem
+    /// Create a minimal `PKMItem` instance populated with the provided fields.
+    ///
+    /// - Parameters:
+    ///   - id: Numeric item identifier.
+    ///   - name: Item slug (e.g. "master-ball").
+    ///   - cost: Purchase cost of the item.
+    ///   - category: Category slug for the item.
+    ///   - effect: Full effect description.
+    ///   - shortEffect: Compact effect summary.
+    ///   - sprites: URL string for the default item sprite.
+    ///   - atributes: Array of item attribute resources.
+    /// - Returns: A decoded `PKMItem` instance.
     static func mockItem(
         id: Int,
         name: String,
@@ -69,6 +87,9 @@ enum ItemMockFactory {
         )
     }
     
+    /// Convenience mock for the `master-ball` item.
+    ///
+    /// - Returns: A `PKMItem` representing a `master-ball` with common attributes.
     static func mockMasterBall() -> PKMItem {
         mockItem(
             id: 1,

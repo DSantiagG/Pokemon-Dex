@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/// Stylized title view used across the app.
+///
+/// - Parameters:
+///   - title: Main title text to display.
 struct CustomTitle: View {
     
     let title: String

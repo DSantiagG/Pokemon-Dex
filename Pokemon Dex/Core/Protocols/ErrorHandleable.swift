@@ -11,7 +11,7 @@ import PokemonAPI
 // MARK: - Error Handleable Protocol
 
 /// Protocol that provides a standardized error handling helper for view models
-/// and other types that manage a `ViewState`.
+/// and other types that manage a ``ViewState``.
 ///
 /// Conforming types must expose a mutable `state` property so the default
 /// implementation can update UI state (for example `.error` or `.notFound`) in
@@ -28,7 +28,7 @@ protocol ErrorHandleable: AnyObject {
 extension ErrorHandleable {
     /// Default error handling routine used across the app.
     ///
-    /// This function logs a debug message and handles an error by mapping it to a `ViewState` suitable for presentation:
+    /// This function logs a debug message and handles an error by mapping it to a ``ViewState`` suitable for presentation:
     ///
     /// - Ignores cancellation-related errors.
     /// - Maps HTTP 404 responses to `.notFound`.

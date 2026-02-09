@@ -6,6 +6,12 @@
 //
 import SwiftUI
 
+/// A vertical info column that displays a title and a descriptive value.
+///
+/// - Parameters:
+///   - title: The title label for the column (e.g., "Height").
+///   - color: Accent color used for the value text.
+///   - content: The view displayed beneath the title.
 struct InfoColumn<Content: View>: View {
     let title: String
     let color: Color

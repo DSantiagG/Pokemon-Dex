@@ -6,7 +6,21 @@
 //
 import SwiftUI
 
+/// A compact vertical divider used between columns in an `HStack`.
+///
+/// Renders a full-height `Divider` with horizontal padding to separate
+/// adjacent content while keeping layout consistent.
+///
+/// Example:
+/// ```swift
+/// HStack {
+///     Text("Left")
+///     ColumnDivider()
+///     Text("Right")
+/// }
+/// ```
 struct ColumnDivider: View {
+    // MARK: - View
     var body: some View {
         Divider()
             .frame(maxHeight: .infinity)

@@ -9,10 +9,24 @@
 import Foundation
 import PokemonAPI
 
+/// Factory helpers for creating minimal `PKMAbility` test objects.
+///
+/// Use these helpers in previews and unit tests to produce small, predictable
+/// `PKMAbility` instances without performing network calls.
 enum AbilityMockFactory {
     
     // MARK: - Ability
-    /// Create a minimal PKMAbility
+    /// Create a minimal `PKMAbility` instance from the provided fields.
+    ///
+    /// - Parameters:
+    ///   - id: Numeric ability identifier.
+    ///   - name: Ability slug (e.g. "stench").
+    ///   - generationName: Generation resource name (e.g. "generation-iii").
+    ///   - effect: Full effect text shown in the ability detail.
+    ///   - shortEffect: Short effect summary.
+    ///   - firstPokemonName: Name of the first Pokémon entry in the ability's `pokemon` array.
+    ///   - firstPokemonIsHidden: Whether the first Pokémon entry is a hidden ability.
+    /// - Returns: A decoded `PKMAbility` populated with the minimal JSON above.
     static func mockAbility(
         id: Int,
         name: String,
@@ -58,6 +72,9 @@ enum AbilityMockFactory {
     }
     
     // MARK: - Stench
+    /// Convenience mock for the classic `stench` ability.
+    ///
+    /// - Returns: A `PKMAbility` representing the `stench` ability with a single example Pokémon.
     static func mockStench() -> PKMAbility {
         mockAbility(
             id: 1,

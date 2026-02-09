@@ -9,6 +9,13 @@ import SwiftUI
 import PokemonAPI
 
 extension String {
+    /// Color mapping for common Pokémon type names.
+    ///
+    /// Returns an appropriate `Color` used throughout the UI when rendering
+    /// type badges or accents. The mapping is case-insensitive and falls back
+    /// to `.gray` for unknown types.
+    ///
+    /// - Returns: A `Color` representing the Pokémon type tint.
     var pokemonTypeColor: Color {
         switch self.lowercased() {
         case "fire": return .red
@@ -36,8 +43,10 @@ extension String {
 }
 
 extension PKMPokemonType {
+    /// Convenience accessor returning the `Color` for this `PKMPokemonType`.
+    ///
+    /// - Returns: A `Color` derived from the underlying type name.
     var color: Color {
         (self.type?.name ?? "unknown").pokemonTypeColor
     }
 }
-

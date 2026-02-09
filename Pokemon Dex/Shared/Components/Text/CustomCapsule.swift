@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+/// A capsule-shaped label used to display small badges or types.
+///
+/// - Parameters:
+///   - text: The label text shown inside the capsule.
+///   - fontSize: Font size used for the label.
+///   - fontWeight: Optional font weight for the label text.
+///   - color: Accent color used for the capsule background.
+///   - verticalPadding: Vertical padding inside the capsule.
+///   - horizontalPadding: Horizontal padding inside the capsule.
+///   - isMultiline: Whether the inner text may wrap into multiple lines.
 struct CustomCapsule: View {
     
     var text: String

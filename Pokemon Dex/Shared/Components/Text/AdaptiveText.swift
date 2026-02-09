@@ -8,6 +8,11 @@
 
 import SwiftUI
 
+/// A text view that adapts line limits based on content shape.
+///
+/// - Parameters:
+///   - text: The text content to display.
+///   - isMultiline: Whether multi-line rendering is allowed. When `false` the text is forced to a single line.
 struct AdaptiveText: View {
     
     let text: String

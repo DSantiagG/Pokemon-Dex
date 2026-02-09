@@ -25,7 +25,7 @@ struct PokemonAbilitiesSection: View {
         SectionCard(text: "Abilities", color: color) {
             VStack(spacing: 16) {
                 
-                CustomSegmentedControl("", selection: $abilityKind, color: color, items: [
+                CustomSegmentedControl(selection: $abilityKind, color: color, items: [
                     .init("Normal", tag: .normal),
                     .init("Hidden", tag: .hidden)
                 ])

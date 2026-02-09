@@ -7,14 +7,34 @@
 
 import SwiftUI
 
+/// A compact, friendly informational screen used to show empty/error states.
+///
+/// Presents a decorative illustration and two lines of text. Intended for
+/// states such as "not found", "empty" or light error messaging where a
+/// short title and supporting description are sufficient.
+///
+/// - Parameters:
+///   - primaryText: The prominent headline shown to the user.
+///   - secondaryText: A short supporting description displayed below the headline.
+///
+/// - Example:
+/// ```swift
+/// InfoStateView(primaryText: "No Pokémon found!", secondaryText: "Try searching again")
+/// ```
 struct InfoStateView: View {
+    
+    // MARK: - Parameters
     
     let primaryText: String
     let secondaryText: String
     
+    // MARK: - State
+    
     @State private var animate = false
     @State private var expand = false
     @State private var showText = false
+    
+    // MARK: - Body
     
     var body: some View {
         ZStack {

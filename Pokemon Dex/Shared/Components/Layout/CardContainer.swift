@@ -8,15 +8,48 @@
 
 import SwiftUI
 
+/// A flexible card container that presents content in either a vertical or
+/// horizontal layout depending on the provided ``CardOrientation``.
+///
+/// Use ``CardContainer`` to wrap related pieces of UI inside a rounded card with
+/// padding, a subtle background tint derived from `color`, and a stroked border.
+/// The container adapts its inner layout by calling either `contentVertical` or
+/// `contentHorizontal` based on the `layout` value.
+///
+/// Example:
+/// ```swift
+/// CardContainer(color: .red, layout: .vertical) {
+///     VStack { Text("Vertical") }
+/// } contentHorizontal: {
+///     HStack { Text("Horizontal") }
+/// }
+/// ```
 struct CardContainer<VerticalContent: View, HorizontalContent: View>: View {
     
+    // MARK: - Environment
+    
+    /// Color scheme used to adjust background shadowing in light/dark modes.
     @Environment(\.colorScheme) private var colorScheme
     
+    // MARK: - Properties
+    
+    /// Primary color used for the card tint and border.
     let color: Color
+    /// Orientation that controls which content closure is rendered.
     let layout: CardOrientation
+    /// Closure that produces the vertical arrangement of content.
     @ViewBuilder let contentVertical: () -> VerticalContent
+    /// Closure that produces the horizontal arrangement of content.
     @ViewBuilder let contentHorizontal: () -> HorizontalContent
     
+    // MARK: - View
+    
+    /// The card view body. Chooses the vertical or horizontal content path
+    /// according to `layout`, applies consistent padding and a rounded
+    /// background/tint, and draws a stroked border using `color`.
+    ///
+    /// Note: the implementation uses a conditional `.if` modifier to apply a
+    /// shadow only in light mode (keeps the card subtle in dark mode).
     var body: some View {
         Group {
             switch layout {

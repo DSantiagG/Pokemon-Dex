@@ -8,9 +8,17 @@
 import Foundation
 import PokemonAPI
 
+/// Factory helpers to create minimal `PKMPokemon`-related model instances for previews and tests.
+///
+/// These functions use `MockFactory.decode(_:)` to produce concrete model objects from
+/// inline JSON snippets so previews don't rely on network responses.
 enum PokemonMockFactory {
     
     // MARK: - Types
+    /// Create a minimal `PKMPokemonType` resource with the supplied name.
+    ///
+    /// - Parameter name: The type name (e.g. "grass").
+    /// - Returns: A decoded `PKMPokemonType`.
     static func mockType(name: String) -> PKMPokemonType {
         MockFactory.decode("""
         {
@@ -24,6 +32,12 @@ enum PokemonMockFactory {
     }
     
     // MARK: - Stats
+    /// Create a minimal `PKMPokemonStat` with the provided base value.
+    ///
+    /// - Parameters:
+    ///   - name: Stat identifier (e.g. "hp").
+    ///   - baseStat: The base stat number.
+    /// - Returns: A decoded `PKMPokemonStat`.
     static func mockStat(name: String, baseStat: Int) -> PKMPokemonStat {
         MockFactory.decode("""
         {
@@ -38,6 +52,12 @@ enum PokemonMockFactory {
     }
     
     // MARK: - Ability
+    /// Create a minimal `PKMPokemonAbility` entry.
+    ///
+    /// - Parameters:
+    ///   - name: Ability slug.
+    ///   - isHidden: Whether the ability entry is hidden.
+    /// - Returns: A decoded `PKMPokemonAbility`.
     static func mockAbility(name: String, isHidden: Bool) -> PKMPokemonAbility {
         MockFactory.decode("""
         {
@@ -52,6 +72,17 @@ enum PokemonMockFactory {
     }
     
     // MARK: - Pokémon
+    /// Create a minimal `PKMPokemon` with the supplied characteristics.
+    ///
+    /// - Parameters:
+    ///   - id: Numeric Pokémon id.
+    ///   - order: Display order number.
+    ///   - name: Pokémon slug.
+    ///   - sprite: URL string to the official artwork sprite.
+    ///   - abilities: Optional array of `PKMPokemonAbility` entries.
+    ///   - types: Optional array of `PKMPokemonType` entries.
+    ///   - stats: Optional array of `PKMPokemonStat` entries.
+    /// - Returns: A decoded `PKMPokemon` instance suitable for previews.
     static func mockPokemon(
         id: Int,
         order: Int,
@@ -110,6 +141,9 @@ enum PokemonMockFactory {
     }
     
     // MARK: - Pokémon (Bulbasaur)
+    /// Convenience mock for Bulbasaur with typical stats, types and abilities.
+    ///
+    /// - Returns: A `PKMPokemon` representing Bulbasaur.
     static func mockBulbasaur() -> PKMPokemon {
         mockPokemon(
             id: 1,

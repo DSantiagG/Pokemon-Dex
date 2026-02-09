@@ -10,7 +10,7 @@ import PokemonAPI
 
 // MARK: - PKMAPIResource: IdentifiableResource
 
-/// Make `PKMAPIResource` conform to `IdentifiableResource` by exposing
+/// Make `PKMAPIResource` conform to ``IdentifiableResource`` by exposing
 /// a stable `resourceName` that prefers `name`, then `url`, then a fallback.
 extension PKMAPIResource: IdentifiableResource {
     var resourceName: String { name ?? url ?? "unknown" }

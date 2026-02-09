@@ -6,6 +6,11 @@
 //
 import SwiftUI
 
+/// A section used to display an effect description.
+///
+/// - Parameters:
+///   - effectDescription: The longer body text describing the effect.
+///   - color: Accent color used for the header/decoration.
 struct EffectSection: View {
     var effectDescription: String
     var color: Color
