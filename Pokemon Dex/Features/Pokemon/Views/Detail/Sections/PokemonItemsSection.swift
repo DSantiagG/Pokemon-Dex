@@ -8,18 +8,31 @@
 import SwiftUI
 import PokemonAPI
 
+/// A view that presents a section of items that a Pokémon can hold.
+///
+/// - Parameters:
+///   - items: Items that this Pokémon can hold.
+///   - color: Accent color for the section.
+///   - context: Navigation context controlling push vs sheet behavior when selecting items.
 struct PokemonItemsSection: View {
     
+    // MARK: - Environment
+    /// Used to navigate to item detail.
     @EnvironmentObject private var router: NavigationRouter
+    /// Dismiss action for sheet contexts.
     @Environment(\.dismiss) private var dismiss
     
+    // MARK: - State
+    /// Currently selected item name for sheet presentation.
     @State private var selectedItem: String?
     
+    // MARK: - Parameters
     let items: [PKMItem]
     let color: Color
     
     let context: NavigationContext
     
+    // MARK: - Body
     var body: some View {
         if !items.isEmpty {
             SectionCard(text: "Items", color: color) {

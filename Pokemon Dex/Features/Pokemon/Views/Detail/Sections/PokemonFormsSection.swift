@@ -8,8 +8,17 @@
 import SwiftUI
 import PokemonAPI
 
+/// A view that presents alternative forms of a Pokémon species in a sectioned card layout.
+///
+/// - Parameters:
+///   - pokemonName: The currently displayed Pokémon name (used to select default form behavior).
+///   - forms: Array of `PokemonFormViewModel` available for the species.
+///   - color: Accent color for the section.
+///   - context: Navigation context controlling navigation behavior on tap.
 struct PokemonFormsSection: View {
     
+    // MARK: - Environment
+    /// Navigation router used to push detail screens.
     @EnvironmentObject private var router: NavigationRouter
     
     private var rows: [[PokemonFormViewModel]]
@@ -19,6 +28,7 @@ struct PokemonFormsSection: View {
     let color: Color
     let context: NavigationContext
     
+    // MARK: - Init
     init(for pokemonName: String?, forms: [PokemonFormViewModel], color: Color, context: NavigationContext) {
         self.color = color
         hasForms = forms.count > 1

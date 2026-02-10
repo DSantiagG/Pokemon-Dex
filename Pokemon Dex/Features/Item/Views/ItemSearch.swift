@@ -7,13 +7,29 @@
 
 import SwiftUI
 
+/// Search UI for items used inside the feature's search tab.
+///
+/// - Parameters:
+///   - searchText: Binding to the parent search input shared by `SearchView`.
+///
+/// Behavior:
+/// - Debounces and performs searches through `SearchViewModel`.
+/// - Shows `InfoStateView` when the query is empty or when no results are found.
 struct ItemSearch: View {
+    
+    // MARK: - Environment
     
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - ViewModel
+    
     @StateObject private var itemVM = SearchViewModel(service: DataProvider.shared.itemService)
     
+    // MARK: - Parameters
+    
     @Binding var searchText: String
+    
+    // MARK: - Body
     
     var body: some View {
         Group {

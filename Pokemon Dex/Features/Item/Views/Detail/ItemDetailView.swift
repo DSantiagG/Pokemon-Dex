@@ -7,12 +7,26 @@
 import SwiftUI
 import PokemonAPI
 
+/// Detail screen presenting a single item's information, attributes and holding Pokémon.
+///
+/// - Parameters:
+///   - itemName: Optional slug of the item to display (e.g. "master-ball").
+///   - context: NavigationContext controlling presentation behavior for nested navigation.
+///
+/// Behavior:
+/// - Loads item data via ``ItemDetailViewModel`` and renders ``InfoStateView`` for error/empty states.
 struct ItemDetailView: View {
+    
+    // MARK: - ViewModel
     
     @StateObject private var itemVM = ItemDetailViewModel(itemService: DataProvider.shared.itemService, pokemonService: DataProvider.shared.pokemonService)
     
+    // MARK: - Parameters
+    
     let itemName: String?
     var context: NavigationContext = .main
+    
+    // MARK: - Body
     
     var body: some View {
         ViewStateHandler(viewModel: itemVM){

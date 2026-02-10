@@ -7,13 +7,24 @@
 
 import SwiftUI
 
+/// Capture-related information shown in a compact card.
+///
+/// - Parameters:
+///   - habit: Habitat or environment string (display-only).
+///   - captureRate: Capture probability metric used for display.
+///   - baseExperience: Base experience reward shown for the species.
+///   - growthRate: Text label describing the species' experience growth rate.
+///   - color: Accent color used by the section UI.
 struct PokemonCaptureSection: View {
+    
+    // MARK: - Parameters
     let habit: String
     let captureRate: Int
     let baseExperience: Int
     let growthRate: String
     let color: Color
     
+    // MARK: - Body
     var body: some View {
         SectionCard(text: "Capture", color: color) {
             VStack (spacing: 20){

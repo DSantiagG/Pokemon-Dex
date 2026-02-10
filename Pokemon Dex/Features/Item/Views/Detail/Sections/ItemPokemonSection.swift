@@ -8,17 +8,35 @@
 import SwiftUI
 import PokemonAPI
 
+/// Section that displays the list of Pokémon that hold the current item.
+///
+/// - Parameters:
+///   - pokemons: Array of `PKMPokemon` who can hold the item.
+///   - color: Accent color used for the section styling.
+///   - context: NavigationContext describing how navigation should be handled when selecting a Pokémon.
+///
+/// Behavior:
+/// - If `context` indicates the parent is a sheet for Pokémon, the section will dismiss and push the detail route.
+/// - Otherwise, it presents a sheet with the selected Pokémon detail when tapped.
 struct ItemPokemonSection: View {
+    
+    // MARK: - Environment
     
     @EnvironmentObject private var router: NavigationRouter
     @Environment(\.dismiss) private var dismiss
     
+    // MARK: - State
+    
     @State private var selectedPokemon: String?
+    
+    // MARK: - Parameters
     
     let pokemons: [PKMPokemon]
     var color: Color
     
     let context: NavigationContext
+    
+    // MARK: - Body
     
     var body: some View {
         if !pokemons.isEmpty{

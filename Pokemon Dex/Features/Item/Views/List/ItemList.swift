@@ -8,13 +8,24 @@
 import SwiftUI
 import PokemonAPI
 
+/// A generic list/grid view that renders `PKMItem` instances using `ItemCard`.
+///
+/// - Parameters:
+///   - items: Array of `PKMItem` models to display.
+///   - layout: Preferred `ListLayout` (twoColumns or singleColumn).
+///   - onItemAppear: Called when an item appears (used for pagination).
+///   - onItemSelected: Called when an item's name is selected.
 struct ItemList: View {
+    
+    // MARK: - Parameters
     
     let items: [PKMItem]
     var layout: ListLayout = .twoColumns
     
     var onItemAppear: (PKMItem) -> Void = { _ in }
     var onItemSelected: (String?) -> Void = { _ in }
+    
+    // MARK: - Body
     
     var body: some View {
         CardList(

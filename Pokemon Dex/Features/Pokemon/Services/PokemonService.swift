@@ -17,18 +17,31 @@ enum PokemonEndpoints: ResourceEndpoints {
     }
 }
 
+/// High-level service providing Pokémon-specific operations.
+///
+/// `PokemonService` composes the generic ``ResourceService`` for common paging/search
+/// functionality and adds Pokémon-centric helpers (type/species caches, evolution
+/// chain extraction, and favorites integration via ``PokemonFavoritesService``).
 actor PokemonService: PagingService, SearchService {
     
+    // MARK: - Dependencies
+    /// Low-level `PokemonAPI` client used for resource fetches.
     private let api: PokemonAPI
+    /// Core resource service that handles paging, caching and decoding for `PKMPokemon`.
     private let core: ResourceService<PokemonEndpoints>
     
+    /// Favorites helper used by UI features.
     let favoritesService: PokemonFavoritesService
+    
+    // MARK: - Init
     
     init() {
         self.api = PokemonAPI()
         self.core = ResourceService<PokemonEndpoints>()
         self.favoritesService = PokemonFavoritesService()
     }
+    
+    // MARK: - Internal caches
     
     private var typeCache = [String: PKMType]()
     private var speciesCache = [String: PKMPokemonSpecies]()
@@ -37,39 +50,74 @@ actor PokemonService: PagingService, SearchService {
     private var typeResourcesCache: [PKMAPIResource<PKMType>]?
     
     // MARK: - Pagination
-    
+    /// Fetch first page of Pokémon using the core paging service.
+    ///
+    /// - Parameter limit: Maximum items to request.
+    /// - Returns: Array of `PKMPokemon` for the initial page.
+    /// - Throws: Errors from the underlying `ResourceService`.
     func fetchInitialPage(limit: Int) async throws -> [PKMPokemon] {
         try await core.fetchInitialPage(limit: limit)
     }
     
+    /// Fetch the next page if available.
+    ///
+    /// - Returns: Optional array of `PKMPokemon` for the next page, or `nil` if there's no next page.
+    /// - Throws: Errors from the underlying `ResourceService` or decoding.
     func fetchNextPage() async throws -> [PKMPokemon]? {
         try await core.fetchNextPage()
     }
     
+    /// Fetch all available Pokémon resource descriptors.
+    ///
+    /// - Returns: Array of `PKMAPIResource<PKMPokemon>` descriptors.
+    /// - Throws: Errors from the underlying `ResourceService`.
     func fetchAllResources() async throws -> [PKMAPIResource<PKMPokemon>] {
         try await core.fetchAllResources()
     }
     
     // MARK: - Fetch by name / resource
-    
+    /// Fetch a single Pokémon by its canonical name.
+    ///
+    /// - Parameter name: Pokémon slug (e.g. "pikachu").
+    /// - Returns: A decoded `PKMPokemon`.
+    /// - Throws: Errors from the underlying `ResourceService`.
     func fetch(name: String) async throws -> PKMPokemon {
         try await core.fetch(byName: name)
     }
     
+    /// Fetch a single Pokémon from a resource descriptor.
+    ///
+    /// - Parameter resource: API resource describing the Pokémon.
+    /// - Returns: A decoded `PKMPokemon` for that resource.
+    /// - Throws: Errors from the underlying `ResourceService` or network client.
     func fetch(resource: PKMAPIResource<PKMPokemon>) async throws -> PKMPokemon {
         try await core.fetch(byResource: resource)
     }
     
     // MARK: - Fetch List by names / resources / types
-    
+    /// Fetch multiple Pokémon by their names.
+    ///
+    /// - Parameter names: Array of Pokémon slugs.
+    /// - Returns: Decoded `PKMPokemon` instances in the same order as `names`.
+    /// - Throws: Errors from the underlying `ResourceService` when fetching individual items.
     func fetch(from names: [String]) async throws -> [PKMPokemon] {
         try await core.fetch(from: names)
     }
     
+    /// Fetch multiple Pokémon from resource descriptors.
+    ///
+    /// - Parameter resources: Array of `PKMAPIResource<PKMPokemon>`.
+    /// - Returns: Decoded `PKMPokemon` instances in the same order as `resources`.
+    /// - Throws: Errors during parallel fetching and decoding.
     func fetch(from resources: [PKMAPIResource<PKMPokemon>]) async throws -> [PKMPokemon] {
         try await core.fetch(from: resources)
     }
     
+    /// Fetch Pokémon that match all provided types (logical AND across types).
+    ///
+    /// - Parameter types: Array of `PKMAPIResource<PKMType>` describing the types to match.
+    /// - Returns: Pokémon that belong to all specified types.
+    /// - Throws: Errors when fetching type resources or individual Pokémon.
     func fetch(byTypes types: [PKMAPIResource<PKMType>]) async throws -> [PKMPokemon] {
         var pokemonsPerType: [[PKMAPIResource<PKMPokemon>]] = []
         
@@ -90,7 +138,11 @@ actor PokemonService: PagingService, SearchService {
     }
     
     // MARK: - Species
-    
+    /// Fetch species details for a species resource, with an internal cache.
+    ///
+    /// - Parameter resource: Species API resource to fetch.
+    /// - Returns: A decoded `PKMPokemonSpecies`.
+    /// - Throws: Network/decoding errors from the API client.
     func fetchSpecies(resource: PKMAPIResource<PKMPokemonSpecies>) async throws -> PKMPokemonSpecies {
         let key = resource.name ?? resource.url ?? "unknown"
         if let cached = speciesCache[key] { return cached }
@@ -101,7 +153,11 @@ actor PokemonService: PagingService, SearchService {
     }
     
     // MARK: - Evolution Chain
-    
+    /// Fetch the evolution chain for a species' evolution chain resource.
+    ///
+    /// - Parameter resource: `PKMAPIResource<PKMEvolutionChain>` describing the chain.
+    /// - Returns: An ordered array of `EvolutionStage` or `nil` if the chain is absent.
+    /// - Throws: Errors from the API client when fetching the chain or individual Pokémon.
     func fetchEvolutionChain(resource: PKMAPIResource<PKMEvolutionChain>) async throws -> [EvolutionStage]? {
         
         guard let url = resource.url else { return nil }
@@ -129,7 +185,10 @@ actor PokemonService: PagingService, SearchService {
     }
     
     // MARK: - Types List
-    
+    /// Fetch all type resources and cache the result.
+    ///
+    /// - Returns: Array of `PKMAPIResource<PKMType>` representing available types.
+    /// - Throws: Errors from the API client.
     func fetchAllTypeResources() async throws -> [PKMAPIResource<PKMType>] {
         if let cached = typeResourcesCache { return cached }
         
@@ -140,16 +199,26 @@ actor PokemonService: PagingService, SearchService {
     }
     
     // MARK: - Favorites
-    
+    /// Toggle a Pokémon's favorite state using the favorites actor.
+    ///
+    /// - Parameter pokemon: The `PKMPokemon` to toggle as favorite.
     func toggleFavorite(pokemon: PKMPokemon) async {
         await favoritesService.toggle(name: pokemon.resourceName)
     }
     
+    /// Fetch favorite Pokémon by resolving the stored favorite names.
+    ///
+    /// - Returns: Decoded `PKMPokemon` instances corresponding to the user's favorites.
+    /// - Throws: Errors when resolving individual favorite names.
     func fetchFavoritePokemons() async throws -> [PKMPokemon] {
         let names = await favoritesService.getAll()
         return try await fetch(from: names)
     }
     
+    /// Check whether a name is marked as favorite.
+    ///
+    /// - Parameter name: The Pokémon name slug to check.
+    /// - Returns: `true` when the name is in the favorites actor's set.
     func isFavorite(name: String) async -> Bool {
         await favoritesService.isFavorite(name: name)
     }

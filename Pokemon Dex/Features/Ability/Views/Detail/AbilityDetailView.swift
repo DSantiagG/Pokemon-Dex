@@ -8,12 +8,22 @@
 import SwiftUI
 import PokemonAPI
 
+/// Detail screen that shows an ability and related sections.
+///
+/// - Parameters:
+///   - abilityName: Optional ability slug to load and display.
+///   - context: Navigation context for how the view is presented.
 struct AbilityDetailView: View {
     
+    // MARK: - View Model
+    /// View model that loads and exposes ability data.
     @StateObject private var abilityVM = AbilityDetailViewModel(abilityService: DataProvider.shared.abilityService, pokemonService: DataProvider.shared.pokemonService)
     
+    // MARK: - Properties
     let abilityName: String?
     var context: NavigationContext = .main
+    
+    // MARK: - View
     
     var body: some View {
         ViewStateHandler(viewModel: abilityVM) {

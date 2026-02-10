@@ -7,13 +7,22 @@
 
 import SwiftUI
 
+/// Characteristics section presenting generation, weight and height.
+///
+/// - Parameters:
+///   - generation: Generation label (e.g. "Generation II").
+///   - weight: Weight in kilograms to show (display formatted).
+///   - height: Height in meters to show (display formatted).
+///   - color: Accent color used for the section visuals.
 struct PokemonCharacteristicsSection: View {
     
+    // MARK: - Parameters
     let generation: String
     let weight: Double
     let height: Double
     let color: Color
     
+    // MARK: - Body
     var body: some View {
         SectionCard(text: "Characteristics", color: color) {
             HStack(alignment: .top, spacing: 0) {

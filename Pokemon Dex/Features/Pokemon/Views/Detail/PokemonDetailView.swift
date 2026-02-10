@@ -8,12 +8,27 @@
 import SwiftUI
 import PokemonAPI
 
+/// Detailed view that presents a Pokémon's full information using a composed set of detail sections.
+///
+/// - Parameters:
+///   - pokemonName: Optional slug/name of the Pokémon to load (for example, "bulbasaur"). If `nil` nothing will be loaded.
+///   - context: The navigation presentation context that influences how child views should navigate or present sheets. See ``NavigationContext``.
+///
+/// - Note: The view delegates loading/error handling to ``ViewStateHandler`` and performs the initial load in a `.task` by calling
+///   ``PokemonDetailViewModel/loadPokemon(name:)``.
 struct PokemonDetailView: View {
     
+    // MARK: - ViewModel
+    
+    /// Owns loading, state, and data used by the view.
     @StateObject private var pokemonVM = PokemonDetailViewModel(pokemonService: DataProvider.shared.pokemonService, abilityService: DataProvider.shared.abilityService, itemService: DataProvider.shared.itemService)
+    
+    // MARK: - Parameters
     
     let pokemonName: String?
     var context: NavigationContext = .main
+    
+    //MARK: - Body
     
     var body: some View {
         ViewStateHandler(viewModel: pokemonVM) {

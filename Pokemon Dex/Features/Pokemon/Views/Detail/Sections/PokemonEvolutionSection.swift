@@ -7,13 +7,28 @@
 import SwiftUI
 import PokemonAPI
 
+/// A view that displays the evolution chain of a Pokémon.
+///
+/// - Parameters:
+///   - evolution: Array of `EvolutionStageViewModel` representing the chain.
+///   - color: Accent color for the section.
+///   - context: Navigation context controlling push vs sheet navigation.
+///
+/// - Environment:
+///   - `router`: Navigation router used to push detail screens.
 struct PokemonEvolutionSection: View {
     
+    // MARK: - Environment
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - Parameters
+    /// Precomputed rows of evolution stages for presentation (chunked to show arrows between stages).
     private let rows: [[EvolutionStageViewModel]]
+    /// Whether the Pokémon has an evolution chain (more than one stage).
     private let hasEvolution: Bool
+    /// Accent color for section styling.
     let color: Color
+    /// Navigation context controlling in-place push vs sheet presentation.
     let context: NavigationContext
     
     init(evolution: [EvolutionStageViewModel], color: Color, context: NavigationContext) {
@@ -23,6 +38,7 @@ struct PokemonEvolutionSection: View {
         self.hasEvolution = self.rows.flatMap { $0 }.count > 1
     }
     
+    // MARK: - Body
     var body: some View {
         SectionCard(text: "Evolution Chain", color: color) {
             VStack {
@@ -66,4 +82,3 @@ struct PokemonEvolutionSection: View {
         .environmentObject(NavigationRouter())
         .padding(.horizontal)
 }
-

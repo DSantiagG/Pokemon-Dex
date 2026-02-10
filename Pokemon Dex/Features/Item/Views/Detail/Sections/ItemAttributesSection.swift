@@ -8,12 +8,23 @@
 import SwiftUI
 import PokemonAPI
 
+/// Displays a card of item attributes as a responsive grid of capsules.
+///
+/// - Parameters:
+///   - attributes: Array of attribute display strings (pre-formatted).
+///   - color: Accent color used for capsules and section styling.
+///
+/// - Note: Renders nothing when `attributes` is empty.
 struct ItemAttributesSection: View {
+    
+    // MARK: - Parameters
     
     let attributes: [String]
     let color: Color
     
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 8)]
+    
+    // MARK: - Body
     
     var body: some View {
        if !attributes.isEmpty {

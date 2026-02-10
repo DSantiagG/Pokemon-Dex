@@ -7,11 +7,23 @@
 
 import SwiftUI
 
+/// Root home view for the Items feature.
+///
+/// - Behavior:
+///   - Uses a `PaginationViewModel` to load paged items.
+///   - Shows `InfoStateView` when no items are available.
+///   - Renders `ItemList` and exposes presentation controls in the toolbar.
 struct ItemHomeView: View {
+    
+    // MARK: - Environment
     
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - ViewModel
+    
     @StateObject private var itemVM = PaginationViewModel(service: DataProvider.shared.itemService, layoutKey: .item)
+    
+    // MARK: - Body
     
     var body: some View {
         NavigationContainer {

@@ -8,12 +8,28 @@
 import SwiftUI
 import PokemonAPI
 
+/// A compact card view presenting an item's artwork, title and category.
+///
+/// - Parameters:
+///   - item: The `PKMItem` model to display.
+///   - layout: Orientation used by `CardContainer` to switch between vertical and horizontal layouts.
+///
+/// Computed properties:
+/// - `itemColor`: Accent color derived from the item's category.
+/// - `displayName`: Formatted item name for display.
+/// - `displayCategory`: Formatted category name for display.
 struct ItemCard: View {
+    
+    // MARK: - Environment
     
     @Environment(\.colorScheme) private var colorScheme
     
+    // MARK: - Parameters
+    
     var item: PKMItem
     var layout: CardOrientation = .vertical
+    
+    // MARK: - Computed
     
     private var itemColor: Color {
         item.category?.name?.categoryColor ?? .gray
@@ -26,6 +42,8 @@ struct ItemCard: View {
     private var displayCategory: String {
         item.category?.name?.formattedName() ?? "Unknown Category"
     }
+    
+    // MARK: - Body
     
     var body: some View {
         
@@ -49,6 +67,8 @@ struct ItemCard: View {
             }
         }
     }
+    
+    // MARK: - Subviews
     
     private var image: some View {
         URLImage(

@@ -7,6 +7,14 @@
 import PokemonAPI
 
 extension [PKMFlavorText] {
+    /// Return a cleaned English flavor text when available from an array of `PKMFlavorText`.
+    ///
+    /// - Returns: A cleaned `String` containing the English flavor text, or `nil` if no English entry exists.
+    ///
+    /// Behavior:
+    /// 1. Filters entries to those where `language?.name == "en"`.
+    /// 2. Prefers the `"emerald"` version entry when present.
+    /// 3. Otherwise returns the first English entry found.
     func englishFlavorText() -> String? {
         let englishEntries = self.filter {
             $0.language?.name == "en"
@@ -25,5 +33,3 @@ extension [PKMFlavorText] {
         return englishEntries.first?.flavorText?.cleanFlavorText()
     }
 }
-
-

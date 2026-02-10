@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+/// Breeding details section including gender ratios, egg cycles and egg groups.
+///
+/// - Parameters:
+///   - genderRatio: Struct with `femaleRatio`/`maleRatio` as percentages (0..100) or nil when genderless.
+///   - eggCycles: Hatch counter / egg cycles value.
+///   - eggGroups: Array of displayable egg group names.
+///   - color: Accent color for section visuals.
 struct PokemonBreedingSection: View {
     
     struct GenderRatio {
@@ -14,11 +21,13 @@ struct PokemonBreedingSection: View {
         let maleRatio: Double?
     }
     
+    // MARK: - Parameters
     let genderRatio: GenderRatio
     let eggCycles: Int
     let eggGroups: [String]
     let color: Color
     
+    // MARK: - Body
     var body: some View {
         SectionCard(text: "Breeding", color: color) {
             HStack(alignment: .top, spacing: 0) {
@@ -45,6 +54,8 @@ struct PokemonBreedingSection: View {
         }
     }
     
+    // MARK: - Subviews
+    /// Computed subview showing gender or 'Genderless' message.
     var genderRatioInfo: some View {
         VStack (spacing: 2){
             if let femaleRatio = genderRatio.femaleRatio,

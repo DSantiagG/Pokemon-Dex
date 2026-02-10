@@ -7,12 +7,23 @@
 
 import SwiftUI
 
+/// Home screen listing abilities with pagination and presentation options.
+///
+/// - Behavior:
+///   - Uses a ``PaginationViewModel`` to load paged ability items.
+///   - Shows ``InfoStateView`` when no abilities are available.
+///   - Renders ``AbilityList`` and exposes presentation controls in the toolbar.
 struct AbilityHomeView: View {
     
+    // MARK: - Environment
+    /// Router used for navigation actions.
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - View Model
+    /// Pagination view model for loading and paging ability items.
     @StateObject private var abilityVM = PaginationViewModel(service: DataProvider.shared.abilityService, layoutKey: .ability)
     
+    // MARK: - Body
     var body: some View {
         NavigationContainer {
             Group{

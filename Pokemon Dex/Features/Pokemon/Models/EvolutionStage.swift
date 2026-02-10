@@ -6,6 +6,11 @@
 //
 
 
+/// Represents a single stage in a Pokémon's evolution chain.
+///
+/// - Properties:
+///   - `name`: Optional Pokémon name at this stage.
+///   - `sprite`: Optional URL string for the stage's sprite artwork.
 struct EvolutionStage {
     let name: String?
     let sprite: String?

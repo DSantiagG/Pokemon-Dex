@@ -7,11 +7,18 @@
 import SwiftUI
 import PokemonAPI
 
+/// A view that displays a section of Pokémon stats in a card format.
+///
+/// - Parameters:
+///   - stats: Array of stat name/value pairs prepared for presentation.
+///   - color: Accent color used for progress bars and headings.
 struct PokemonStatsSection: View{
     
+    // MARK: - Parameters
     var stats: [(name: String, value: Int)]
     let color: Color
     
+    // MARK: - Body
     var body: some View {
         SectionCard(text: "Stats", color: color) {
             VStack(alignment: .leading, spacing: 12) {

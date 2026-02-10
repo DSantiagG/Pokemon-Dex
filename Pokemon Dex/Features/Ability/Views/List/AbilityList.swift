@@ -8,15 +8,26 @@
 import SwiftUI
 import PokemonAPI
 
+/// List view that renders a collection of abilities.
+///
+/// - Parameters:
+///   - abilities: Array of abilities to display.
+///   - layout: Layout used by the list (`singleColumn` or `twoColumns`).
+///   - color: Accent color for list items.
+///   - onItemAppear: Called when an item appears (for pagination).
+///   - onItemSelected: Called when an item is selected; passes the ability name.
 struct AbilityList: View {
     
+    // MARK: - Properties
     let abilities: [PKMAbility]
     var layout: ListLayout = .singleColumn
     var color: Color = .red
     
+    // MARK: - Callbacks
     var onItemAppear: (PKMAbility) -> Void = { _ in }
     var onItemSelected: (String?) -> Void = { _ in }
     
+    // MARK: - Body
     var body: some View {
         
          CardList(

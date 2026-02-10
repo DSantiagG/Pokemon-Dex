@@ -7,7 +7,12 @@
 
 import PokemonAPI
 
+/// Helpers for extracting English flavor text from version group entries.
 extension [PKMVersionGroupFlavorText] {
+    /// Returns the preferred English flavor text from the entries.
+    ///
+    /// - Returns: The cleaned English flavor text if found, otherwise `nil`.
+    /// - Note: Prefers the entry whose `versionGroup.name == "emerald"` when available.
     func englishFlavorText() -> String? {
         let englishEntries = self.filter {
             $0.language?.name == "en"

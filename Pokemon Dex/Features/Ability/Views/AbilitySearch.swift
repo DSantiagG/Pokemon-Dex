@@ -7,14 +7,28 @@
 
 import SwiftUI
 
+/// Search view for abilities.
+///
+/// - Parameters:
+///   - searchText: Bound search string controlled by the parent `SearchView`.
+///
+/// Behavior:
+/// - Binds to `searchText`, drives a `SearchViewModel`, and shows results or info states.
 struct AbilitySearch: View {
     
+    // MARK: - Environment
+    /// Router used for navigation actions.
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - View Model
+    /// View model that performs ability searches.
     @StateObject private var abilityVM = SearchViewModel(service: DataProvider.shared.abilityService)
     
+    // MARK: - Bindings
+    /// Bound search text entered by the user.
     @Binding var searchText: String
     
+    // MARK: - Body
     var body: some View {
         Group {
             if searchText.isEmpty {
@@ -36,6 +50,8 @@ struct AbilitySearch: View {
                 }
             }
         }
+        // MARK: - Reactions
+        /// Trigger a search whenever the bound text changes.
         .onChange(of: searchText) { _, newValue in
             abilityVM.search(newValue)
         }

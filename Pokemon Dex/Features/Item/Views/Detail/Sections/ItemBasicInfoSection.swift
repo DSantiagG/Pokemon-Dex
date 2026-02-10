@@ -7,13 +7,25 @@
 
 import SwiftUI
 
+/// Basic header and summary information for an item used on the detail screen.
+///
+/// - Parameters:
+///   - name: Display name of the item.
+///   - category: Formatted category name.
+///   - cost: Numeric cost of the item.
+///   - description: User-facing flavor text or description.
+///   - color: Accent color used for the category capsule and price badge.
 struct ItemBasicInfoSection: View {
+    
+    // MARK: - Parameters
     
     let name: String
     let category: String
     let cost: Int
     let description: String
     let color: Color
+    
+    // MARK: - Body
     
     var body: some View {
         VStack(spacing: 15) {

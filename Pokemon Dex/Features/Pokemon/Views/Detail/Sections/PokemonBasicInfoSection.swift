@@ -7,13 +7,22 @@
 import SwiftUI
 import PokemonAPI
 
-///no se que hace
+/// Top area showing a Pokémon's basic information: index, name, types and short description.
+///
+/// - Parameters:
+///   - order: Pokédex order/index used for display (shown as `#000`).
+///   - name: Formatted Pokémon name for the header.
+///   - types: Array of display type names used to render `CustomCapsule` badges.
+///   - description: Short flavor text or summary for the Pokémon.
 struct PokemonBasicInfoSection: View {
+    
+    // MARK: - Parameters
     let order: Int
     let name: String
     let types: [String]
     let description: String
     
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 16) {
             

@@ -7,23 +7,35 @@
 
 import SwiftUI
 
+/// A filter sheet that lets users pick Pokémon types to filter the main list.
+///
+/// - Parameters:
+///   - allTypes: An array of ``PokemonTypeFilterItem`` representing available types.
+///   - selectedTypes: Binding to the currently selected type ids.
+///   - applyFilters: Closure invoked when user taps "Apply" to confirm selection.
 struct PokemonFilterView: View {
     
+    // MARK: - Environment
     @Environment(\.dismiss) private var dismiss
     
+    // MARK: - Inputs
     let allTypes: [PokemonTypeFilterItem]
     @Binding var selectedTypes: [String]
     let applyFilters: (() -> Void)
     
+    // MARK: - Computed Properties
+    /// Whether any type is currently selected (used to enable/disable the Apply button).
     private var hasSelectedTypes: Bool {
         !selectedTypes.isEmpty
     }
     
+    // MARK: - Layout
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             LazyVGrid(columns: columns) {
@@ -39,6 +51,7 @@ struct PokemonFilterView: View {
                         .scaleEffect(isActive ? 1.03 : 1.0)
                         .animation(.spring(response: 0.25, dampingFraction: 0.5), value: isActive)
                         .onTapGesture {
+                            // Toggle selection: remove if active, append otherwise.
                             if isActive {
                                 selectedTypes.removeAll { $0 == type.id }
                             } else {
@@ -46,6 +59,7 @@ struct PokemonFilterView: View {
                             }
                         }
                 }
+                // Animate grid changes when the selection set changes.
                 .animation(.easeInOut(duration: 0.15), value: selectedTypes)
             }
             .frame(maxHeight: .infinity, alignment: .top)
@@ -54,6 +68,7 @@ struct PokemonFilterView: View {
             .toolbar {
                 ToolbarItem (placement: .topBarLeading) {
                     Button("Clean All") {
+                        // Clear selection and immediately apply/dismiss.
                         selectedTypes.removeAll()
                         applyFilters()
                         dismiss()
@@ -61,12 +76,14 @@ struct PokemonFilterView: View {
                 }
                  ToolbarItem(placement: .topBarTrailing) {
                      Button {
+                         // Apply chosen filters and close the sheet.
                          applyFilters()
                          dismiss()
                      } label: {
                          Text("Apply")
                              .foregroundStyle(hasSelectedTypes ? .white : .gray.opacity(0.7))
                      }
+                     // Disable when no types selected to prevent a no-op.
                      .disabled(!hasSelectedTypes)
                      .if(hasSelectedTypes) { buttom in
                          buttom

@@ -6,12 +6,26 @@
 //
 import SwiftUI
 
+/// Basic info section shown at the top of an ability detail screen.
+///
+/// - Parameters:
+///   - name: Ability name displayed as the header title.
+///   - generation: Generation label shown in a capsule.
+///   - description: Short flavor text / description.
+///   - color: Color used for header and accents.
+///
+/// Computed properties:
+/// - `header`: A header view with stretch/parallax behavior.
+/// - `headerShape`: The `UnevenRoundedRectangle` used to cut the header's rounded shape.
 struct AbilityBasicInfoSection: View {
     
+    // MARK: - Properties
     var name: String
     var generation: String
     var description: String
     var color: Color
+    
+    // MARK: - View
     
     var body: some View{
         
@@ -27,6 +41,7 @@ struct AbilityBasicInfoSection: View {
         .padding(.horizontal)
     }
     
+    // MARK: - Header
     private var header: some View {
         GeometryReader { proxy in
             let y = proxy.frame(in: .global).minY
@@ -50,6 +65,7 @@ struct AbilityBasicInfoSection: View {
         }
     }
     
+    // MARK: - Shapes
     private var headerShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(
             topLeadingRadius: 0,
