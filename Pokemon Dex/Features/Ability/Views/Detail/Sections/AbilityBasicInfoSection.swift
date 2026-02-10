@@ -13,10 +13,6 @@ import SwiftUI
 ///   - generation: Generation label shown in a capsule.
 ///   - description: Short flavor text / description.
 ///   - color: Color used for header and accents.
-///
-/// Computed properties:
-/// - `header`: A header view with stretch/parallax behavior.
-/// - `headerShape`: The `UnevenRoundedRectangle` used to cut the header's rounded shape.
 struct AbilityBasicInfoSection: View {
     
     // MARK: - Properties
@@ -42,6 +38,7 @@ struct AbilityBasicInfoSection: View {
     }
     
     // MARK: - Header
+    /// A header view that stretches and creates a parallax effect when pulled down.
     private var header: some View {
         GeometryReader { proxy in
             let y = proxy.frame(in: .global).minY
@@ -66,6 +63,7 @@ struct AbilityBasicInfoSection: View {
     }
     
     // MARK: - Shapes
+    /// The shape used to cut the header's bottom corners. The top corners are left square to create a "tab" effect.
     private var headerShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(
             topLeadingRadius: 0,

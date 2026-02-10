@@ -7,11 +7,26 @@
 import PokemonAPI
 import Foundation
 
+/// Endpoints adapter used by the generic ``ResourceService`` for Pokémon resources.
+///
+/// This enum conforms to ``ResourceEndpoints`` and provides thin, focused
+/// implementations used by `ResourceService<PokemonEndpoints>` to load paged
+/// lists and single Pokémon models.
 enum PokemonEndpoints: ResourceEndpoints {
+    /// Load a paged list of `PKMPokemon` for the given pagination state.
+    ///
+    /// - Parameter state: Pagination information (cursor/offset/limit) used by the request.
+    /// - Returns: A `PKMPagedObject<PKMPokemon>` containing the requested page and metadata.
+    /// - Throws: Networking or decoding errors originating from `PokemonAPI`.
     static func fetchPage(_ state: PaginationState<PKMPokemon>) async throws -> PKMPagedObject<PKMPokemon> {
         try await PokemonAPI().pokemonService.fetchPokemonList(paginationState: state)
     }
     
+    /// Fetch a single `PKMPokemon` by its canonical name (slug).
+    ///
+    /// - Parameter name: The Pokémon's canonical name (for example, "pikachu").
+    /// - Returns: A decoded `PKMPokemon` instance.
+    /// - Throws: Networking or decoding errors from `PokemonAPI`.
     static func fetchByName(_ name: String) async throws -> PKMPokemon {
         try await PokemonAPI().pokemonService.fetchPokemon(name)
     }

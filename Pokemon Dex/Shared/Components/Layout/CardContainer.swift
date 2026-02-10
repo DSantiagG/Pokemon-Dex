@@ -16,6 +16,12 @@ import SwiftUI
 /// The container adapts its inner layout by calling either `contentVertical` or
 /// `contentHorizontal` based on the `layout` value.
 ///
+/// - Parameters:
+///  - color: Primary color used for the card's tint and border.
+///  - layout: Orientation that determines which content closure to render.
+///  - contentVertical: Closure that produces the vertical arrangement of content.
+///  - contentHorizontal: Closure that produces the horizontal arrangement of content.
+///
 /// Example:
 /// ```swift
 /// CardContainer(color: .red, layout: .vertical) {
@@ -33,13 +39,9 @@ struct CardContainer<VerticalContent: View, HorizontalContent: View>: View {
     
     // MARK: - Properties
     
-    /// Primary color used for the card tint and border.
     let color: Color
-    /// Orientation that controls which content closure is rendered.
     let layout: CardOrientation
-    /// Closure that produces the vertical arrangement of content.
     @ViewBuilder let contentVertical: () -> VerticalContent
-    /// Closure that produces the horizontal arrangement of content.
     @ViewBuilder let contentHorizontal: () -> HorizontalContent
     
     // MARK: - View

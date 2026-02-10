@@ -21,8 +21,9 @@ import PokemonAPI
 struct ItemPokemonSection: View {
     
     // MARK: - Environment
-    
+    /// Router used for navigation actions, injected from parent views.
     @EnvironmentObject private var router: NavigationRouter
+    /// Dismiss action for closing sheets, used when context indicates we're in a Pokémon sheet.
     @Environment(\.dismiss) private var dismiss
     
     // MARK: - State

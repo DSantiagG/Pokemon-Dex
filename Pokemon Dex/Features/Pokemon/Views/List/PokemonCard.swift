@@ -28,25 +28,7 @@ struct PokemonCard: View {
     var pokemon: PKMPokemon
     var layout: CardOrientation = .vertical
     
-    // MARK: - Computed Properties
-    /// Primary tint color derived from the Pokémon's first type.
-    /// Falls back to gray when no type information is available.
-    private var pokemonColor: Color {
-        // Use the first available type to theme the card
-        pokemon.types?.first?.color ?? .gray
-    }
-    
-    /// Formatted display name for UI.
-    private var displayName: String {
-        pokemon.name?.formattedName() ?? "Unknown Name"
-    }
-    
-    /// Type names prepared for display as capsules.
-    private var displayTypes: [String] {
-        pokemon.types?.map { $0.type?.name?.formattedName() ?? "Unknown Type" } ?? []
-    }
-    
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View{
         CardContainer(color: pokemonColor, layout: layout) {
@@ -104,7 +86,23 @@ struct PokemonCard: View {
         }
     }
     
-    // MARK: - Previews
+    // MARK: - Computed Properties
+    /// Primary tint color derived from the Pokémon's first type.
+    /// Falls back to gray when no type information is available.
+    private var pokemonColor: Color {
+        // Use the first available type to theme the card
+        pokemon.types?.first?.color ?? .gray
+    }
+    
+    /// Formatted display name for UI.
+    private var displayName: String {
+        pokemon.name?.formattedName() ?? "Unknown Name"
+    }
+    
+    /// Type names prepared for display as capsules.
+    private var displayTypes: [String] {
+        pokemon.types?.map { $0.type?.name?.formattedName() ?? "Unknown Type" } ?? []
+    }
 }
 
 #Preview ("Vertical") {

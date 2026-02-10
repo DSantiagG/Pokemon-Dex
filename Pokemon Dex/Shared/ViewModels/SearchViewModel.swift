@@ -13,7 +13,7 @@ import Foundation
 /// and executes filtered searches against the preloaded resource list. Results
 /// are published via `results` and loading/error state through `state`.
 ///
-/// - Generic parameter `S`: A `SearchService` implementation providing
+/// - Generic parameter `S`: A ``SearchService`` implementation providing
 ///   methods to fetch resources and decode models.
 ///
 /// Example:

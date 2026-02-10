@@ -21,6 +21,7 @@ struct PokemonFormsSection: View {
     /// Navigation router used to push detail screens.
     @EnvironmentObject private var router: NavigationRouter
     
+    // MARK: - Properties
     private var rows: [[PokemonFormViewModel]]
     private let hasForms: Bool
     private var isDefault: Bool
@@ -51,6 +52,7 @@ struct PokemonFormsSection: View {
         self.context = context
     }
     
+    //MARK: - View
     var body: some View {
         if hasForms {
             SectionCard(text: isDefault ? "Alternative Forms" : "Original Form", color: color) {
@@ -73,6 +75,12 @@ struct PokemonFormsSection: View {
             }
         }
     }
+    
+    //MARK: - Subviews
+    
+    /// View for a single Pokémon form, showing its sprite and name.
+    /// - Parameter form: View model representing a Pokémon form, including display name and sprite URL.
+    /// - Returns: A view that displays the form's sprite and name, styled for presentation in the forms section.
     private func formItem(_ form: PokemonFormViewModel) -> some View {
         VStack {
             URLImage(urlString: form.spriteURL, contentMode: .fit)

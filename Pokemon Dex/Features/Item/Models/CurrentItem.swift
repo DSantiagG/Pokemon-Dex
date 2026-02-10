@@ -8,9 +8,9 @@
 import PokemonAPI
 
 /// Container with an item and its related holding Pokémon.
-/// - Properties:
-///   - `details`: The item details model.
-///   - `holdingPokemon`: Pokémon that commonly hold this item.
+/// - Parameters:
+///    - details: The item details model.
+///    - holdingPokemon: Pokémon that commonly hold this item.
 struct CurrentItem {
 
     let details: PKMItem

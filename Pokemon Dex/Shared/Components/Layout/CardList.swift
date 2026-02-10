@@ -9,12 +9,20 @@
 import SwiftUI
 
 /// A reusable container that renders an array of items as a scrollable list or grid.
-///
+///  
 /// ``CardList`` adapts its layout between a two-column grid and a single-column
 /// vertical list based on the provided `layout` parameter. The view delegates
 /// rendering of each item to the caller-supplied `content` closure so it can be
 /// used with any model type `T`.
-///
+///  
+/// - Parameters:
+///    - items: The array of items to display.
+///    - layout: The presentation layout (twoColumns or singleColumn).
+///    - onItemAppear: Callback when an item appears (useful for pagination).
+///    - onItemSelected: Callback when an item is tapped/selected.
+///    - content: Closure that generates the view for each item, receiving the current item
+///    and the active `ListLayout` for adaptive presentation.
+///  
 /// Example:
 /// ```swift
 /// CardList(items: pokemons, layout: .twoColumns) { pokemon, layout in
@@ -25,19 +33,12 @@ struct CardList<T, Content: View>: View {
     
     // MARK: - Properties
     
-    /// The array of items to display.
     let items: [T]
-    /// Presentation layout: `.twoColumns` for a grid, `.singleColumn` for a list.
     var layout: ListLayout = .twoColumns
     
-    /// Called when an item appears (useful for pagination).
     var onItemAppear: (T) -> Void = { _ in }
-    /// Called when the user selects (taps) an item.
     var onItemSelected: (T) -> Void = { _ in }
     
-    /// Closure that produces the view for a single item. The closure receives
-    /// the current item and the active `ListLayout` so the caller can adapt the
-    /// presentation (e.g., compact card vs expanded row).
     let content: (T, ListLayout) -> Content
     
     // Two flexible columns used for the grid layout.

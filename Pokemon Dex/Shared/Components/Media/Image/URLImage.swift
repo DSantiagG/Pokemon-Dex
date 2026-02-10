@@ -13,25 +13,28 @@ import SwiftUI
 /// request and exposes three visual states: loaded image, in-progress
 /// progress indicator, and a placeholder when no image is available.
 ///
+/// - Parameters:
+///  - `urlString`: Optional URL string of the image to load. If `nil` the placeholder state is shown.
+///  - `cornerRadius`: Corner radius applied to the rendered image or placeholder (default: 0).
+///  - `contentMode`: Content mode used when rendering the image (default: .fit).
+///
 /// Example:
 /// ```swift
 /// URLImage(urlString: pokemon.sprites?.other?.officialArtwork?.frontDefault, cornerRadius: 8)
 /// ```
 struct URLImage: View {
     
-    // MARK: - Properties
-    
-    /// Remote image URL string to load. If `nil` the placeholder state is shown.
-    var urlString: String?
-    /// Corner radius applied to the rendered image or placeholder.
-    var cornerRadius: CGFloat = 0
-    /// Content mode used when rendering the image.
-    var contentMode: ContentMode = .fit
-    
     // MARK: - State
     
     /// The loader ViewModel that performs fetching and caching.
     @StateObject private var loader = URLImageViewModel()
+    
+    // MARK: - Properties
+
+    var urlString: String?
+    var cornerRadius: CGFloat = 0
+    var contentMode: ContentMode = .fit
+    
     
     // MARK: - View
     

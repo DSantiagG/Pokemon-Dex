@@ -29,10 +29,9 @@ struct PokemonItemsSection: View {
     // MARK: - Parameters
     let items: [PKMItem]
     let color: Color
-    
     let context: NavigationContext
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         if !items.isEmpty {
             SectionCard(text: "Items", color: color) {

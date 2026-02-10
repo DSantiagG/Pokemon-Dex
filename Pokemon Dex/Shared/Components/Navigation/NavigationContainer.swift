@@ -14,6 +14,9 @@ import SwiftUI
 /// `NavigationStack` that binds to the router's path and maps `NavigationRouter.AppRoute`
 /// cases to the corresponding detail views.
 ///
+/// - Parameters:
+///  - Content: Content closure producing the root view shown inside the navigation stack.
+///
 /// Example:
 /// ```swift
 /// NavigationContainer {
@@ -31,7 +34,6 @@ struct NavigationContainer<Content: View>: View {
     
     // MARK: - Properties
     
-    /// Content closure producing the root view shown inside the navigation stack.
     private let content: () -> Content
     
     // MARK: - Init

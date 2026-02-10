@@ -30,11 +30,14 @@ struct InfoStateView: View {
     
     // MARK: - State
     
+    /// Controls the animation state of the illustration. When `true`, the image is rotated and scaled up slightly; when `false`, it's rotated in the opposite direction and scaled down. This state toggles on appear to create a continuous rocking animation.
     @State private var animate = false
+    /// Controls the expansion state of the illustration. When `true`, the image scales up to 250x250; when `false`, it scales down to 220x220. This state toggles on tap to create a bounce effect.
     @State private var expand = false
+    /// Controls the visibility of the text elements. When `true`, the primary and secondary text are shown with a fade-in transition; when `false`, they are hidden. This state is set to `true` shortly after the view appears to create a staggered reveal effect.
     @State private var showText = false
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
         ZStack {

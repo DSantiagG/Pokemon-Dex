@@ -9,7 +9,7 @@ import Combine
 
 /// A small helper view that overlays loading and error UI states on top of content.
 ///
-/// `ViewStateHandler` accepts a view model conforming to `ObservableObject & ErrorHandleable`
+/// `ViewStateHandler` accepts a view model conforming to `ObservableObject` & ``ErrorHandleable``
 /// and a content closure. It renders the content and conditionally displays a
 /// `LoadingView` when `viewModel.state` is `.loading` or an `ErrorView` when the
 /// state is `.error(message:retryAction:)`.
@@ -25,21 +25,22 @@ struct ViewStateHandler<VM: ObservableObject & ErrorHandleable, Content: View>: 
     // MARK: - Stored Properties
     
     /// The observed view model providing the current UI state.
-    ///
-    /// Must conform to `ErrorHandleable` so the handler can display errors and
-    /// expose retry actions provided by the view model.
     @ObservedObject private var viewModel: VM
-    /// Closure producing the wrapped content displayed under the state overlays.
+    
     private let content: () -> Content
     
     // MARK: - Init
     
+    /// Initializes the `ViewStateHandler` with a view model and content closure.
+    /// - Parameters:
+    ///   - viewModel: The view model whose `state` will drive the loading and error UI overlays.
+    ///   - content: A closure that produces the main content of the view, which will be displayed under any loading or error overlays.
     init(viewModel: VM, @ViewBuilder content: @escaping () -> Content) {
         self.viewModel = viewModel
         self.content = content
     }
     
-    // MARK: - Body
+    // MARK: - View
     
     /// Renders the wrapped content and overlays state-driven UI elements.
     ///

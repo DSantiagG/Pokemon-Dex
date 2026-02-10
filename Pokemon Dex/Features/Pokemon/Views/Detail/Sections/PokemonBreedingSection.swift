@@ -27,7 +27,7 @@ struct PokemonBreedingSection: View {
     let eggGroups: [String]
     let color: Color
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Breeding", color: color) {
             HStack(alignment: .top, spacing: 0) {

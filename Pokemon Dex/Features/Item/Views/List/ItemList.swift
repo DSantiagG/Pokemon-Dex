@@ -25,7 +25,7 @@ struct ItemList: View {
     var onItemAppear: (PKMItem) -> Void = { _ in }
     var onItemSelected: (String?) -> Void = { _ in }
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
         CardList(

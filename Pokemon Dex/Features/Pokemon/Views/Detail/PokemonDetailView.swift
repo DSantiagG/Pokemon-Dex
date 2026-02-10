@@ -28,7 +28,7 @@ struct PokemonDetailView: View {
     let pokemonName: String?
     var context: NavigationContext = .main
     
-    //MARK: - Body
+    //MARK: - View
     
     var body: some View {
         ViewStateHandler(viewModel: pokemonVM) {

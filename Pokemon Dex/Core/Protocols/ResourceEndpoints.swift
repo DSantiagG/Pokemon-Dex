@@ -6,8 +6,6 @@
 //
 import PokemonAPI
 
-// MARK: - Resource Endpoints Protocol
-
 /// Defines the static endpoint methods used to fetch paginated resources and
 /// to resolve a single resource by name.
 ///

@@ -24,7 +24,7 @@ struct ItemAttributesSection: View {
     
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 8)]
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
        if !attributes.isEmpty {

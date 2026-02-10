@@ -24,7 +24,7 @@ struct PokemonCaptureSection: View {
     let growthRate: String
     let color: Color
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Capture", color: color) {
             VStack (spacing: 20){

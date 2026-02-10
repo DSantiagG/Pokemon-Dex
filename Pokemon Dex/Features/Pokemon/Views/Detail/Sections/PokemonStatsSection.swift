@@ -18,7 +18,7 @@ struct PokemonStatsSection: View{
     var stats: [(name: String, value: Int)]
     let color: Color
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Stats", color: color) {
             VStack(alignment: .leading, spacing: 12) {

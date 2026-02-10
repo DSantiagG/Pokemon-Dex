@@ -12,14 +12,14 @@ import PokemonAPI
 /// the fetched `PKMPokemon` plus resolved abilities, species, evolution stages,
 /// alternate forms and held items.
 ///
-/// Properties:
-/// - `details`: The primary `PKMPokemon` model.
-/// - `normalAbilities`: Abilities available in normal slots.
-/// - `hiddenAbilities`: Abilities marked as hidden for this Pokémon.
-/// - `species`: The `PKMPokemonSpecies` resource for additional metadata.
-/// - `evolution`: Array of `EvolutionStage` representing the evolution chain.
-/// - `forms`: Alternate ``PokemonForm` entries (sprites/names).
-/// - `items`: Items that this Pokémon can hold.
+/// - Parameters:
+///    - details: The primary `PKMPokemon` model.
+///    - normalAbilities: Abilities available in normal slots.
+///    - hiddenAbilities: Abilities marked as hidden for this Pokémon.
+///    - species: The `PKMPokemonSpecies` resource for additional metadata.
+///    - evolution: Array of `EvolutionStage` representing the evolution chain.
+///    - forms: Alternate `PokemonForm` entries (sprites/names).
+///    - items: Items that this Pokémon can hold.
 struct CurrentPokemon {
     var details: PKMPokemon
     var normalAbilities: [PKMAbility]

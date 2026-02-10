@@ -1,5 +1,5 @@
 //
-//  TabBar+Appearance.swift
+//  TabBarAppearanceConfigurator.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 23/01/26.

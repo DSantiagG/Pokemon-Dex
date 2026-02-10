@@ -1,5 +1,5 @@
 //
-//  PagedResourceService.swift
+//  PagedService.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 10/12/25.
@@ -7,8 +7,6 @@
 
 
 import Foundation
-
-// MARK: - Paging Service Protocol
 
 /// A protocol describing a paginated data source used by view models.
 ///

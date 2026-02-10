@@ -13,12 +13,10 @@ import PokemonAPI
 ///   - evolution: Array of `EvolutionStageViewModel` representing the chain.
 ///   - color: Accent color for the section.
 ///   - context: Navigation context controlling push vs sheet navigation.
-///
-/// - Environment:
-///   - `router`: Navigation router used to push detail screens.
 struct PokemonEvolutionSection: View {
     
     // MARK: - Environment
+    /// Navigation router for pushing new screens when tapping evolution stages.
     @EnvironmentObject private var router: NavigationRouter
     
     // MARK: - Parameters
@@ -38,7 +36,7 @@ struct PokemonEvolutionSection: View {
         self.hasEvolution = self.rows.flatMap { $0 }.count > 1
     }
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Evolution Chain", color: color) {
             VStack {

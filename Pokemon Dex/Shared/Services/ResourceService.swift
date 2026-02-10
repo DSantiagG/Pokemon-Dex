@@ -8,7 +8,7 @@ import PokemonAPI
 
 /// Generic actor responsible for fetching and caching resources for a given `Endpoint`.
 ///
-/// `ResourceService` implements `PagingService` and `SearchService` for the
+/// `ResourceService` implements ``PagingService`` and ``SearchService` for the
 /// supplied `Endpoint` type. It provides methods to fetch the initial page,
 /// paginate, fetch individual resources by name or resource descriptor, and
 /// to decode multiple resources in parallel. Results are cached in-memory to

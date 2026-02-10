@@ -19,6 +19,7 @@ import SwiftUI
 ///   - isMultiline: Whether the inner text may wrap into multiple lines.
 struct CustomCapsule: View {
     
+    // MARK: - Properties
     var text: String
     var fontSize: Int = 17
     var fontWeight: Font.Weight?
@@ -27,6 +28,7 @@ struct CustomCapsule: View {
     var horizontalPadding: CGFloat = 10
     var isMultiline = true
     
+    // MARK: - View
     var body: some View {
         AdaptiveText(text: text, isMultiline: isMultiline)
             .foregroundStyle(Color.white)

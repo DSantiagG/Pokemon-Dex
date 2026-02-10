@@ -11,7 +11,7 @@ import Foundation
 /// Storage protocol for persisting and retrieving list layout preferences.
 ///
 /// Implementations provide a small API used by view models to store the user's
-/// preferred `ListLayout` for a given `ListLayoutKey`.
+/// preferred ``ListLayout`` for a given ``ListLayoutKey``.
 protocol ListLayoutStorageProtocol {
     /// Return the stored layout for the provided key or the key's default.
     func getLayout(for key: ListLayoutKey) -> ListLayout

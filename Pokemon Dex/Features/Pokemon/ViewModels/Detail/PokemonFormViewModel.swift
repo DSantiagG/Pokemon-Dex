@@ -13,6 +13,9 @@ struct PokemonFormViewModel: Identifiable {
     /// Kept private to encapsulate model details and prevent external mutation.
     private let form: PokemonForm
     
+    
+    /// Initialize with a `PokemonForm` model.
+    /// - Parameter form: The underlying model containing raw form data.
     init(form: PokemonForm) {
         self.form = form
     }

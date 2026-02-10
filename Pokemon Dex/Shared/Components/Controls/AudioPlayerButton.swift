@@ -15,20 +15,16 @@ import AVFoundation
 /// identified by a URL string. The button automatically disables itself when
 /// the provided URL is invalid or unsupported.
 ///
+/// - Parameters:
+///  - urlString: Remote audio URL as a string. If `nil` or invalid the button is disabled.
+///  - color: Foreground color for the icon.
+///  - iconSize: Size used for the SF Symbol icon (default: 44).
+///
 /// Example:
 /// ```swift
 /// AudioPlayerButton(urlString: "https://.../132.ogg", color: .green)
 /// ```
 struct AudioPlayerButton: View {
-    
-    // MARK: - Props
-    
-    /// Remote audio URL as a string. If `nil` or invalid the button is disabled.
-    let urlString: String?
-    /// Foreground color for the icon.
-    var color: Color = .white
-    /// Size used for the SF Symbol icon.
-    var iconSize: CGFloat
     
     // MARK: - State
     
@@ -37,6 +33,11 @@ struct AudioPlayerButton: View {
     @State private var player: AVPlayer?
     /// Tracks whether playback is currently active.
     @State private var isPlaying: Bool = false
+    
+    // MARK: - Props
+    let urlString: String?
+    var color: Color = .white
+    var iconSize: CGFloat
     
     // MARK: - Init
     
@@ -51,7 +52,6 @@ struct AudioPlayerButton: View {
     }
     
     // MARK: - View
-    
     var body: some View {
         Button(action: onTap) {
             Image(systemName: iconName)
@@ -92,7 +92,6 @@ struct AudioPlayerButton: View {
     /// Shows a disabled icon when playback cannot occur; otherwise toggles
     /// between play and pause icons based on `isPlaying`.
     private var iconName: String {
-        // Use a disabled icon when playback cannot occur.
         guard canPlay else { return "play.slash.fill" }
         return isPlaying ? "pause.circle.fill" : "play.circle.fill"
     }
@@ -151,7 +150,6 @@ struct AudioPlayerButton: View {
     ///   The implementation validates that the ended item matches the current
     ///   player's item before updating state.
     private func handlePlaybackEnded(_ notification: Notification) {
-        // Ensure the ended notification pertains to our current item.
         guard
             let endedItem = notification.object as? AVPlayerItem, let currentItem = player?.currentItem, endedItem == currentItem
         else { return }

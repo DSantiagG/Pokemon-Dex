@@ -13,23 +13,23 @@ import SwiftUI
 ///   - searchText: Binding to the parent search input shared by `SearchView`.
 ///
 /// Behavior:
-/// - Debounces and performs searches through `SearchViewModel`.
-/// - Shows `InfoStateView` when the query is empty or when no results are found.
+/// - Debounces and performs searches through ``SearchViewModel``.
+/// - Shows ``InfoStateView`` when the query is empty or when no results are found.
 struct ItemSearch: View {
     
     // MARK: - Environment
-    
+    /// Router for handling navigation to item details when a search result is selected.
     @EnvironmentObject private var router: NavigationRouter
     
     // MARK: - ViewModel
-    
+    /// ViewModel responsible for performing item searches and exposing results and state.
     @StateObject private var itemVM = SearchViewModel(service: DataProvider.shared.itemService)
     
     // MARK: - Parameters
     
     @Binding var searchText: String
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
         Group {

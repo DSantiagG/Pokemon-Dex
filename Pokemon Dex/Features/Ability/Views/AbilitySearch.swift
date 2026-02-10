@@ -10,7 +10,7 @@ import SwiftUI
 /// Search view for abilities.
 ///
 /// - Parameters:
-///   - searchText: Bound search string controlled by the parent `SearchView`.
+///   - searchText: Bound search string controlled by the parent ``SearchView``.
 ///
 /// Behavior:
 /// - Binds to `searchText`, drives a `SearchViewModel`, and shows results or info states.

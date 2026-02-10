@@ -18,7 +18,7 @@ import PokemonAPI
 struct ItemDetailView: View {
     
     // MARK: - ViewModel
-    
+    /// ViewModel responsible for loading item details and exposing display properties.
     @StateObject private var itemVM = ItemDetailViewModel(itemService: DataProvider.shared.itemService, pokemonService: DataProvider.shared.pokemonService)
     
     // MARK: - Parameters
@@ -26,7 +26,7 @@ struct ItemDetailView: View {
     let itemName: String?
     var context: NavigationContext = .main
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
         ViewStateHandler(viewModel: itemVM){

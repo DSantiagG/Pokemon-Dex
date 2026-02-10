@@ -13,11 +13,6 @@ import PokemonAPI
 ///   - ability: The ability model to display.
 ///   - layout: Orientation of the card layout.
 ///   - color: Accent color for the card.
-///
-/// Computed properties:
-/// - `displayName`: Formatted ability name.
-/// - `displayGeneration`: Formatted generation string.
-/// - `displayShortEffect`: Short effect text used in compact presentations.
 struct AbilityCard: View {
     
     // MARK: - Environment
@@ -30,14 +25,17 @@ struct AbilityCard: View {
     var color: Color = .red
     
     // MARK: - Computed
+    /// Formatted ability name with fallback.
     private var displayName: String {
         ability.name?.formattedName() ?? "Unknown Name"
     }
     
+    /// Formatted generation string with fallback.
     private var displayGeneration: String {
         ability.generation?.name?.formattedGeneration() ?? "Unknown Generation"
     }
     
+    /// Short effect text for the ability, with fallback if not available.
     private var displayShortEffect: String {
         ability.effectEntries?.first(where: { $0.language?.name == "en" })?.shortEffect?.cleanFlavorText() ?? "No effect available"
     }

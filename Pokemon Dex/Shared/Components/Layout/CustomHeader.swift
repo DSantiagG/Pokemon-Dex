@@ -1,5 +1,5 @@
 //
-//  PokemonHeader.swift
+//  CustomHeader.swift
 //  Pokemon Dex
 //
 //  Created by David Giron on 23/11/25.

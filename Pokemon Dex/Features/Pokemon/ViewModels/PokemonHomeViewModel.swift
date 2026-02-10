@@ -11,20 +11,19 @@ import Combine
 
 /// Modes used to control which Pokémon the home screen displays.
 ///
-/// - `all`: Show the full paginated list.
-/// - `filteredByTypes`: Show items matching the currently selected type filters.
-/// - `favorites`: Show the user's favorite Pokémon.
-///
 /// Use this enum to switch the UI and data source for the list presentation.
 enum PokemonBrowseMode {
+    /// Show the full paginated list of Pokémon.
     case all
+    /// Show Pokémon matching the currently selected type filters.
     case filteredByTypes
+    /// Show the user's favorite Pokémon.
     case favorites
 }
 
 /// Lightweight model used to populate type filter UI controls.
 ///
-/// - Properties:
+/// - Parameters:
 ///   - `id`: The unique type identifier (slug) used as the `Identifiable` id.
 ///   - `displayName`: User-facing, formatted name for the type (e.g. "Fire").
 struct PokemonTypeFilterItem: Identifiable, Hashable {

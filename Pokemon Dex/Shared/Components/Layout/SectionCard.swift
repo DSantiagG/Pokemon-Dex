@@ -13,6 +13,11 @@ import SwiftUI
 /// that floats above the top edge with a colored stroke. Use it to group
 /// related controls or lists within a screen.
 ///
+/// - Parameters:
+///  - text: The title displayed in the floating capsule at the top of the card.
+///  - color: The accent color used for the capsule stroke and subtle background tint.
+///  - content: A view builder closure that produces the inner content of the card.
+///
 /// Example:
 /// ```swift
 /// SectionCard(text: "Evolution Chain", color: .green) {
@@ -28,11 +33,8 @@ struct SectionCard<Content: View>: View {
     
     // MARK: - Properties
     
-    /// Title text displayed inside the floating capsule overlay.
     var text: String
-    /// Accent color used for the capsule stroke and subtle tinting.
     var color: Color
-    /// Content builder closure producing the inner view shown inside the card.
     private let content: () -> Content
 
     // MARK: - Init

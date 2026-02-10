@@ -11,11 +11,11 @@ import Combine
 ///
 /// `PaginationViewModel` is a reusable, MainActor-bound view model for lists that
 /// support initial load + pagination. It delegates network work to a `Service`
-/// conforming to `PagingService` and persists a `ListLayout` choice via a
+/// conforming to ``PagingService`` and persists a ``ListLayout`` choice via a
 /// `ListLayoutStorageProtocol` keyed by `layoutKey`.
 ///
 /// - Generic parameters:
-///   - Resource: The resource model type (must conform to `IdentifiableResource`).
+///   - Resource: The resource model type (must conform to ``IdentifiableResource``).
 ///   - Service: The paging service implementation used to fetch pages of `Resource`.
 ///
 /// Example:

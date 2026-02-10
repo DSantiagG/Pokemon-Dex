@@ -20,13 +20,6 @@ import SwiftUI
 /// ```
 struct SearchView: View {
     
-    // MARK: - Parameters
-    
-    /// Which feature/tab to target for searching (Pokémon, Abilities, Items, etc.).
-    let searchTarget: AppTab
-    /// Called when the search sheet is dismissed while the query is empty.
-    var onDismissSearch: (() -> Void)
-    
     // MARK: - State
     
     /// The current search query bound to the system `searchable` field.
@@ -36,8 +29,12 @@ struct SearchView: View {
     /// unknown state; the view converts this to a `Binding<Bool>` for `searchable`.
     @State private var isSearchFocused: Bool?
     
+    // MARK: - Parameters
     
-    // MARK: - Body
+    let searchTarget: AppTab
+    var onDismissSearch: (() -> Void)
+    
+    // MARK: - View
     
     var body: some View {
         NavigationContainer{

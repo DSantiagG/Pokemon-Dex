@@ -15,9 +15,11 @@ import SwiftUI
 ///   - isMultiline: Whether multi-line rendering is allowed. When `false` the text is forced to a single line.
 struct AdaptiveText: View {
     
+    // MARK: - Properties
     let text: String
     var isMultiline: Bool = true
     
+    // MARK: - View
     var body: some View {
         if isSingleWord(text) || !isMultiline {
             adaptiveText
@@ -29,6 +31,9 @@ struct AdaptiveText: View {
         }
     }
     
+    // MARK: - Computed Views
+    
+    /// The base text view with adaptive scaling and truncation.
     var adaptiveText: some View {
         Text(text)
             .minimumScaleFactor(0.7)
@@ -36,6 +41,9 @@ struct AdaptiveText: View {
             .truncationMode(.tail)
     }
     
+    //MARK: - Helpers
+    
+    /// Checks if the provided string is a single word (no spaces) after trimming whitespace.
     private func isSingleWord(_ value: String) -> Bool {
         value.trimmingCharacters(in: .whitespacesAndNewlines)
              .split(separator: " ").count == 1

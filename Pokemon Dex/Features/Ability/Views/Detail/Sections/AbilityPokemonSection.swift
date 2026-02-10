@@ -16,7 +16,7 @@ import PokemonAPI
 ///   - context: Navigation context controlling push vs sheet behavior.
 ///
 /// - Behavior:
-///   - Uses `CustomSegmentedControl` to switch between normal and hidden lists.
+///   - Uses ``CustomSegmentedControl`` to switch between normal and hidden lists.
 ///   - Selecting a Pokémon either pushes or presents a sheet depending on `context`.
 struct AbilityPokemonSection: View {
     
@@ -46,6 +46,7 @@ struct AbilityPokemonSection: View {
                 .init("Normal", tag: .normal),
                 .init("Hidden", tag: .hidden)
             ])
+            
             
             PokemonList(pokemons: (pokemonKind == .normal) ? normalPokemon : hiddenPokemon, layout: .singleColumn, onItemSelected: { pokemonName in
                 switch context {

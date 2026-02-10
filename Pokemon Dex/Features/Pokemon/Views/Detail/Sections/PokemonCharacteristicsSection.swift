@@ -22,7 +22,7 @@ struct PokemonCharacteristicsSection: View {
     let height: Double
     let color: Color
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Characteristics", color: color) {
             HStack(alignment: .top, spacing: 0) {

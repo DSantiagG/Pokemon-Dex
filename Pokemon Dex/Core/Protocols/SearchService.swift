@@ -5,8 +5,6 @@
 //  Created by David Giron on 10/12/25.
 //
 
-// MARK: - Search Service Protocol
-
 /// A protocol defining search-related operations used by feature services.
 ///
 /// Conforming types expose two associated types: `Item` is the decoded model

@@ -11,7 +11,7 @@ import PokemonAPI
 /// A list container that renders an array of Pokémons using the chosen layout.
 ///
 /// - Parameters:
-///   - pokemons: An array of ``PKMPokemon`` to display.
+///   - pokemons: An array of `PKMPokemon` to display.
 ///   - layout: The ``ListLayout`` to render (single column or two columns).
 ///   - onItemAppear: Closure invoked when a cell becomes visible (used for pagination triggers).
 ///   - onItemSelected: Callback invoked with the selected Pokémon name when a card is tapped.
@@ -31,7 +31,7 @@ struct PokemonList: View {
     var onItemAppear: (PKMPokemon) -> Void = { _ in }
     var onItemSelected: (String?) -> Void = { _ in }
 
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         CardList(
             items: pokemons,

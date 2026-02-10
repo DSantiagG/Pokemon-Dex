@@ -34,7 +34,7 @@ struct PokemonAbilitiesSection: View {
     let color: Color
     let context: NavigationContext
 
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         SectionCard(text: "Abilities", color: color) {
             VStack(spacing: 16) {

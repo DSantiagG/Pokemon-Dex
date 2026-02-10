@@ -13,8 +13,10 @@ import SwiftUI
 ///   - color: Accent color used for the value text.
 ///   - content: The view displayed beneath the title.
 struct InfoColumn<Content: View>: View {
+    
     let title: String
     let color: Color
+    
     @ViewBuilder let content: Content
     
     var body: some View {

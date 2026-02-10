@@ -25,7 +25,7 @@ struct ItemBasicInfoSection: View {
     let description: String
     let color: Color
     
-    // MARK: - Body
+    // MARK: - View
     
     var body: some View {
         VStack(spacing: 15) {

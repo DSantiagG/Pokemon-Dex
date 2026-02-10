@@ -22,7 +22,7 @@ struct PokemonBasicInfoSection: View {
     let types: [String]
     let description: String
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         VStack(spacing: 16) {
             

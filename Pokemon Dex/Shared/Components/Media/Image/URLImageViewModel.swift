@@ -35,8 +35,8 @@ final class URLImageViewModel: ObservableObject {
     /// Shared in-memory cache for decoded `UIImage` instances keyed by absolute URL string.
     /// This lightweight cache avoids refetching when the same artwork is requested repeatedly.
     private static var imageCache = NSCache<NSString, UIImage>()
+    /// urlSession data task for the current image load request. Kept as a property to allow cancellation when needed.
     private var dataTask: URLSessionDataTask?
-    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Public API
     

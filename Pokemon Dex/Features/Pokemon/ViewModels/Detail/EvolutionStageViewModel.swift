@@ -15,6 +15,8 @@ struct EvolutionStageViewModel: Identifiable {
     /// Backing ``EvolutionStage` model used to compute presentation properties.
     private let stage: EvolutionStage
     
+    /// Initialize with a given stage model.
+    /// - Parameter stage: The `EvolutionStage` instance to wrap and present.
     init(stage: EvolutionStage) {
         self.stage = stage
     }

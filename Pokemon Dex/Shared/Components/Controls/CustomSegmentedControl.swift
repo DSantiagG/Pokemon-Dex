@@ -13,6 +13,11 @@ import SwiftUI
 /// selection indicator. The control accepts an array of `Item` values and binds to a
 /// `Selection` value that updates when the user taps a segment.
 ///
+/// - Parameters:
+///   - selection: Binding to the currently selected tag.
+///   - color: Accent color used for the selection indicator.
+///   - items: Array of `Item` values describing each segment.
+///
 /// Example:
 /// ```swift
 /// @State private var selection: Fruit = .banana
@@ -36,17 +41,14 @@ public struct CustomSegmentedControl<Selection: Hashable>: View {
             self.id = tag
         }
     }
+    
+    // MARK: - Properties
     @Binding private var selection: Selection
-    
-    private let items: [Item]
     private let color: Color
+    private let items: [Item]
     
+    // MARK: - Init
     /// Create a segmented control bound to `selection`.
-    ///
-    /// - Parameters:
-    ///   - selection: Binding to the currently selected tag.
-    ///   - color: Accent color used for the selection indicator.
-    ///   - items: Array of `Item` values describing each segment.
     public init(selection: Binding<Selection>, color: Color, items: [Item]) {
         self._selection = selection
         self.items = items

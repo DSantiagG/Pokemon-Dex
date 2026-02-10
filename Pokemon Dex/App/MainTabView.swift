@@ -15,11 +15,7 @@ import SwiftUI
 /// non-search selection so the search target can default to the previously
 /// active primary tab.
 struct MainTabView: View {
-    // MARK: - Properties
-
-    /// Shared application router that provides per-feature routers
-    /// and coordinates navigation between feature modules.
-    @StateObject var appRouter = AppRouter()
+    // MARK: - State
 
     /// The currently selected tab in the `TabView`.
     @State private var selection: AppTab = .pokemon
@@ -29,6 +25,10 @@ struct MainTabView: View {
 
     /// The tab that should receive search actions when the Search tab is used.
     @State private var searchTarget: AppTab = .pokemon
+    
+    /// Shared application router that provides per-feature routers
+    /// and coordinates navigation between feature modules.
+    @StateObject var appRouter = AppRouter()
 
     // MARK: - Init TabBar appearance
 
@@ -44,8 +44,12 @@ struct MainTabView: View {
     /// routing back to the appropriate per-feature router using `searchTarget`.
     var body: some View {
         TabView (selection: $selection){
+            
             ForEach(AppTab.primaryTabs, id: \.self) { tab in
-                Tab(tab.title, systemImage: tab.systemImageName, value: tab) {
+                Tab(tab.title,
+                    systemImage: tab.systemImageName,
+                    value: tab)
+                {
                     tab.view(appRouter: appRouter)
                 }
             }

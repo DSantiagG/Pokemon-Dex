@@ -23,19 +23,13 @@ struct PokemonFilterView: View {
     @Binding var selectedTypes: [String]
     let applyFilters: (() -> Void)
     
-    // MARK: - Computed Properties
-    /// Whether any type is currently selected (used to enable/disable the Apply button).
-    private var hasSelectedTypes: Bool {
-        !selectedTypes.isEmpty
-    }
-    
     // MARK: - Layout
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         NavigationStack {
             LazyVGrid(columns: columns) {
@@ -94,6 +88,12 @@ struct PokemonFilterView: View {
                  }
             }
         }
+    }
+    
+    // MARK: - Computed Properties
+    /// Whether any type is currently selected (used to enable/disable the Apply button).
+    private var hasSelectedTypes: Bool {
+        !selectedTypes.isEmpty
     }
 }
 

@@ -66,7 +66,7 @@ class ItemDetailViewModel: ObservableObject, ErrorHandleable{
     }
     
     // MARK: - Private
-    /// Fetch item details and the associated holding Pokémon, returning a `CurrentItem`.
+    /// Fetch item details and the associated holding Pokémon, returning a ``CurrentItem`.
     ///
     /// - Parameter name: Item slug to fetch.
     /// - Returns: A `CurrentItem` containing the decoded `PKMItem` and the list of `PKMPokemon` that hold it, or `nil` when no Pokémon are associated.

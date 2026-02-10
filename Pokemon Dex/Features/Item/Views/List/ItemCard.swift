@@ -13,15 +13,10 @@ import PokemonAPI
 /// - Parameters:
 ///   - item: The `PKMItem` model to display.
 ///   - layout: Orientation used by `CardContainer` to switch between vertical and horizontal layouts.
-///
-/// Computed properties:
-/// - `itemColor`: Accent color derived from the item's category.
-/// - `displayName`: Formatted item name for display.
-/// - `displayCategory`: Formatted category name for display.
 struct ItemCard: View {
     
     // MARK: - Environment
-    
+    /// Color scheme used to adjust shadowing and contrast for light/dark modes.
     @Environment(\.colorScheme) private var colorScheme
     
     // MARK: - Parameters
@@ -30,15 +25,15 @@ struct ItemCard: View {
     var layout: CardOrientation = .vertical
     
     // MARK: - Computed
-    
+    /// Accent color derived from the item's category. Falls back to gray if unavailable.
     private var itemColor: Color {
         item.category?.name?.categoryColor ?? .gray
     }
-    
+    /// Formatted item name for display. Falls back to "Unknown Name" if unavailable.
     private var displayName: String {
         item.name?.formattedName() ?? "Unknown Name"
     }
-    
+    /// Formatted category name for display. Falls back to "Unknown Category" if unavailable.
     private var displayCategory: String {
         item.category?.name?.formattedName() ?? "Unknown Category"
     }

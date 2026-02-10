@@ -10,8 +10,6 @@ import PokemonAPI
 /// Search view used within the app's search tab/flow.
 ///
 /// - Parameters:
-///   - router: Provided via `@EnvironmentObject` to perform navigation actions (push to detail).
-///   - pokemonVM: Internal `@StateObject` view model that performs searches and exposes `results` and `state`.
 ///   - searchText: Binding to the current search query controlled by the parent view.
 ///
 /// - Behavior:
@@ -28,8 +26,7 @@ struct PokemonSearch: View {
     /// Performs the search and exposes `results` and `state` for the UI.
     @StateObject private var pokemonVM = SearchViewModel(service: DataProvider.shared.pokemonService)
     
-    // MARK: - Bindings
-    /// Bound search text coming from the parent/search field.
+    // MARK: - Properties
     @Binding var searchText: String
     
     // MARK: - Body

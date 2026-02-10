@@ -20,8 +20,9 @@ import Foundation
 actor PokemonFavoritesService {
     
     // MARK: - Persistence
-    
+    /// Key used for storing the favorites array in `UserDefaults`.
     private let key = "favorite.pokemons"
+    /// UserDefaults instance for persistence. Using the standard singleton for simplicity.
     private let storage = UserDefaults.standard
     
     // MARK: - In-memory state

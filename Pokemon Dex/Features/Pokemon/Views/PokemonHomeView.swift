@@ -22,7 +22,7 @@ struct PokemonHomeView: View {
     /// Controls whether the filter sheet is presented.
     @State private var showFilters = false
     
-    // MARK: - Body
+    // MARK: - View
     var body: some View {
         NavigationContainer {
             content
