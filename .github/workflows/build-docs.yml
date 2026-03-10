@@ -41,8 +41,7 @@ jobs:
           -scheme "Pokemon Dex" \
           -destination 'generic/platform=iOS' \
           -derivedDataPath build \
-          CODE_SIGNING_ALLOWED=NO \
-          IPHONEOS_DEPLOYMENT_TARGET=17.0
+          CODE_SIGNING_ALLOWED=NO
 
       - name: Find DocC archive
         run: |
