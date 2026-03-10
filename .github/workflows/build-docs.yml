@@ -41,7 +41,8 @@ jobs:
           -scheme "Pokemon Dex" \
           -destination 'generic/platform=iOS Simulator' \
           -derivedDataPath build \
-          CODE_SIGNING_ALLOWED=NO
+          CODE_SIGNING_ALLOWED=NO \
+          ONLY_ACTIVE_ARCH=YES
 
       - name: Find DocC archive
         run: |
