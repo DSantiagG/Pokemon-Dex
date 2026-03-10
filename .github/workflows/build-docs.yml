@@ -21,12 +21,12 @@ jobs:
       - name: Build DocC archive
         run: |
           xcodebuild docbuild \
-          -scheme PokemonDex \
+          -scheme "Pokemon Dex" \
           -destination 'generic/platform=iOS'
 
       - name: Find DocC archive
         run: |
-          DOCC_ARCHIVE=$(find ~/Library/Developer/Xcode/DerivedData -name "*.doccarchive" | head -n 1)
+          DOCC_ARCHIVE=$(find ~/Library/Developer/Xcode/DerivedData -path "*/Pokemon*Dex*.doccarchive" | head -n 1)
           echo "DOCC_ARCHIVE=$DOCC_ARCHIVE" >> $GITHUB_ENV
 
       - name: Convert to static site
