@@ -48,8 +48,14 @@ struct AbilityHomeView: View {
             }
             .toolbarRole(.editor)
             .toolbar {
-                ToolbarItem(placement: .subtitle) {
-                    CustomTitle(title: AppTab.abilities.title)
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .subtitle) {
+                        CustomTitle(title: AppTab.abilities.title)
+                    }
+                } else {
+                    ToolbarItem(placement: .principal) {
+                        CustomTitle(title: AppTab.abilities.title)
+                    }
                 }
                 ToolbarItem {
                     PresentationOptionsMenu(layout: $abilityVM.layout)

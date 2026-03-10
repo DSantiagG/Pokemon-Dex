@@ -115,15 +115,23 @@ private struct PokemonHomeToolbar: ToolbarContent {
     
     // MARK: - Body
     var body: some ToolbarContent {
-        ToolbarItem(placement: .subtitle) {
-            CustomTitle(title: AppTab.pokemon.title)
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .subtitle) {
+                CustomTitle(title: AppTab.pokemon.title)
+            }
+        } else {
+            ToolbarItem(placement: .principal) {
+                CustomTitle(title: AppTab.pokemon.title)
+            }
         }
         
         ToolbarItem(placement: .topBarTrailing) {
             PresentationOptionsMenu(layout: $vm.layout)
         }
         
-        ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
         
         // Favorites button: hidden when filteredByTypes to avoid conflicting modes
         if vm.browseMode != .filteredByTypes {
@@ -136,7 +144,9 @@ private struct PokemonHomeToolbar: ToolbarContent {
             }
         }
         
-        ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
         
         // Filter button: hidden when viewing favorites
         if vm.browseMode != .favorites {

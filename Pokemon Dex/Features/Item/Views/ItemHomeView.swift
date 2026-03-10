@@ -49,8 +49,14 @@ struct ItemHomeView: View {
             }
             .toolbarRole(.editor)
             .toolbar {
-                ToolbarItem(placement: .subtitle) {
-                    CustomTitle(title: AppTab.items.title)
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .subtitle) {
+                        CustomTitle(title: AppTab.items.title)
+                    }
+                } else {
+                    ToolbarItem(placement: .principal) {
+                        CustomTitle(title: AppTab.items.title)
+                    }
                 }
                 ToolbarItem {
                     PresentationOptionsMenu(layout: $itemVM.layout)
