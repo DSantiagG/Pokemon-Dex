@@ -39,11 +39,9 @@ jobs:
         run: |
           xcodebuild docbuild \
           -scheme "Pokemon Dex" \
-          -destination 'generic/platform=iOS' \
+          -destination 'generic/platform=iOS Simulator' \
           -derivedDataPath build \
-          CODE_SIGNING_ALLOWED=NO \
-          SKIP_INSTALL=NO \
-          BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+          CODE_SIGNING_ALLOWED=NO
 
       - name: Find DocC archive
         run: |
