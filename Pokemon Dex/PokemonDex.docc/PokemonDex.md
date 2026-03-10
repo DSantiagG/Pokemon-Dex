@@ -1,6 +1,6 @@
 # ``Pokemon_Dex``
 
-EjemploA modular SwiftUI application that consumes the PokéAPI using its official Swift wrapper library.
+Ejemplo2A modular SwiftUI application that consumes the PokéAPI using its official Swift wrapper library.
 
 
 ## Overview
