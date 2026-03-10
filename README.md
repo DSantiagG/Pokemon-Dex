@@ -207,6 +207,14 @@ The structure enforces **clear boundaries**, making the app easy to scale withou
 
 ---
 
+## 📚 Documentation
+
+Full documentation available here:
+
+[![Documentation](https://img.shields.io/badge/Documentation-DocC-blue)](https://dsantiagg.github.io/Pokemon-Dex/documentation/pokemon_dex)
+
+---
+
 ## 🚀 Why This Project Exists
 
 Pokémon Dex was built to:
