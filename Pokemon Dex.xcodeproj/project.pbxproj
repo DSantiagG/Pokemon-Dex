@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4A9B72C92EBD5CC200EEF8FE /* PokemonAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9B72C82EBD5CC200EEF8FE /* PokemonAPI */; };
+		4AFF334D2F60A0D200D809A7 /* PokemonAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4AFF334C2F60A0D200D809A7 /* PokemonAPI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A9B72C92EBD5CC200EEF8FE /* PokemonAPI in Frameworks */,
+				4AFF334D2F60A0D200D809A7 /* PokemonAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			);
 			name = "Pokemon Dex";
 			packageProductDependencies = (
-				4A9B72C82EBD5CC200EEF8FE /* PokemonAPI */,
+				4AFF334C2F60A0D200D809A7 /* PokemonAPI */,
 			);
 			productName = "Pokemon Dex";
 			productReference = 4A9B72B92EBD5C4D00EEF8FE /* Pokemon Dex.app */;
@@ -101,7 +101,7 @@
 			mainGroup = 4A9B72B02EBD5C4D00EEF8FE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				4A9B72C72EBD5CC200EEF8FE /* XCRemoteSwiftPackageReference "PokemonAPI" */,
+				4AFF334B2F60A0D200D809A7 /* XCRemoteSwiftPackageReference "PokemonAPI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4A9B72BA2EBD5C4D00EEF8FE /* Products */;
@@ -347,9 +347,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4A9B72C72EBD5CC200EEF8FE /* XCRemoteSwiftPackageReference "PokemonAPI" */ = {
+		4AFF334B2F60A0D200D809A7 /* XCRemoteSwiftPackageReference "PokemonAPI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kinkofer/PokemonAPI?tab=readme-ov-file";
+			repositoryURL = "https://github.com/kinkofer/PokemonAPI";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.0.3;
@@ -358,9 +358,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4A9B72C82EBD5CC200EEF8FE /* PokemonAPI */ = {
+		4AFF334C2F60A0D200D809A7 /* PokemonAPI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A9B72C72EBD5CC200EEF8FE /* XCRemoteSwiftPackageReference "PokemonAPI" */;
+			package = 4AFF334B2F60A0D200D809A7 /* XCRemoteSwiftPackageReference "PokemonAPI" */;
 			productName = PokemonAPI;
 		};
 /* End XCSwiftPackageProductDependency section */
