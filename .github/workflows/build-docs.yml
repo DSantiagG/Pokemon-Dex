@@ -1,60 +1,55 @@
 name: Build and Deploy DocC
 
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 permissions:
-contents: read
-pages: write
-id-token: write
-
-jobs:
-build-docs:
-runs-on: macos-latest
-
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-
-  - name: Build DocC archive
-    run: |
-      xcodebuild docbuild \
-      -scheme PokemonDex \
-      -destination 'generic/platform=iOS'
-
-  - name: Find DocC archive
-    run: |
-      DOCC_ARCHIVE=$(find ~/Library/Developer/Xcode/DerivedData -name "*.doccarchive" | head -n 1)
-      echo "DOCC_ARCHIVE=$DOCC_ARCHIVE" >> $GITHUB_ENV
-
-  - name: Convert to static site
-    run: |
-      xcrun docc process-archive transform-for-static-hosting \
-      "$DOCC_ARCHIVE" \
-      --output-path docs \
-      --hosting-base-path Pokemon-Dex
-
-  - name: Upload Pages artifact
-    uses: actions/upload-pages-artifact@v3
-    with:
-      path: docs
-
-deploy:
-needs: build-docs
-runs-on: ubuntu-latest
-
-environment:
-  name: github-pages
-  url: ${{ steps.deployment.outputs.page_url }}
-
-permissions:
+  contents: read
   pages: write
   id-token: write
 
-steps:
-  - name: Deploy to GitHub Pages
-    id: deployment
-    uses: actions/deploy-pages@v4
+jobs:
+  build-docs:
+    runs-on: macos-latest
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build DocC archive
+        run: |
+          xcodebuild docbuild \
+          -scheme PokemonDex \
+          -destination 'generic/platform=iOS'
+
+      - name: Find DocC archive
+        run: |
+          DOCC_ARCHIVE=$(find ~/Library/Developer/Xcode/DerivedData -name "*.doccarchive" | head -n 1)
+          echo "DOCC_ARCHIVE=$DOCC_ARCHIVE" >> $GITHUB_ENV
+
+      - name: Convert to static site
+        run: |
+          xcrun docc process-archive transform-for-static-hosting \
+          "$DOCC_ARCHIVE" \
+          --output-path docs \
+          --hosting-base-path Pokemon-Dex
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build-docs
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
