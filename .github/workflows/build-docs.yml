@@ -33,16 +33,16 @@ jobs:
         run: |
           xcodebuild -resolvePackageDependencies \
           -scheme "Pokemon Dex" \
-          -derivedDataPath build \
-          CODE_SIGNING_ALLOWED=NO \
-          IPHONEOS_DEPLOYMENT_TARGET=17.0
+          -derivedDataPath build
 
       - name: Build DocC archive
         run: |
           xcodebuild docbuild \
           -scheme "Pokemon Dex" \
           -destination 'generic/platform=iOS' \
-          -derivedDataPath build
+          -derivedDataPath build \
+          CODE_SIGNING_ALLOWED=NO \
+          IPHONEOS_DEPLOYMENT_TARGET=17.0
 
       - name: Find DocC archive
         run: |
