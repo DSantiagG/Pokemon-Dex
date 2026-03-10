@@ -48,8 +48,15 @@ struct AbilityHomeView: View {
             }
             .toolbarRole(.editor)
             .toolbar {
-                toolbarTitle()
-                
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .subtitle) {
+                        CustomTitle(title: AppTab.abilities.title)
+                    }
+                } else {
+                    ToolbarItem(placement: .principal) {
+                        CustomTitle(title: AppTab.abilities.title)
+                    }
+                }
                 ToolbarItem {
                     PresentationOptionsMenu(layout: $abilityVM.layout)
                 }
@@ -59,24 +66,6 @@ struct AbilityHomeView: View {
             if abilityVM.items.isEmpty {
                 await abilityVM.loadInitialPage()
             }
-        }
-    }
-    @ToolbarContentBuilder
-    func toolbarTitle() -> some ToolbarContent {
-        if #available(iOS 26.0, *) {
-            subtitleToolbar()
-        } else {
-            ToolbarItem(placement: .principal) {
-                CustomTitle(title: AppTab.abilities.title)
-            }
-        }
-    }
-
-    @available(iOS 26.0, *)
-    @ToolbarContentBuilder
-    func subtitleToolbar() -> some ToolbarContent {
-        ToolbarItem(placement: .subtitle) {
-            CustomTitle(title: AppTab.abilities.title)
         }
     }
 }
