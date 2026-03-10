@@ -2,8 +2,8 @@ name: Build and Deploy DocC
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,16 +18,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache Swift Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.swiftpm
+            ~/Library/Caches/org.swift.swiftpm
+            build/SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Resolve Swift Packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+          -scheme "Pokemon Dex" \
+          -derivedDataPath build \
+          CODE_SIGNING_ALLOWED=NO \
+          IPHONEOS_DEPLOYMENT_TARGET=17.0
+
       - name: Build DocC archive
         run: |
           xcodebuild docbuild \
           -scheme "Pokemon Dex" \
-          -destination 'generic/platform=iOS'
+          -destination 'generic/platform=iOS' \
+          -derivedDataPath build
 
       - name: Find DocC archive
         run: |
-          DOCC_ARCHIVE=$(find ~/Library/Developer/Xcode/DerivedData -path "*/Pokemon*Dex*.doccarchive" | head -n 1)
+          DOCC_ARCHIVE=$(find build -name "*.doccarchive" | head -n 1)
           echo "DOCC_ARCHIVE=$DOCC_ARCHIVE" >> $GITHUB_ENV
+          echo "DocC archive found at: $DOCC_ARCHIVE"
 
       - name: Convert to static site
         run: |
